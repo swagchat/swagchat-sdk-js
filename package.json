@@ -1,0 +1,56 @@
+{
+  "name": "swagchat-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "swagchat",
+    "chat",
+    "messaging",
+    "sdk"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "build-node": "tsc --pretty --watch",
+    "build-browser": "watchify src/index.ts -s Swagchat -p [tsify] --verbose -o dist/bundle-browser.js",
+    "build-doc": "typedoc --out ./doc/ ./src/"
+  },
+  "author": "Betchi <shinichi.minobe@gmail.com>",
+  "contributors": [
+    {
+      "name": "Betchi",
+      "email": "shinichi.minobe@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fairway-corp/swagchat-sdk"
+  },
+  "license": "MIT",
+  "browser": {
+    "./file1.js": "./file2.js",
+    "fs": false
+  },
+  "dependencies": {
+    "es6-promise": "^4.1.0",
+    "isomorphic-fetch": "^2.2.1",
+    "typescript": "^2.2.1",
+    "ws": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/isomorphic-fetch": "0.0.33",
+    "@types/ws": "0.0.39",
+    "browserify": "^14.1.0",
+    "ts-loader": "^2.0.1",
+    "tsify": "^3.0.1",
+    "tslint": "^4.5.1",
+    "tslint-loader": "^3.4.3",
+    "typedoc": "^0.5.7",
+    "watchify": "^3.9.0",
+    "webpack": "^2.2.1"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^3.0.0",
+    "utf-8-validate": "^3.0.1"
+  }
+}
