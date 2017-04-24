@@ -22,8 +22,8 @@ export default class Room {
     readonly created: number;
     readonly modified: number;
     readonly users: model.IUserForRoom[];
-    getMetaData(key: string): (string | number | boolean);
     setMetaData(key: string, value: string | number | boolean): void;
+    getMetaData(key: string): (string | number | boolean);
     /**
      * Updating user item.
      *

@@ -78,10 +78,6 @@ export default class Room {
         return this._data.users;
     }
 
-    public getMetaData(key: string): (string | number | boolean) {
-        return this._data.metaData[key];
-    }
-
     public setMetaData(key: string, value: string | number | boolean) {
         if (this._data.metaData === undefined) {
             let metaData = {key: value};
@@ -89,6 +85,10 @@ export default class Room {
         } else {
             this._data.metaData[key] = value;
         }
+    }
+
+    public getMetaData(key: string): (string | number | boolean) {
+        return this._data.metaData[key];
     }
 
     /**
@@ -123,7 +123,7 @@ export default class Room {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -147,7 +147,7 @@ export default class Room {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -174,7 +174,7 @@ export default class Room {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -213,7 +213,6 @@ export default class Room {
         if (queryParams !== undefined) {
             queryParamsString = createQueryParams(queryParams);
         }
-        console.log(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString);
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString, {
         }).then((response: Response) => response.json())
         .then((json) => {
@@ -248,9 +247,6 @@ export default class Room {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             throw Error("Unsubscribe message failure. roomId is not setting.");
         }
-        if (this._onMessageReceived === undefined) {
-            throw Error("Unsubscribe message failure. .");
-        }
         this._onMessageReceived = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "unbind")) {
             console.info("Unsubscribe message success roomId[" + this._data.roomId + "]");
@@ -282,9 +278,6 @@ export default class Room {
     public unsubscribeUserJoin(): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             throw Error("Unsubscribe userJoin failure. roomId is not setting.");
-        }
-        if (this._onUserJoined === undefined) {
-            throw Error("Unsubscribe userJoin failure. .");
         }
         this._onUserJoined = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {

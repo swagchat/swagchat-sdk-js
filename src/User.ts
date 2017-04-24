@@ -1,4 +1,5 @@
 import * as model from "./interface";
+import { PLATFORM_IOS, PLATFORM_ANDROID } from "./const";
 import { Client } from "./Client";
 import "isomorphic-fetch";
 
@@ -69,8 +70,66 @@ export default class User {
         return this._data.rooms;
     }
 
-    public getMetaData(key: string): (string | number | boolean) {
-        return this._data.metaData[key];
+    private _setDevice(platform: number, token: string): Promise<never> {
+        if (!platform || typeof(platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+            })
+        }).then((response: Response) => response.json())
+        .then((json) => {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+            return json;
+        }).catch((error) => {
+            throw Error(error.message);
+        });
+    }
+
+    private _updateDevice(platform: number, token: string): Promise<never> {
+        if (!platform || typeof(platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+            })
+        }).then((response: Response) => response.json())
+        .then((json) => {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+            return json;
+        }).catch((error) => {
+            throw Error(error.message);
+        });
+    }
+
+    private _removeDevice(platform: number): Promise<never> {
+        if (!platform || typeof(platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "DELETE",
+        }).then((response: Response) => response.json())
+        .then((json) => {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+        }).catch((error) => {
+            throw Error(error.message);
+        });
     }
 
     public setMetaData(key: string, value: string | number | boolean) {
@@ -82,6 +141,33 @@ export default class User {
         }
     }
 
+    public getMetaData(key: string): (string | number | boolean) {
+        return this._data.metaData[key];
+    }
+
+    public setDeviceIos(token: string): Promise<never> {
+        return this._setDevice(PLATFORM_IOS, token);
+    }
+
+    public setDeviceAndroid(token: string): Promise<never> {
+        return this._setDevice(PLATFORM_ANDROID, token);
+    }
+
+    public updateDeviceIos(token: string): Promise<never> {
+        return this._updateDevice(PLATFORM_IOS, token);
+    }
+
+    public updateDeviceAndroid(token: string): Promise<never> {
+        return this._updateDevice(PLATFORM_ANDROID, token);
+    }
+
+    public removeDeviceIos(): Promise<never> {
+        return this._removeDevice(PLATFORM_IOS);
+    }
+
+    public removeDeviceAndroid(): Promise<never> {
+        return this._removeDevice(PLATFORM_ANDROID);
+    }
     /**
      * Updating user item.
      *

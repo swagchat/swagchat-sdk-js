@@ -1,4 +1,4 @@
-import { isBrowser } from "./util";
+import { isBrowser } from "./const";
 import * as model from "./interface";
 
 export default class Realtime {

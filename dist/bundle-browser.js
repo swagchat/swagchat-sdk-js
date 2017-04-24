@@ -34797,12 +34797,12 @@ exports.Client = Client;
 },{"./Realtime":190,"./Room":191,"./User":192,"isomorphic-fetch":103}],190:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var util_1 = require("./util");
+var const_1 = require("./const");
 var Realtime = (function () {
     function Realtime(endpoint) {
         var _this = this;
         console.info("Connection Swagchat Realtime Server...");
-        var websocket = util_1.isBrowser ? WebSocket : require("ws");
+        var websocket = const_1.isBrowser ? WebSocket : require("ws");
         this.conn = new websocket(endpoint);
         this.conn.addEventListener("open", function (e) {
             _this.onConnected(e.target);
@@ -34851,7 +34851,7 @@ var Realtime = (function () {
 }());
 exports.default = Realtime;
 
-},{"./util":194,"ws":176}],191:[function(require,module,exports){
+},{"./const":193,"ws":176}],191:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("./util");
@@ -34946,9 +34946,6 @@ var Room = (function () {
         enumerable: true,
         configurable: true
     });
-    Room.prototype.getMetaData = function (key) {
-        return this._data.metaData[key];
-    };
     Room.prototype.setMetaData = function (key, value) {
         if (this._data.metaData === undefined) {
             var metaData = { key: value };
@@ -34957,6 +34954,9 @@ var Room = (function () {
         else {
             this._data.metaData[key] = value;
         }
+    };
+    Room.prototype.getMetaData = function (key) {
+        return this._data.metaData[key];
     };
     /**
      * Updating user item.
@@ -34989,7 +34989,7 @@ var Room = (function () {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -35012,7 +35012,7 @@ var Room = (function () {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -35038,7 +35038,7 @@ var Room = (function () {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                users: userIds
+                userIds: userIds
             })
         };
         if (!(userIds instanceof Array) || userIds.length === 0) {
@@ -35074,7 +35074,6 @@ var Room = (function () {
         if (queryParams !== undefined) {
             queryParamsString = util_1.createQueryParams(queryParams);
         }
-        console.log(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString);
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString, {}).then(function (response) { return response.json(); })
             .then(function (json) {
             if (json.hasOwnProperty("errorName")) {
@@ -35108,9 +35107,6 @@ var Room = (function () {
         if (!this._data.roomId || typeof (this._data.roomId) !== "string") {
             throw Error("Unsubscribe message failure. roomId is not setting.");
         }
-        if (this._onMessageReceived === undefined) {
-            throw Error("Unsubscribe message failure. .");
-        }
         this._onMessageReceived = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "unbind")) {
             console.info("Unsubscribe message success roomId[" + this._data.roomId + "]");
@@ -35143,9 +35139,6 @@ var Room = (function () {
     Room.prototype.unsubscribeUserJoin = function () {
         if (!this._data.roomId || typeof (this._data.roomId) !== "string") {
             throw Error("Unsubscribe userJoin failure. roomId is not setting.");
-        }
-        if (this._onUserJoined === undefined) {
-            throw Error("Unsubscribe userJoin failure. .");
         }
         this._onUserJoined = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {
@@ -35195,9 +35188,10 @@ var Room = (function () {
 }());
 exports.default = Room;
 
-},{"./util":194,"isomorphic-fetch":103}],192:[function(require,module,exports){
+},{"./util":195,"isomorphic-fetch":103}],192:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var const_1 = require("./const");
 require("isomorphic-fetch");
 /**
  * User xxxxxxxxxxxx.
@@ -35285,8 +35279,64 @@ var User = (function () {
         enumerable: true,
         configurable: true
     });
-    User.prototype.getMetaData = function (key) {
-        return this._data.metaData[key];
+    User.prototype._setDevice = function (platform, token) {
+        if (!platform || typeof (platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+            })
+        }).then(function (response) { return response.json(); })
+            .then(function (json) {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+            return json;
+        }).catch(function (error) {
+            throw Error(error.message);
+        });
+    };
+    User.prototype._updateDevice = function (platform, token) {
+        if (!platform || typeof (platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                token: token,
+            })
+        }).then(function (response) { return response.json(); })
+            .then(function (json) {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+            return json;
+        }).catch(function (error) {
+            throw Error(error.message);
+        });
+    };
+    User.prototype._removeDevice = function (platform) {
+        if (!platform || typeof (platform) !== "number") {
+            throw Error("Set device failure. platform is not setting.");
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
+            method: "DELETE",
+        }).then(function (response) { return response.json(); })
+            .then(function (json) {
+            if (json.hasOwnProperty("errorName")) {
+                throw Error(JSON.stringify(json));
+            }
+        }).catch(function (error) {
+            throw Error(error.message);
+        });
     };
     User.prototype.setMetaData = function (key, value) {
         if (this._data.metaData === undefined) {
@@ -35296,6 +35346,27 @@ var User = (function () {
         else {
             this._data.metaData[key] = value;
         }
+    };
+    User.prototype.getMetaData = function (key) {
+        return this._data.metaData[key];
+    };
+    User.prototype.setDeviceIos = function (token) {
+        return this._setDevice(const_1.PLATFORM_IOS, token);
+    };
+    User.prototype.setDeviceAndroid = function (token) {
+        return this._setDevice(const_1.PLATFORM_ANDROID, token);
+    };
+    User.prototype.updateDeviceIos = function (token) {
+        return this._updateDevice(const_1.PLATFORM_IOS, token);
+    };
+    User.prototype.updateDeviceAndroid = function (token) {
+        return this._updateDevice(const_1.PLATFORM_ANDROID, token);
+    };
+    User.prototype.removeDeviceIos = function () {
+        return this._removeDevice(const_1.PLATFORM_IOS);
+    };
+    User.prototype.removeDeviceAndroid = function () {
+        return this._removeDevice(const_1.PLATFORM_ANDROID);
     };
     /**
      * Updating user item.
@@ -35393,7 +35464,14 @@ var User = (function () {
 }());
 exports.default = User;
 
-},{"isomorphic-fetch":103}],193:[function(require,module,exports){
+},{"./const":193,"isomorphic-fetch":103}],193:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isBrowser = typeof window !== "undefined";
+exports.PLATFORM_IOS = 1;
+exports.PLATFORM_ANDROID = 2;
+
+},{}],194:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -35404,10 +35482,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 __export(require("./Client"));
 
-},{"./Client":189}],194:[function(require,module,exports){
+},{"./Client":189}],195:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isBrowser = typeof window !== "undefined";
 function createQueryParams(params) {
     return Object.keys(params)
         .map(function (key) { return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]); })
@@ -35415,5 +35492,5 @@ function createQueryParams(params) {
 }
 exports.createQueryParams = createQueryParams;
 
-},{}]},{},[193])(193)
+},{}]},{},[194])(194)
 });
