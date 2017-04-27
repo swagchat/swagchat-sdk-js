@@ -10,14 +10,14 @@ export declare class Client {
     onError: Function;
     onClosed: Function;
     socketClose(): void;
-    createUser(createUserObject: model.IUser): Promise<never>;
-    getUsers(): Promise<never>;
-    getUser(userId: string): Promise<never>;
-    removeUser(userId: string): Promise<never>;
-    createRoom(createRoomObject: model.IRoom): Promise<never>;
-    getRooms(): Promise<never>;
-    getRoom(roomId: string): Promise<never>;
-    removeRoom(roomId: string): Promise<never>;
+    createUser(createUserObject: model.IUser): Promise<Response>;
+    getUsers(): Promise<Response>;
+    getUser(userId: string): Promise<Response>;
+    removeUser(userId: string): Promise<Response>;
+    createRoom(createRoomObject: model.IRoom): Promise<Response>;
+    getRooms(): Promise<Response>;
+    getRoom(roomId: string): Promise<Response>;
+    removeRoom(roomId: string): Promise<Response>;
     createTextMessage(roomId: string, userId: string, text: string): model.IMessage;
     createCustomMessage(roomId: string, userId: string, payload: Object, type: string): model.IMessage;
 }

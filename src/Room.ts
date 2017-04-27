@@ -3,9 +3,6 @@ import { Client } from "./Client";
 import { createQueryParams } from "./util";
 import "isomorphic-fetch";
 
-/**
- * Room xxxxxxxxxxxx.
- */
 export default class Room {
     private _client: Client;
     private _data: model.IRoom;
@@ -13,13 +10,9 @@ export default class Room {
     private _onUserJoined: Function;
     private _onUserLeft: Function;
 
-    /**
-     * constructor xxxxxxxxxxxx.
-     */
     constructor(option: model.IRoomConfig) {
         this._client = option.client;
         this._data = option.roomObj;
-        // Object.preventExtensions(this);
     }
 
     get roomId(): string {
@@ -38,24 +31,31 @@ export default class Room {
         this._data.name = name;
     }
 
-    get pictureUrl(): string | undefined {
+    get pictureUrl(): string {
         return this._data.pictureUrl;
     }
 
-    set pictureUrl(pictureUrl: string | undefined) {
+    set pictureUrl(pictureUrl: string) {
         this._data.pictureUrl = pictureUrl;
     }
 
-    get informationUrl(): string | undefined {
+    get informationUrl(): string {
         return this._data.informationUrl;
     }
 
-    set informationUrl(informationUrl: string | undefined) {
+    set informationUrl(informationUrl: string) {
         this._data.informationUrl = informationUrl;
     }
 
-    get metaData(): Object | undefined {
+    get metaData(): {[key: string]: string | number | boolean | Object} {
         return this._data.metaData;
+    }
+
+    set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
+        if (!metaData || typeof(metaData) !== "object") {
+            throw Error("Set metaData failure. metaData is not setting.");
+        }
+        this._data.metaData = metaData;
     }
 
     get isPublic(): boolean {
@@ -78,7 +78,10 @@ export default class Room {
         return this._data.users;
     }
 
-    public setMetaData(key: string, value: string | number | boolean) {
+    public setMetaData(key: string, value: string | number | boolean | Object) {
+        if (!key || typeof(key) !== "string") {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         if (this._data.metaData === undefined) {
             let metaData = {key: value};
             this._data.metaData = metaData;
@@ -87,17 +90,7 @@ export default class Room {
         }
     }
 
-    public getMetaData(key: string): (string | number | boolean) {
-        return this._data.metaData[key];
-    }
-
-    /**
-     * Updating user item.
-     *
-     * @param userObj xxxxxxx.
-     * @returns yyyyyyyy.
-     */
-    public update(): Promise<never> {
+    public update(): Promise<Response> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
@@ -117,6 +110,9 @@ export default class Room {
     }
 
     public setUsers(userIds: string[]) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("setUsers failure. Parameter invalid.");
+        }
         let fetchParam = {
             method: "POST",
             headers: {
@@ -141,6 +137,9 @@ export default class Room {
     }
 
     public addUsers(userIds: string[]) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("addUsers failure. Parameter invalid.");
+        }
         let fetchParam = {
             method: "PUT",
             headers: {
@@ -153,12 +152,8 @@ export default class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then((json) => {
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => response.json())
+        .then((json) => {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
@@ -168,6 +163,9 @@ export default class Room {
     }
 
     public removeUsers(userIds: string[]) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("removeUsers failure. Parameter invalid.");
+        }
         let fetchParam = {
             method: "DELETE",
             headers: {
@@ -180,12 +178,8 @@ export default class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then((json) => {
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => response.json())
+        .then((json) => {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
@@ -194,7 +188,7 @@ export default class Room {
         });
     }
 
-    public reflesh(): Promise<never> {
+    public reflesh(): Promise<Response> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
         }).then((response: Response) => response.json())
@@ -208,7 +202,7 @@ export default class Room {
         });
     }
 
-    public getMessages(queryParams: {[key: string]: string}): Promise<never> {
+    public getMessages(queryParams: {[key: string]: string}): Promise<Response> {
         let queryParamsString = "";
         if (queryParams !== undefined) {
             queryParamsString = createQueryParams(queryParams);
@@ -322,4 +316,3 @@ export default class Room {
         }
     }
 }
-

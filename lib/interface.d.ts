@@ -12,34 +12,41 @@ export interface IUserConfig {
     client: Client;
     userObj: IUser;
 }
+export interface IDevice {
+    userId: string;
+    platform: number;
+    token: string;
+    notificationDeviceId: string;
+}
 export interface IUser {
     userId: string;
     name: string;
-    pictureUrl?: string;
-    informationUrl?: string;
+    pictureUrl: string;
+    informationUrl: string;
     unreadCount: number;
     metaData: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     created: number;
     modified: number;
     rooms: IRoomForUser[];
+    devices: IDevice[];
     blockedUsers?: string[];
     mutedRooms?: string[];
 }
 export interface IRoomForUser {
     roomId: string;
     name: string;
-    pictureUrl?: string;
-    informationUrl?: string;
+    pictureUrl: string;
+    informationUrl: string;
     metaData: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     created: number;
     modified: number;
     ruUnreadCount: number;
     ruMetaData: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     ruCreated: number;
     ruModified: number;
@@ -50,11 +57,12 @@ export interface IRoomConfig {
 }
 export interface IRoom {
     roomId: string;
+    userId: string;
     name: string;
-    pictureUrl?: string;
-    informationUrl?: string;
+    pictureUrl: string;
+    informationUrl: string;
     metaData: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     isPublic: boolean;
     lastMessage?: string;
@@ -66,16 +74,16 @@ export interface IRoom {
 export interface IUserForRoom {
     userId: string;
     name: string;
-    pictureUrl?: string;
-    informationUrl?: string;
+    pictureUrl: string;
+    informationUrl: string;
     metaData?: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     created: number;
     modified: number;
     ruUnreadCount: number;
     ruMetaData?: {
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | Object;
     };
     ruCreated: number;
     ruModified: number;

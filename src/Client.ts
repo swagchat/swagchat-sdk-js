@@ -38,7 +38,7 @@ export class Client {
         this.connection.close();
     }
 
-    public createUser(createUserObject: model.IUser): Promise<never> {
+    public createUser(createUserObject: model.IUser): Promise<Response> {
         const self = this;
         return fetch(this.apiEndpoint + "/users", {
             method: "POST",
@@ -62,7 +62,7 @@ export class Client {
         });
     }
 
-    public getUsers(): Promise<never> {
+    public getUsers(): Promise<Response> {
         return fetch(this.apiEndpoint + "/users", {
         }).then((response: Response) => response.json())
         .then((json) => {
@@ -75,7 +75,7 @@ export class Client {
         });
     }
 
-    public getUser(userId: string): Promise<never> {
+    public getUser(userId: string): Promise<Response> {
         if (!userId || typeof(userId) !== "string") {
             throw Error("Get user failure. Parameter invalid.");
         }
@@ -95,7 +95,10 @@ export class Client {
         });
     }
 
-    public removeUser(userId: string): Promise<never> {
+    public removeUser(userId: string): Promise<Response> {
+        if (!userId || typeof(userId) !== "string") {
+            throw Error("Remove user failure. Parameter invalid.");
+        }
         return fetch(this.apiEndpoint + "/users/" + userId, {
             method: "DELETE",
             headers: {
@@ -115,7 +118,7 @@ export class Client {
         });
     }
 
-    public createRoom(createRoomObject: model.IRoom): Promise<never> {
+    public createRoom(createRoomObject: model.IRoom): Promise<Response> {
         const self = this;
         return fetch(this.apiEndpoint + "/rooms", {
             method: "POST",
@@ -130,10 +133,6 @@ export class Client {
             }
             return json;
         }).then((json) => {
-            console.log("---------------------");
-
-            console.log(json);
-
             return new Room({
                 client: self,
                 roomObj: <model.IRoom>json
@@ -143,7 +142,7 @@ export class Client {
         });
     }
 
-    public getRooms(): Promise<never> {
+    public getRooms(): Promise<Response> {
         return fetch(this.apiEndpoint + "/rooms", {
         }).then((response: Response) => response.json())
         .then((json) => {
@@ -156,7 +155,7 @@ export class Client {
         });
     }
 
-    public getRoom(roomId: string): Promise<never> {
+    public getRoom(roomId: string): Promise<Response> {
         if (!roomId || typeof(roomId) !== "string") {
             throw Error("Get room failure. Parameter invalid.");
         }
@@ -176,7 +175,10 @@ export class Client {
         });
     }
 
-    public removeRoom(roomId: string): Promise<never> {
+    public removeRoom(roomId: string): Promise<Response> {
+        if (!roomId || typeof(roomId) !== "string") {
+            throw Error("Remove room failure. Parameter invalid.");
+        }
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
             method: "DELETE",
             headers: {
@@ -198,7 +200,7 @@ export class Client {
 
     public createTextMessage(roomId: string, userId: string, text: string): model.IMessage {
         if (!roomId || !userId || !text || typeof(roomId) !== "string" || typeof(userId) !== "string" || typeof(text) !== "string") {
-            throw Error("Creating message failure. Parameter invalid.");
+            throw Error("Message creation failed. Parameter invalid.");
         };
         return {
             roomId: roomId,

@@ -34668,6 +34668,9 @@ var Client = (function () {
         });
     };
     Client.prototype.removeUser = function (userId) {
+        if (!userId || typeof (userId) !== "string") {
+            throw Error("Remove user failure. Parameter invalid.");
+        }
         return fetch(this.apiEndpoint + "/users/" + userId, {
             method: "DELETE",
             headers: {
@@ -34701,8 +34704,6 @@ var Client = (function () {
             }
             return json;
         }).then(function (json) {
-            console.log("---------------------");
-            console.log(json);
             return new Room_1.default({
                 client: self,
                 roomObj: json
@@ -34741,6 +34742,9 @@ var Client = (function () {
         });
     };
     Client.prototype.removeRoom = function (roomId) {
+        if (!roomId || typeof (roomId) !== "string") {
+            throw Error("Remove room failure. Parameter invalid.");
+        }
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
             method: "DELETE",
             headers: {
@@ -34761,7 +34765,7 @@ var Client = (function () {
     };
     Client.prototype.createTextMessage = function (roomId, userId, text) {
         if (!roomId || !userId || !text || typeof (roomId) !== "string" || typeof (userId) !== "string" || typeof (text) !== "string") {
-            throw Error("Creating message failure. Parameter invalid.");
+            throw Error("Message creation failed. Parameter invalid.");
         }
         ;
         return {
@@ -34856,17 +34860,10 @@ exports.default = Realtime;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("./util");
 require("isomorphic-fetch");
-/**
- * Room xxxxxxxxxxxx.
- */
 var Room = (function () {
-    /**
-     * constructor xxxxxxxxxxxx.
-     */
     function Room(option) {
         this._client = option.client;
         this._data = option.roomObj;
-        // Object.preventExtensions(this);
     }
     Object.defineProperty(Room.prototype, "roomId", {
         get: function () {
@@ -34912,6 +34909,12 @@ var Room = (function () {
         get: function () {
             return this._data.metaData;
         },
+        set: function (metaData) {
+            if (!metaData || typeof (metaData) !== "object") {
+                throw Error("Set metaData failure. metaData is not setting.");
+            }
+            this._data.metaData = metaData;
+        },
         enumerable: true,
         configurable: true
     });
@@ -34947,6 +34950,9 @@ var Room = (function () {
         configurable: true
     });
     Room.prototype.setMetaData = function (key, value) {
+        if (!key || typeof (key) !== "string") {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         if (this._data.metaData === undefined) {
             var metaData = { key: value };
             this._data.metaData = metaData;
@@ -34955,15 +34961,6 @@ var Room = (function () {
             this._data.metaData[key] = value;
         }
     };
-    Room.prototype.getMetaData = function (key) {
-        return this._data.metaData[key];
-    };
-    /**
-     * Updating user item.
-     *
-     * @param userObj xxxxxxx.
-     * @returns yyyyyyyy.
-     */
     Room.prototype.update = function () {
         var self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
@@ -34983,6 +34980,9 @@ var Room = (function () {
         });
     };
     Room.prototype.setUsers = function (userIds) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("setUsers failure. Parameter invalid.");
+        }
         var fetchParam = {
             method: "POST",
             headers: {
@@ -35006,6 +35006,9 @@ var Room = (function () {
         });
     };
     Room.prototype.addUsers = function (userIds) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("addUsers failure. Parameter invalid.");
+        }
         var fetchParam = {
             method: "PUT",
             headers: {
@@ -35018,12 +35021,8 @@ var Room = (function () {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then(function (response) {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then(function (json) {
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then(function (response) { return response.json(); })
+            .then(function (json) {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
@@ -35032,6 +35031,9 @@ var Room = (function () {
         });
     };
     Room.prototype.removeUsers = function (userIds) {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("removeUsers failure. Parameter invalid.");
+        }
         var fetchParam = {
             method: "DELETE",
             headers: {
@@ -35044,12 +35046,8 @@ var Room = (function () {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then(function (response) {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then(function (json) {
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then(function (response) { return response.json(); })
+            .then(function (json) {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
@@ -35193,13 +35191,7 @@ exports.default = Room;
 Object.defineProperty(exports, "__esModule", { value: true });
 var const_1 = require("./const");
 require("isomorphic-fetch");
-/**
- * User xxxxxxxxxxxx.
- */
 var User = (function () {
-    /**
-     * constructor xxxxxxxxxxxx.
-     */
     function User(option) {
         this._client = option.client;
         this._data = option.userObj;
@@ -35209,6 +35201,9 @@ var User = (function () {
             return this._data.userId;
         },
         set: function (userId) {
+            if (!userId || userId === "" || typeof (userId) !== "string") {
+                throw Error("Set userId failure. userId is not setting.");
+            }
             this._data.userId = userId;
         },
         enumerable: true,
@@ -35219,6 +35214,9 @@ var User = (function () {
             return this._data.name;
         },
         set: function (name) {
+            if (!name || name === "" || typeof (name) !== "string") {
+                throw Error("Set userId failure. userId is not setting.");
+            }
             this._data.name = name;
         },
         enumerable: true,
@@ -35229,6 +35227,9 @@ var User = (function () {
             return this._data.pictureUrl;
         },
         set: function (pictureUrl) {
+            if (!pictureUrl || pictureUrl === "" || typeof (pictureUrl) !== "string") {
+                throw Error("Set userId failure. userId is not setting.");
+            }
             this._data.pictureUrl = pictureUrl;
         },
         enumerable: true,
@@ -35239,6 +35240,9 @@ var User = (function () {
             return this._data.informationUrl;
         },
         set: function (informationUrl) {
+            if (!informationUrl || informationUrl === "" || typeof (informationUrl) !== "string") {
+                throw Error("Set userId failure. userId is not setting.");
+            }
             this._data.informationUrl = informationUrl;
         },
         enumerable: true,
@@ -35254,6 +35258,12 @@ var User = (function () {
     Object.defineProperty(User.prototype, "metaData", {
         get: function () {
             return this._data.metaData;
+        },
+        set: function (metaData) {
+            if (!metaData || typeof (metaData) !== "object") {
+                throw Error("Set metaData failure. metaData is not setting.");
+            }
+            this._data.metaData = metaData;
         },
         enumerable: true,
         configurable: true
@@ -35279,12 +35289,29 @@ var User = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(User.prototype, "devices", {
+        get: function () {
+            return this._data.devices;
+        },
+        enumerable: true,
+        configurable: true
+    });
     User.prototype._setDevice = function (platform, token) {
+        var _this = this;
         if (!platform || typeof (platform) !== "number") {
             throw Error("Set device failure. platform is not setting.");
         }
+        var method = "POST";
+        if (this._data.devices) {
+            for (var _i = 0, _a = this._data.devices; _i < _a.length; _i++) {
+                var device = _a[_i];
+                if (device.platform === platform) {
+                    method = "PUT";
+                }
+            }
+        }
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
-            method: "POST",
+            method: method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -35296,49 +35323,38 @@ var User = (function () {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
-            return json;
-        }).catch(function (error) {
-            throw Error(error.message);
-        });
-    };
-    User.prototype._updateDevice = function (platform, token) {
-        if (!platform || typeof (platform) !== "number") {
-            throw Error("Set device failure. platform is not setting.");
-        }
-        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                token: token,
-            })
-        }).then(function (response) { return response.json(); })
-            .then(function (json) {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
-            }
+            _this.reflesh();
             return json;
         }).catch(function (error) {
             throw Error(error.message);
         });
     };
     User.prototype._removeDevice = function (platform) {
+        var _this = this;
         if (!platform || typeof (platform) !== "number") {
             throw Error("Set device failure. platform is not setting.");
         }
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
             method: "DELETE",
-        }).then(function (response) { return response.json(); })
-            .then(function (json) {
+        }).then(function (response) {
+            if (response.status !== 204) {
+                return response.json();
+            }
+            return {};
+        }).then(function (json) {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
+            _this.reflesh();
+            return json;
         }).catch(function (error) {
             throw Error(error.message);
         });
     };
     User.prototype.setMetaData = function (key, value) {
+        if (!key || typeof (key) !== "string") {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         if (this._data.metaData === undefined) {
             var metaData = { key: value };
             this._data.metaData = metaData;
@@ -35347,20 +35363,11 @@ var User = (function () {
             this._data.metaData[key] = value;
         }
     };
-    User.prototype.getMetaData = function (key) {
-        return this._data.metaData[key];
-    };
     User.prototype.setDeviceIos = function (token) {
         return this._setDevice(const_1.PLATFORM_IOS, token);
     };
     User.prototype.setDeviceAndroid = function (token) {
         return this._setDevice(const_1.PLATFORM_ANDROID, token);
-    };
-    User.prototype.updateDeviceIos = function (token) {
-        return this._updateDevice(const_1.PLATFORM_IOS, token);
-    };
-    User.prototype.updateDeviceAndroid = function (token) {
-        return this._updateDevice(const_1.PLATFORM_ANDROID, token);
     };
     User.prototype.removeDeviceIos = function () {
         return this._removeDevice(const_1.PLATFORM_IOS);
@@ -35368,12 +35375,6 @@ var User = (function () {
     User.prototype.removeDeviceAndroid = function () {
         return this._removeDevice(const_1.PLATFORM_ANDROID);
     };
-    /**
-     * Updating user item.
-     *
-     * @param userObj xxxxxxx.
-     * @returns yyyyyyyy.
-     */
     User.prototype.update = function () {
         var self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
@@ -35409,6 +35410,9 @@ var User = (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             messages[_i] = arguments[_i];
         }
+        if (!messages || !Array.isArray(messages)) {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         return fetch(this._client.apiEndpoint + "/messages", {
             method: "POST",
             headers: {
@@ -35427,6 +35431,9 @@ var User = (function () {
         });
     };
     User.prototype.markAsRead = function (roomId) {
+        if (!roomId || typeof (roomId) !== "string") {
+            throw Error("markAsRead failure. Parameter invalid.");
+        }
         return fetch(this._client.apiEndpoint + "/rooms/" + roomId + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {

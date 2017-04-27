@@ -3,16 +3,10 @@ import { PLATFORM_IOS, PLATFORM_ANDROID } from "./const";
 import { Client } from "./Client";
 import "isomorphic-fetch";
 
-/**
- * User xxxxxxxxxxxx.
- */
 export default class User {
     readonly _client: Client;
     private _data: model.IUser;
 
-    /**
-     * constructor xxxxxxxxxxxx.
-     */
     constructor(option: model.IUserConfig) {
         this._client = option.client;
         this._data = option.userObj;
@@ -23,6 +17,9 @@ export default class User {
     }
 
     set userId(userId: string) {
+        if (!userId || userId === "" || typeof(userId) !== "string") {
+            throw Error("Set userId failure. userId is not setting.");
+        }
         this._data.userId = userId;
     }
 
@@ -31,22 +28,31 @@ export default class User {
     }
 
     set name(name: string) {
+        if (!name || name === "" || typeof(name) !== "string") {
+            throw Error("Set userId failure. userId is not setting.");
+        }
         this._data.name = name;
     }
 
-    get pictureUrl(): string | undefined {
+    get pictureUrl(): string {
         return this._data.pictureUrl;
     }
 
-    set pictureUrl(pictureUrl: string | undefined) {
+    set pictureUrl(pictureUrl: string) {
+        if (!pictureUrl || pictureUrl === "" || typeof(pictureUrl) !== "string") {
+            throw Error("Set userId failure. userId is not setting.");
+        }
         this._data.pictureUrl = pictureUrl;
     }
 
-    get informationUrl(): string | undefined {
+    get informationUrl(): string {
         return this._data.informationUrl;
     }
 
-    set informationUrl(informationUrl: string | undefined) {
+    set informationUrl(informationUrl: string) {
+        if (!informationUrl || informationUrl === "" || typeof(informationUrl) !== "string") {
+            throw Error("Set userId failure. userId is not setting.");
+        }
         this._data.informationUrl = informationUrl;
     }
 
@@ -54,8 +60,15 @@ export default class User {
         return this._data.unreadCount;
     }
 
-    get metaData(): Object {
+    get metaData(): {[key: string]: string | number | boolean | Object} {
         return this._data.metaData;
+    }
+
+    set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
+        if (!metaData || typeof(metaData) !== "object") {
+            throw Error("Set metaData failure. metaData is not setting.");
+        }
+        this._data.metaData = metaData;
     }
 
     get created(): number {
@@ -70,12 +83,24 @@ export default class User {
         return this._data.rooms;
     }
 
-    private _setDevice(platform: number, token: string): Promise<never> {
+    get devices(): model.IDevice[] {
+        return this._data.devices;
+    }
+
+    private _setDevice(platform: number, token: string): Promise<Response> {
         if (!platform || typeof(platform) !== "number") {
             throw Error("Set device failure. platform is not setting.");
         }
+        let method = "POST";
+        if (this._data.devices) {
+            for (let device of this._data.devices) {
+                if (device.platform === platform) {
+                    method = "PUT";
+                }
+            }
+        }
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
-            method: "POST",
+            method: method,
             headers: {
                 "Content-Type": "application/json"
             },
@@ -87,52 +112,39 @@ export default class User {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
+            this.reflesh();
             return json;
         }).catch((error) => {
             throw Error(error.message);
         });
     }
 
-    private _updateDevice(platform: number, token: string): Promise<never> {
-        if (!platform || typeof(platform) !== "number") {
-            throw Error("Set device failure. platform is not setting.");
-        }
-        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                token: token,
-            })
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
-            }
-            return json;
-        }).catch((error) => {
-            throw Error(error.message);
-        });
-    }
-
-    private _removeDevice(platform: number): Promise<never> {
+    private _removeDevice(platform: number): Promise<Response> {
         if (!platform || typeof(platform) !== "number") {
             throw Error("Set device failure. platform is not setting.");
         }
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
             method: "DELETE",
-        }).then((response: Response) => response.json())
-        .then((json) => {
+        }).then((response: Response) => {
+            if (response.status !== 204) {
+                return response.json();
+            }
+            return {};
+        }).then((json) => {
             if (json.hasOwnProperty("errorName")) {
                 throw Error(JSON.stringify(json));
             }
+            this.reflesh();
+            return json;
         }).catch((error) => {
             throw Error(error.message);
         });
     }
 
-    public setMetaData(key: string, value: string | number | boolean) {
+    public setMetaData(key: string, value: string | number | boolean | Object) {
+        if (!key || typeof(key) !== "string") {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         if (this._data.metaData === undefined) {
             let metaData = {key: value};
             this._data.metaData = metaData;
@@ -141,40 +153,23 @@ export default class User {
         }
     }
 
-    public getMetaData(key: string): (string | number | boolean) {
-        return this._data.metaData[key];
-    }
-
-    public setDeviceIos(token: string): Promise<never> {
+    public setDeviceIos(token: string): Promise<Response> {
         return this._setDevice(PLATFORM_IOS, token);
     }
 
-    public setDeviceAndroid(token: string): Promise<never> {
+    public setDeviceAndroid(token: string): Promise<Response> {
         return this._setDevice(PLATFORM_ANDROID, token);
     }
 
-    public updateDeviceIos(token: string): Promise<never> {
-        return this._updateDevice(PLATFORM_IOS, token);
-    }
-
-    public updateDeviceAndroid(token: string): Promise<never> {
-        return this._updateDevice(PLATFORM_ANDROID, token);
-    }
-
-    public removeDeviceIos(): Promise<never> {
+    public removeDeviceIos(): Promise<Response> {
         return this._removeDevice(PLATFORM_IOS);
     }
 
-    public removeDeviceAndroid(): Promise<never> {
+    public removeDeviceAndroid(): Promise<Response> {
         return this._removeDevice(PLATFORM_ANDROID);
     }
-    /**
-     * Updating user item.
-     *
-     * @param userObj xxxxxxx.
-     * @returns yyyyyyyy.
-     */
-    public update(): Promise<never> {
+
+    public update(): Promise<Response> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
@@ -193,7 +188,7 @@ export default class User {
         });
     }
 
-    public reflesh(): Promise<never> {
+    public reflesh(): Promise<Response> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
         }).then((response: Response) => response.json())
@@ -207,7 +202,10 @@ export default class User {
         });
     }
 
-    public sendMessages(...messages: model.IMessage[]) {
+    public sendMessages(...messages: model.IMessage[]): Promise<Response> {
+        if (!messages || !Array.isArray(messages)) {
+            throw Error("set metaData failure. Parameter invalid.");
+        }
         return fetch(this._client.apiEndpoint + "/messages", {
             method: "POST",
             headers: {
@@ -226,7 +224,10 @@ export default class User {
         });
     }
 
-    public markAsRead(roomId: string): Promise<never> {
+    public markAsRead(roomId: string): Promise<Response> {
+        if (!roomId || typeof(roomId) !== "string") {
+            throw Error("markAsRead failure. Parameter invalid.");
+        }
         return fetch(this._client.apiEndpoint + "/rooms/" + roomId + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
@@ -244,7 +245,7 @@ export default class User {
         });
     }
 
-    public markAllAsRead(): Promise<never> {
+    public markAllAsRead(): Promise<Response> {
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
@@ -262,4 +263,3 @@ export default class User {
         });
     }
 }
-
