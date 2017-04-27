@@ -19,8 +19,12 @@ export default class Room {
         return this._data.roomId;
     }
 
-    set roomId(roomId: string) {
-        this._data.roomId = roomId;
+    get userId(): string {
+        return this._data.userId;
+    }
+
+    set userId(userId: string) {
+        this._data.roomId = userId;
     }
 
     get name(): string {

@@ -7,7 +7,8 @@ export default class Room {
     private _onUserJoined;
     private _onUserLeft;
     constructor(option: model.IRoomConfig);
-    roomId: string;
+    readonly roomId: string;
+    userId: string;
     name: string;
     pictureUrl: string;
     informationUrl: string;

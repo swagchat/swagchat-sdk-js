@@ -34869,8 +34869,15 @@ var Room = (function () {
         get: function () {
             return this._data.roomId;
         },
-        set: function (roomId) {
-            this._data.roomId = roomId;
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Room.prototype, "userId", {
+        get: function () {
+            return this._data.userId;
+        },
+        set: function (userId) {
+            this._data.roomId = userId;
         },
         enumerable: true,
         configurable: true
