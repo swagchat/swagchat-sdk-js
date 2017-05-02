@@ -96,12 +96,19 @@ export default class Room {
 
     public update(): Promise<Response> {
         const self = this;
+        const putRoom = {
+            name: this._data.name,
+            pictureUrl: this._data.pictureUrl,
+            informationUrl: this._data.informationUrl,
+            metaData: this._data.metaData,
+            isPublic: this._data.isPublic
+        };
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this._data)
+            body: JSON.stringify(putRoom)
         }).then((response: Response) => response.json())
         .then((json) => {
             if (json.hasOwnProperty("errorName")) {

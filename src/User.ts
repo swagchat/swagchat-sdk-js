@@ -171,12 +171,19 @@ export default class User {
 
     public update(): Promise<Response> {
         const self = this;
+        const putUser = {
+            name: this._data.name,
+            pictureUrl: this._data.pictureUrl,
+            informationUrl: this._data.informationUrl,
+            unreadCount: this._data.unreadCount,
+            metaData: this._data.metaData
+        };
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this._data)
+            body: JSON.stringify(putUser)
         }).then((response: Response) => response.json())
         .then((json) => {
             if (json.hasOwnProperty("errorName")) {
