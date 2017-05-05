@@ -3,6 +3,14 @@ import { PLATFORM_IOS, PLATFORM_ANDROID } from "./const";
 import { Client } from "./Client";
 import "isomorphic-fetch";
 
+/**
+ * User class has API client, own data and the behaivor for itself.
+ * Please use accessor to get or set although data is stored in variable <code>_data</code>.
+ *
+ * ex)<br /><code>
+ * user.name = "John";<br />
+ * console.log(user.name);</code>
+ */
 export default class User {
     readonly _client: Client;
     private _data: model.IUser;
@@ -141,6 +149,16 @@ export default class User {
         });
     }
 
+    /**
+     * Register metadata in separate.
+     * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
+     * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
+     *
+     * ex)<br />
+     * <code>user.metaData = {"key1": "value1", "key2": 2, "key3": true, "key4": {"key5": "value5"}};</code>
+     * @param key Key for register.
+     * @param value A value for key.
+     */
     public setMetaData(key: string, value: string | number | boolean | Object) {
         if (!key || typeof(key) !== "string") {
             throw Error("set metaData failure. Parameter invalid.");
@@ -153,22 +171,42 @@ export default class User {
         }
     }
 
+    /**
+     * Register a new iOS device token.
+     *
+     * @param token device token for iOS.
+     */
     public setDeviceIos(token: string): Promise<Response> {
         return this._setDevice(PLATFORM_IOS, token);
     }
 
+    /**
+     * Register a new Android device token.
+     *
+     * @param token device token for Android.
+     */
     public setDeviceAndroid(token: string): Promise<Response> {
         return this._setDevice(PLATFORM_ANDROID, token);
     }
 
+    /**
+     * Delete device token for iOS.
+     */
     public removeDeviceIos(): Promise<Response> {
         return this._removeDevice(PLATFORM_IOS);
     }
 
+    /**
+     * Delete device token for Android.
+     */
     public removeDeviceAndroid(): Promise<Response> {
         return this._removeDevice(PLATFORM_ANDROID);
     }
 
+    /**
+     * Update user information.
+     * Please set the data of this object beforehand.
+     */
     public update(): Promise<Response> {
         const self = this;
         const putUser = {
@@ -195,6 +233,10 @@ export default class User {
         });
     }
 
+    /**
+     * Refresh user information to the latest.
+     * A different client might update an existing user's information while you use the application continuously.
+     */
     public reflesh(): Promise<Response> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
@@ -209,6 +251,11 @@ export default class User {
         });
     }
 
+    /**
+     * Send Message.
+     * Please create message objects beforehand by using such as client.createTextMessage().
+     * @param messages An array for message objects to send.
+     */
     public sendMessages(...messages: model.IMessage[]): Promise<Response> {
         if (!messages || !Array.isArray(messages)) {
             throw Error("set metaData failure. Parameter invalid.");
@@ -231,6 +278,10 @@ export default class User {
         });
     }
 
+    /**
+     * Reset the number of unread for room specified by parameters.
+     * @param roomId Room ID
+     */
     public markAsRead(roomId: string): Promise<Response> {
         if (!roomId || typeof(roomId) !== "string") {
             throw Error("markAsRead failure. Parameter invalid.");
@@ -252,6 +303,9 @@ export default class User {
         });
     }
 
+    /**
+     * Reset the number of unread for each room for the user.
+     */
     public markAllAsRead(): Promise<Response> {
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",

@@ -34860,6 +34860,14 @@ exports.default = Realtime;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("./util");
 require("isomorphic-fetch");
+/**
+ * Room class has API client, own data and the behaivor for itself.
+ * Please use accessor to get or set although data is stored in variable <code>_data</code>.
+ *
+ * ex)<br /><code>
+ * room.name = "John's Room";<br />
+ * console.log(room.name);</code>
+ */
 var Room = (function () {
     function Room(option) {
         this._client = option.client;
@@ -34956,6 +34964,16 @@ var Room = (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * Register metadata in separate.
+     * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
+     * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
+     *
+     * ex)<br />
+     * <code>room.metaData = {"key1": "value1", "key2": 2, "key3": true, "key4": {"key5": "value5"}};</code>
+     * @param key Key for register.
+     * @param value A value for key.
+     */
     Room.prototype.setMetaData = function (key, value) {
         if (!key || typeof (key) !== "string") {
             throw Error("set metaData failure. Parameter invalid.");
@@ -34968,14 +34986,25 @@ var Room = (function () {
             this._data.metaData[key] = value;
         }
     };
+    /**
+     * Update room information.
+     * Please set the data of this object beforehand.
+     */
     Room.prototype.update = function () {
         var self = this;
+        var putRoom = {
+            name: this._data.name,
+            pictureUrl: this._data.pictureUrl,
+            informationUrl: this._data.informationUrl,
+            metaData: this._data.metaData,
+            isPublic: this._data.isPublic
+        };
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this._data)
+            body: JSON.stringify(putRoom)
         }).then(function (response) { return response.json(); })
             .then(function (json) {
             if (json.hasOwnProperty("errorName")) {
@@ -35198,6 +35227,14 @@ exports.default = Room;
 Object.defineProperty(exports, "__esModule", { value: true });
 var const_1 = require("./const");
 require("isomorphic-fetch");
+/**
+ * User class has API client, own data and the behaivor for itself.
+ * Please use accessor to get or set although data is stored in variable <code>_data</code>.
+ *
+ * ex)<br /><code>
+ * user.name = "John";<br />
+ * console.log(user.name);</code>
+ */
 var User = (function () {
     function User(option) {
         this._client = option.client;
@@ -35358,6 +35395,16 @@ var User = (function () {
             throw Error(error.message);
         });
     };
+    /**
+     * Register metadata in separate.
+     * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
+     * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
+     *
+     * ex)<br />
+     * <code>user.metaData = {"key1": "value1", "key2": 2, "key3": true, "key4": {"key5": "value5"}};</code>
+     * @param key Key for register.
+     * @param value A value for key.
+     */
     User.prototype.setMetaData = function (key, value) {
         if (!key || typeof (key) !== "string") {
             throw Error("set metaData failure. Parameter invalid.");
@@ -35370,26 +35417,53 @@ var User = (function () {
             this._data.metaData[key] = value;
         }
     };
+    /**
+     * Register a new iOS device token.
+     *
+     * @param token device token for iOS.
+     */
     User.prototype.setDeviceIos = function (token) {
         return this._setDevice(const_1.PLATFORM_IOS, token);
     };
+    /**
+     * Register a new Android device token.
+     *
+     * @param token device token for Android.
+     */
     User.prototype.setDeviceAndroid = function (token) {
         return this._setDevice(const_1.PLATFORM_ANDROID, token);
     };
+    /**
+     * Delete device token for iOS.
+     */
     User.prototype.removeDeviceIos = function () {
         return this._removeDevice(const_1.PLATFORM_IOS);
     };
+    /**
+     * Delete device token for Android.
+     */
     User.prototype.removeDeviceAndroid = function () {
         return this._removeDevice(const_1.PLATFORM_ANDROID);
     };
+    /**
+     * Update user information.
+     * Please set the data of this object beforehand.
+     */
     User.prototype.update = function () {
         var self = this;
+        var putUser = {
+            name: this._data.name,
+            pictureUrl: this._data.pictureUrl,
+            informationUrl: this._data.informationUrl,
+            unreadCount: this._data.unreadCount,
+            metaData: this._data.metaData
+        };
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this._data)
+            body: JSON.stringify(putUser)
         }).then(function (response) { return response.json(); })
             .then(function (json) {
             if (json.hasOwnProperty("errorName")) {
@@ -35400,6 +35474,10 @@ var User = (function () {
             throw Error(error.message);
         });
     };
+    /**
+     * Refresh user information to the latest.
+     * A different client might update an existing user's information while you use the application continuously.
+     */
     User.prototype.reflesh = function () {
         var self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {}).then(function (response) { return response.json(); })
@@ -35412,6 +35490,11 @@ var User = (function () {
             throw Error(error.message);
         });
     };
+    /**
+     * Send Message.
+     * Please create message objects beforehand by using such as client.createTextMessage().
+     * @param messages An array for message objects to send.
+     */
     User.prototype.sendMessages = function () {
         var messages = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -35437,6 +35520,10 @@ var User = (function () {
             throw Error(error.message);
         });
     };
+    /**
+     * Reset the number of unread for room specified by parameters.
+     * @param roomId Room ID
+     */
     User.prototype.markAsRead = function (roomId) {
         if (!roomId || typeof (roomId) !== "string") {
             throw Error("markAsRead failure. Parameter invalid.");
@@ -35457,6 +35544,9 @@ var User = (function () {
             throw Error(error.message);
         });
     };
+    /**
+     * Reset the number of unread for each room for the user.
+     */
     User.prototype.markAllAsRead = function () {
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
