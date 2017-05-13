@@ -18,11 +18,13 @@ export default class User {
     pictureUrl: string;
     informationUrl: string;
     readonly unreadCount: number;
+    isPublic: boolean;
+    readonly accessToken: string;
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    readonly created: number;
-    readonly modified: number;
+    readonly created: string;
+    readonly modified: string;
     readonly rooms: model.IRoomForUser[];
     readonly devices: model.IDevice[];
     private _setDevice(platform, token);

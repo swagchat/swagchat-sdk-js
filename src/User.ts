@@ -68,6 +68,18 @@ export default class User {
         return this._data.unreadCount;
     }
 
+    get isPublic(): boolean {
+        return this._data.isPublic;
+    }
+
+    set isPublic(isPublic: boolean) {
+        this._data.isPublic = isPublic;
+    }
+
+    get accessToken(): string {
+        return this._data.accessToken;
+    }
+
     get metaData(): {[key: string]: string | number | boolean | Object} {
         return this._data.metaData;
     }
@@ -79,11 +91,11 @@ export default class User {
         this._data.metaData = metaData;
     }
 
-    get created(): number {
+    get created(): string {
         return this._data.created;
     }
 
-    get modified(): number {
+    get modified(): string {
         return this._data.modified;
     }
 

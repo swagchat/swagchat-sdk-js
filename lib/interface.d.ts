@@ -27,8 +27,10 @@ export interface IUser {
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    created: number;
-    modified: number;
+    isPublic: boolean;
+    accessToken: string;
+    created: string;
+    modified: string;
     rooms: IRoomForUser[];
     devices: IDevice[];
     blockedUsers?: string[];
@@ -36,20 +38,24 @@ export interface IUser {
 }
 export interface IRoomForUser {
     roomId: string;
+    userId: string;
     name: string;
     pictureUrl: string;
     informationUrl: string;
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    created: number;
-    modified: number;
+    isPublic: boolean;
+    lastMessage: string;
+    lastMessageUpdated: string;
+    created: string;
+    modified: string;
     ruUnreadCount: number;
     ruMetaData: {
         [key: string]: string | number | boolean | Object;
     };
-    ruCreated: number;
-    ruModified: number;
+    ruCreated: string;
+    ruModified: string;
 }
 export interface IRoomConfig {
     client: Client;
@@ -67,8 +73,8 @@ export interface IRoom {
     isPublic: boolean;
     lastMessage?: string;
     lastMessageUpdated?: number;
-    created: number;
-    modified: number;
+    created: string;
+    modified: string;
     users: IUserForRoom[];
 }
 export interface IUserForRoom {
@@ -79,14 +85,14 @@ export interface IUserForRoom {
     metaData?: {
         [key: string]: string | number | boolean | Object;
     };
-    created: number;
-    modified: number;
+    created: string;
+    modified: string;
     ruUnreadCount: number;
     ruMetaData?: {
         [key: string]: string | number | boolean | Object;
     };
-    ruCreated: number;
-    ruModified: number;
+    ruCreated: string;
+    ruModified: string;
 }
 export interface IMessage {
     roomId: string;

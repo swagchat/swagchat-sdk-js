@@ -24,8 +24,8 @@ export default class Room {
         [key: string]: string | number | boolean | Object;
     };
     isPublic: boolean;
-    readonly created: number;
-    readonly modified: number;
+    readonly created: string;
+    readonly modified: string;
     readonly users: model.IUserForRoom[];
     /**
      * Register metadata in separate.

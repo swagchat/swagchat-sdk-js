@@ -78,11 +78,11 @@ export default class Room {
         this._data.isPublic = isPublic;
     }
 
-    get created(): number {
+    get created(): string {
         return this._data.created;
     }
 
-    get modified(): number {
+    get modified(): string {
         return this._data.modified;
     }
 
