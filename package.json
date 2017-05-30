@@ -10,8 +10,9 @@
     "typescript"
   ],
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build-node": "tsc --pretty --watch",
+    "build-lib": "tsc --pretty --watch",
     "build-browser": "watchify src/index.ts -s Swagchat -p [tsify] --verbose -o dist/bundle-browser.js",
     "build-doc": "typedoc --out ./doc/ ./src/"
   },
