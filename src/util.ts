@@ -1,5 +1,5 @@
-export function createQueryParams(params: {[key: string]: string}) {
+export function createQueryParams(params: {[key: string]: string | number}) {
     return Object.keys(params)
-        .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(params[key]))
+        .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(String(params[key])))
         .join("&");
 }
