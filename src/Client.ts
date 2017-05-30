@@ -55,7 +55,7 @@ export class Client {
         }).then((json) => {
             return new User({
                 client: self,
-                userObj: <model.IUser>json
+                data: <model.IUser>json
             });
         }).catch((error) => {
             throw Error(error.message);
@@ -88,7 +88,7 @@ export class Client {
             }
             return new User({
                 client: self,
-                userObj: <model.IUser>json
+                data: <model.IUser>json
             });
         }).catch((error) => {
             throw Error(error.message);
@@ -135,7 +135,7 @@ export class Client {
         }).then((json) => {
             return new Room({
                 client: self,
-                roomObj: <model.IRoom>json
+                data: <model.IRoom>json
             });
         }).catch((error) => {
             throw Error(error.message);
@@ -168,7 +168,7 @@ export class Client {
             }
             return new Room({
                 client: self,
-                roomObj: <model.IRoom>json
+                data: <model.IRoom>json
             });
         }).catch((error) => {
             throw Error(error.message);

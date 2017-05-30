@@ -12,7 +12,7 @@ export interface IRealtimeConfig {
 
 export interface IUserConfig {
   client: Client;
-  userObj: IUser;
+  data: IUser;
 }
 
 export interface IDevice {
@@ -59,7 +59,7 @@ export interface IRoomForUser {
 
 export interface IRoomConfig {
   client: Client;
-  roomObj: IRoom;
+  data: IRoom;
 }
 
 export interface IRoom {
@@ -91,12 +91,19 @@ export interface IUserForRoom {
   ruModified: string;
 }
 
+export interface IMessages {
+  allCount: number;
+  messages: IMessage[];
+}
+
 export interface IMessage {
+  messageId?: string;
   roomId: string;
   userId: string;
   type: string;
   eventName: string;
   payload: Object;
+  created?: string;
 }
 
 export interface ICloseEvent extends Event {

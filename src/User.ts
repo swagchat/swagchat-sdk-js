@@ -17,7 +17,7 @@ export default class User {
 
     constructor(option: model.IUserConfig) {
         this._client = option.client;
-        this._data = option.userObj;
+        this._data = option.data;
     }
 
     get userId(): string {

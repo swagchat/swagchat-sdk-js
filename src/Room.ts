@@ -20,7 +20,7 @@ export default class Room {
 
     constructor(option: model.IRoomConfig) {
         this._client = option.client;
-        this._data = option.roomObj;
+        this._data = option.data;
     }
 
     get roomId(): string {
