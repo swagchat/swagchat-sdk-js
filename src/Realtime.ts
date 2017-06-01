@@ -1,5 +1,6 @@
 import { isBrowser } from "./const";
-import * as model from "./interface";
+import * as I from "./interface";
+import { realtimeLogColor } from "./const";
 
 export default class Realtime {
     readonly conn: WebSocket;
@@ -12,7 +13,7 @@ export default class Realtime {
     public onUserLeft: Function;
 
     constructor(endpoint: string) {
-        console.info("Connection Swagchat Realtime Server...");
+        console.info("%cConnection Swagchat Realtime Server...", "color:" + realtimeLogColor);
 
         let websocket = isBrowser ? WebSocket : require("ws");
         this.conn = new websocket(endpoint);
@@ -22,11 +23,11 @@ export default class Realtime {
         this.conn.addEventListener("error", (e: Event) => {
             this.onError(<WebSocket>e.target);
         });
-        this.conn.addEventListener("close", (e: model.ICloseEvent) => {
+        this.conn.addEventListener("close", (e: I.ICloseEvent) => {
             this.onClosed(e.code, e.reason);
         });
-        this.conn.addEventListener("message", (e: model.IMessageEvent) => {
-            let message = <model.IMessage>JSON.parse(<string>e.data);
+        this.conn.addEventListener("message", (e: I.IMessageEvent) => {
+            let message = <I.IMessage>JSON.parse(<string>e.data);
             switch (message.eventName) {
             case "message":
                 this.onMessageReceived(message);

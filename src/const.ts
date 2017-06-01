@@ -1,3 +1,3 @@
 export const isBrowser = typeof window !== "undefined";
-export const PLATFORM_IOS = 1;
-export const PLATFORM_ANDROID = 2;
+export const apiLogColor = "#03A9F4";
+export const realtimeLogColor = "#009688";

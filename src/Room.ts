@@ -1,4 +1,4 @@
-import * as model from "./interface";
+import * as I from "./interface";
 import { Client } from "./Client";
 import { createQueryParams } from "./util";
 import "isomorphic-fetch";
@@ -11,16 +11,16 @@ import "isomorphic-fetch";
  * room.name = "John's Room";<br />
  * console.log(room.name);</code>
  */
-export default class Room {
+export class Room {
     private _client: Client;
-    private _data: model.IRoom;
+    private _data: I.IRoom;
     private _onMessageReceived: Function;
     private _onUserJoined: Function;
     private _onUserLeft: Function;
 
-    constructor(option: model.IRoomConfig) {
-        this._client = option.client;
-        this._data = option.data;
+    constructor(params: I.IRoomParams) {
+        this._client = params.client;
+        this._data = params.data;
     }
 
     get roomId(): string {
@@ -82,12 +82,24 @@ export default class Room {
         return this._data.created;
     }
 
+    get lastMessage(): string {
+        return this._data.lastMessage;
+    }
+
+    get lastMessageUpdated(): string {
+        return this._data.lastMessageUpdated;
+    }
+
+    get messageCount(): number {
+        return this._data.messageCount;
+    }
+
     get modified(): string {
         return this._data.modified;
     }
 
-    get users(): model.IUserForRoom[] {
-        return this._data.users;
+    get users(): I.IUserForRoom[] | null {
+        return this._data.users || null;
     }
 
     /**
@@ -100,7 +112,7 @@ export default class Room {
      * @param key Key for register.
      * @param value A value for key.
      */
-    public setMetaData(key: string, value: string | number | boolean | Object) {
+    public setMetaData(key: string, value: string | number | boolean | Object): void {
         if (!key || typeof(key) !== "string") {
             throw Error("set metaData failure. Parameter invalid.");
         }
@@ -116,7 +128,7 @@ export default class Room {
      * Update room information.
      * Please set the data of this object beforehand.
      */
-    public update(): Promise<Response> {
+    public update(): Promise<I.IFetchRoomResponse> {
         const self = this;
         const putRoom = {
             name: this._data.name,
@@ -128,21 +140,42 @@ export default class Room {
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._client.userAccessToken,
             },
             body: JSON.stringify(putRoom)
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((room) => {
+                    self._data = <I.IRoom>room;
+                    return (
+                        {
+                            room: self,
+                            error: null,
+                        } as I.IFetchRoomResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            room: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomResponse
+                    );
+                });
             }
-            self._data = <model.IRoom>json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                room: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomResponse;
         });
     }
 
-    public setUsers(userIds: string[]) {
+    public setUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
         if (!userIds || !Array.isArray(userIds)) {
             throw Error("setUsers failure. Parameter invalid.");
         }
@@ -158,14 +191,42 @@ export default class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
+            fetchParam
+        ).then((response: Response) => {
+            if (response.status === 201) {
+                return response.json().then((roomUsers) => {
+                    return (
+                        {
+                            roomUsers: roomUsers,
+                            error: null,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    roomUsers: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchRoomUsersResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            roomUsers: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
             }
-            return json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                roomUsers: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomUsersResponse;
         });
     }
 
@@ -185,13 +246,42 @@ export default class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
+            fetchParam
+        ).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((roomUsers) => {
+                    return (
+                        {
+                            roomUsers: roomUsers,
+                            error: null,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    roomUsers: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchRoomUsersResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            roomUsers: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
             }
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                roomUsers: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomUsersResponse;
         });
     }
 
@@ -211,48 +301,133 @@ export default class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users", fetchParam).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
+            fetchParam
+        ).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((roomUsers) => {
+                    return (
+                        {
+                            roomUsers: roomUsers,
+                            error: null,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    roomUsers: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchRoomUsersResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            roomUsers: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomUsersResponse
+                    );
+                });
             }
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                roomUsers: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomUsersResponse;
         });
     }
 
-    public reflesh(): Promise<Response> {
+    public reflesh(): Promise<I.IFetchRoomResponse> {
         const self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._client.userAccessToken,
+            },
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((room) => {
+                    self._data = <I.IRoom>room;
+                    return (
+                        {
+                            room: self,
+                            error: null,
+                        } as I.IFetchRoomResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    room: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchRoomResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            room: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomResponse
+                    );
+                });
             }
-            self._data = <model.IRoom>json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                room: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomResponse;
         });
     }
 
-    public getMessages(queryParams: {[key: string]: string}): Promise<Response> {
+    public getMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
         let queryParamsString = "";
         if (queryParams !== undefined) {
             queryParamsString = createQueryParams(queryParams);
         }
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString, {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this._client.userAccessToken,
+            },
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((messages) => {
+                    return (
+                        {
+                            messages: <I.IMessages>messages,
+                            error: null,
+                        } as I.IFetchMessagesResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            messages: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchMessagesResponse
+                    );
+                });
             }
-            return json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                messages: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchMessagesResponse;
         });
     }
 
-    public subscribeMessage(onMessageReceived: Function) {
+    public subscribeMessage(onMessageReceived: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             throw Error("Subscribe message failure. roomId is not setting.");
         }
@@ -261,7 +436,7 @@ export default class Room {
         }
         this._onMessageReceived = onMessageReceived;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "bind")) {
-            this._client.connection.onMessageReceived = (data: model.IMessage) => {
+            this._client.connection.onMessageReceived = (data: I.IMessage) => {
                 this._onMessageReceived(data);
             };
             console.info("Subscribe message success roomId[" + this._data.roomId + "]");
@@ -282,7 +457,7 @@ export default class Room {
         }
     }
 
-    public subscribeUserJoin(onUserJoined: Function) {
+    public subscribeUserJoin(onUserJoined: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             throw Error("Subscribe userJoin failure. roomId is not setting.");
         }
@@ -291,8 +466,8 @@ export default class Room {
         }
         this._onUserJoined = onUserJoined;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "bind")) {
-            this._client.connection.onUserJoined = (data: model.IMessage) => {
-                let users = <model.IUserForRoom[]>data.payload;
+            this._client.connection.onUserJoined = (data: I.IMessage) => {
+                let users = <I.IUserForRoom[]>data.payload;
                 this._data.users = users;
                 this._onUserJoined(users);
             };
@@ -314,7 +489,7 @@ export default class Room {
         }
     }
 
-    public subscribeUserLeft(onUserLeft: Function) {
+    public subscribeUserLeft(onUserLeft: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             throw Error("Subscribe userLeft failure. roomId is not setting.");
         }
@@ -323,8 +498,8 @@ export default class Room {
         }
         this._onUserLeft = onUserLeft;
         if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "bind")) {
-            this._client.connection.onUserLeft = (data: model.IMessage) => {
-                let users = <model.IUserForRoom[]>data.payload;
+            this._client.connection.onUserLeft = (data: I.IMessage) => {
+                let users = <I.IUserForRoom[]>data.payload;
                 this._data.users = users;
                 this._onUserLeft(users);
             };

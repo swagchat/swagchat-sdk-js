@@ -1,231 +1,391 @@
 import Realtime from "./Realtime";
-import User from "./User";
-import Room from "./Room";
-import * as model from "./interface";
+import { User } from "./User";
+import { Room } from "./Room";
+import * as I from "./interface";
+import { apiLogColor } from "./const";
+
 import "isomorphic-fetch";
 
 export class Client {
     readonly apiKey: string;
+    readonly apiSecret: string;
     readonly apiEndpoint: string;
+    readonly userAccessToken: string;
     public connection: Realtime;
 
-    constructor(config: model.IClientConfig) {
-        console.info("Initializing Swagchat Client...");
+    set onConnected(callback: Function) {
+        this.connection.onConnected = callback;
+    }
 
-        this.apiKey = config.apiKey;
-        this.apiEndpoint = config.apiEndpoint;
-        if (config.hasOwnProperty("realtime")) {
-            const realtimeConfig = <model.IRealtimeConfig>config.realtime;
+    set onError(callback: Function) {
+        this.connection.onError = callback;
+    }
+
+    set onClosed(callback: Function) {
+        this.connection.onClosed = callback;
+    }
+
+    private getApiHeaders(): {
+            "X-SwagChat-Api-Key": string;
+            "X-SwagChat-Api-Secret": string;
+            "Content-Type"?: string;
+        } {
+        return {
+            "X-SwagChat-Api-Key": this.apiKey,
+            "X-SwagChat-Api-Secret": this.apiSecret,
+        };
+    }
+
+    constructor(params: I.IClientParams) {
+        console.info("%cInitializing Swagchat Client...", "color:" + apiLogColor);
+
+        this.apiKey = params.apiKey;
+        this.apiSecret = params.apiSecret || "";
+        this.apiEndpoint = params.apiEndpoint;
+        this.userAccessToken = params.userAccessToken || "";
+        if (params.hasOwnProperty("realtime") && params.realtime!.hasOwnProperty("endpoint") && params.realtime!.endpoint !== "") {
+            const realtimeConfig = <I.IRealtimeConfig>params.realtime;
             this.connection = new Realtime(realtimeConfig.endpoint);
         }
 
-        console.info("Initialized Swagchat Client.");
-    }
-
-    set onConnected(onConnected: Function) {
-        this.connection.onConnected = onConnected;
-    }
-
-    set onError(onError: Function) {
-        this.connection.onError = onError;
-    }
-
-    set onClosed(onClosed: Function) {
-        this.connection.onClosed = onClosed;
+        console.info("%cInitialized Swagchat Client.", "color:" + apiLogColor);
     }
 
     public socketClose() {
         this.connection.close();
     }
 
-    public createUser(createUserObject: model.IUser): Promise<Response> {
+    public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
+        let headers = this.getApiHeaders();
+        headers["Content-Type"] = "application/json";
         const self = this;
         return fetch(this.apiEndpoint + "/users", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: headers,
             body: JSON.stringify(createUserObject)
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        }).then((response: Response) => {
+            if (response.status === 201) {
+                return response.json().then((user) => {
+                    return (
+                        {
+                            user: new User({
+                                client: self,
+                                data: <I.IUser>user,
+                            }),
+                            error: null,
+                        } as I.IFetchUserResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            user: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchUserResponse
+                    );
+                });
             }
-            return json;
-        }).then((json) => {
-            return new User({
-                client: self,
-                data: <model.IUser>json
-            });
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                user: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchUserResponse;
         });
     }
 
-    public getUsers(): Promise<Response> {
+    public getUsers(): Promise<I.IFetchUsersResponse> {
         return fetch(this.apiEndpoint + "/users", {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: this.getApiHeaders(),
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((users) => {
+                    return (
+                        {
+                            users: <I.IUser[]>users,
+                            error: null,
+                        } as I.IFetchUsersResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            users: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchUsersResponse
+                    );
+                });
             }
-            return json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                users: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchUsersResponse;
         });
     }
 
-    public getUser(userId: string): Promise<Response> {
+    public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
         if (!userId || typeof(userId) !== "string") {
-            throw Error("Get user failure. Parameter invalid.");
+            throw Error("Get user failure. Parameter invalid [userId].");
         }
+
         const self = this;
         return fetch(this.apiEndpoint + "/users/" + userId, {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: this.getApiHeaders(),
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((user) => {
+                    user.accessToken = accessToken || "";
+                    return (
+                        {
+                            user: new User({
+                                client: self,
+                                data: <I.IUser>user,
+                            }),
+                            error: null,
+                        } as I.IFetchUserResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    user: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchUserResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            user: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchUserResponse
+                    );
+                });
             }
-            return new User({
-                client: self,
-                data: <model.IUser>json
-            });
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                user: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchUserResponse;
         });
     }
 
-    public removeUser(userId: string): Promise<Response> {
+    public removeUser(userId: string): Promise<I.IErrorResponse> {
         if (!userId || typeof(userId) !== "string") {
             throw Error("Remove user failure. Parameter invalid.");
         }
+
+        let headers = this.getApiHeaders();
+        headers["Content-Type"] = "application/json";
         return fetch(this.apiEndpoint + "/users/" + userId, {
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
+            headers: headers,
         }).then((response: Response) => {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            if (response.status === 204) {
+                return response.json().then(() => {
+                    return (
+                        {
+                            error: null,
+                        } as I.IErrorResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IErrorResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            error: <I.IProblemDetail>json,
+                        } as I.IErrorResponse
+                    );
+                });
             }
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IErrorResponse;
         });
     }
 
-    public createRoom(createRoomObject: model.IRoom): Promise<Response> {
+    public createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse> {
+        let headers = this.getApiHeaders();
+        headers["Content-Type"] = "application/json";
         const self = this;
         return fetch(this.apiEndpoint + "/rooms", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: headers,
             body: JSON.stringify(createRoomObject)
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+        }).then((response: Response) => {
+            if (response.status === 201) {
+                return response.json().then((room) => {
+                    return (
+                        {
+                            room: new Room({
+                                client: self,
+                                data: <I.IRoom>room,
+                            }),
+                            error: null,
+                        } as I.IFetchRoomResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            room: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomResponse
+                    );
+                });
             }
-            return json;
-        }).then((json) => {
-            return new Room({
-                client: self,
-                data: <model.IRoom>json
-            });
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                room: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomResponse;
         });
     }
 
-    public getRooms(): Promise<Response> {
+    public getRooms(): Promise<I.IFetchRoomsResponse> {
         return fetch(this.apiEndpoint + "/rooms", {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: this.getApiHeaders(),
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((rooms) => {
+                    return (
+                        {
+                            rooms: <I.IRoom[]>rooms,
+                            error: null,
+                        } as I.IFetchRoomsResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            rooms: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomsResponse
+                    );
+                });
             }
-            return json;
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                rooms: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomsResponse;
         });
     }
 
-    public getRoom(roomId: string): Promise<Response> {
+    public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
         if (!roomId || typeof(roomId) !== "string") {
             throw Error("Get room failure. Parameter invalid.");
         }
         const self = this;
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
-        }).then((response: Response) => response.json())
-        .then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            method: "GET",
+            headers: this.getApiHeaders(),
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((room) => {
+                    return (
+                        {
+                            room: new Room({
+                                client: self,
+                                data: <I.IRoom>room
+                            }),
+                            error: null,
+                        } as I.IFetchRoomResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    room: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchRoomResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            room: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchRoomResponse
+                    );
+                });
             }
-            return new Room({
-                client: self,
-                data: <model.IRoom>json
-            });
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                room: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchRoomResponse;
         });
     }
 
-    public removeRoom(roomId: string): Promise<Response> {
+    public removeRoom(roomId: string): Promise<I.IErrorResponse> {
         if (!roomId || typeof(roomId) !== "string") {
             throw Error("Remove room failure. Parameter invalid.");
         }
+
+        let headers = this.getApiHeaders();
+        headers["Content-Type"] = "application/json";
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
+            headers: headers,
         }).then((response: Response) => {
-            if (response.status !== 204) {
-                return response.json();
-            }
-            return {};
-        }).then((json) => {
-            if (json.hasOwnProperty("errorName")) {
-                throw Error(JSON.stringify(json));
+            if (response.status === 204) {
+                return response.json().then(() => {
+                    return (
+                        {
+                            error: null,
+                        } as I.IErrorResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IErrorResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            error: <I.IProblemDetail>json,
+                        } as I.IErrorResponse
+                    );
+                });
             }
         }).catch((error) => {
-            throw Error(error.message);
+            return {
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IErrorResponse;
         });
-    }
-
-    public createTextMessage(roomId: string, userId: string, text: string): model.IMessage {
-        if (!roomId || !userId || !text || typeof(roomId) !== "string" || typeof(userId) !== "string" || typeof(text) !== "string") {
-            throw Error("Message creation failed. Parameter invalid.");
-        };
-        return {
-            roomId: roomId,
-            userId: userId,
-            type: "text",
-            eventName: "message",
-            payload: {
-                "text": text
-            }
-        };
-    }
-
-    public createCustomMessage(roomId: string, userId: string, payload: Object, type: string): model.IMessage {
-        if (!roomId || !userId || !payload || typeof(roomId) !== "string" || !(payload instanceof Object) || !(payload instanceof Object)) {
-            throw Error("Creating message failure. Parameter invalid.");
-        };
-        if (Object.keys(payload).length === 0) {
-            throw Error("Creating message failure. Parameter invalid.");
-        }
-        return {
-            roomId: roomId,
-            userId: userId,
-            type: type,
-            eventName: "message",
-            payload: payload
-        };
     }
 }
