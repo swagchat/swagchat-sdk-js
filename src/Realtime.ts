@@ -13,11 +13,12 @@ export default class Realtime {
     public onUserLeft: Function;
 
     constructor(endpoint: string) {
-        console.info("%cConnection Swagchat Realtime Server...", "color:" + realtimeLogColor);
+        console.info("%c[SwagChat]Connecting Realtime Server...", "color:" + realtimeLogColor);
 
         let websocket = isBrowser ? WebSocket : require("ws");
         this.conn = new websocket(endpoint);
         this.conn.addEventListener("open", (e: Event) => {
+            console.info("%c[SwagChat]Connecting Realtime Server OK", "color:" + realtimeLogColor);
             this.onConnected(<WebSocket>e.target);
         });
         this.conn.addEventListener("error", (e: Event) => {

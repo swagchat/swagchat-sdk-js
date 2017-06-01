@@ -37,7 +37,7 @@ export class Client {
     }
 
     constructor(params: I.IClientParams) {
-        console.info("%cInitializing Swagchat Client...", "color:" + apiLogColor);
+        console.info("%c[SwagChat]Initializing API Client...", "color:" + apiLogColor);
 
         this.apiKey = params.apiKey;
         this.apiSecret = params.apiSecret || "";
@@ -48,7 +48,7 @@ export class Client {
             this.connection = new Realtime(realtimeConfig.endpoint);
         }
 
-        console.info("%cInitialized Swagchat Client.", "color:" + apiLogColor);
+        console.info("%c[SwagChat]Initialized API Client OK", "color:" + apiLogColor);
     }
 
     public socketClose() {
@@ -192,13 +192,9 @@ export class Client {
             headers: headers,
         }).then((response: Response) => {
             if (response.status === 204) {
-                return response.json().then(() => {
-                    return (
-                        {
-                            error: null,
-                        } as I.IErrorResponse
-                    );
-                });
+                return {
+                    error: null,
+                } as I.IErrorResponse;
             } else if (response.status === 404) {
                 return {
                     error: {
@@ -358,13 +354,9 @@ export class Client {
             headers: headers,
         }).then((response: Response) => {
             if (response.status === 204) {
-                return response.json().then(() => {
-                    return (
-                        {
-                            error: null,
-                        } as I.IErrorResponse
-                    );
-                });
+                return {
+                    error: null,
+                } as I.IErrorResponse;
             } else if (response.status === 404) {
                 return {
                     error: {

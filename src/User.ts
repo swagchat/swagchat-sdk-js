@@ -195,7 +195,7 @@ export class User {
                 token: token,
             })
         }).then((response: Response) => {
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 201) {
                 this.reflesh();
                 return response.json().then((device) => {
                     return (
