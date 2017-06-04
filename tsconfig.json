@@ -1,18 +1,23 @@
 {
+  "version": "2.2.1",
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
+    "sourceMap": true,
+    "allowJs": true,
+    "outDir": "lib",
+    "moduleResolution": "node",
     "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "alwaysStrict": true,
     "declaration": true,
-    "forceConsistentCasingInFileNames": false,
-    "outDir": "./lib/",
-    "moduleResolution": "node"
+    "forceConsistentCasingInFileNames": false
   },
   "formatCodeOptions": {
     "indentSize": 2,
@@ -22,7 +27,8 @@
     "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "lib"
+    "dist",
+    "lib",
+    "node_modules"
   ]
 }
