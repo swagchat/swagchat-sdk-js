@@ -12,9 +12,9 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build-lib": "tsc --pretty --watch",
-    "build-browser": "watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.min.js",
-    "build-doc": "typedoc --out ./doc/ ./src/"
+    "build:lib": "./node_modules/.bin/tsc --pretty --watch",
+    "build:browser": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.min.js",
+    "build:doc": "./node_modules/.bin/typedoc --out ./doc/ ./src/"
   },
   "author": "Betchi <shinichi.minobe@gmail.com>",
   "contributors": [
@@ -29,23 +29,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "es6-promise": "^4.1.0",
     "isomorphic-fetch": "^2.2.1",
     "ws": "^2.2.1"
   },
   "devDependencies": {
-    "@types/es6-promise": "0.0.32",
     "@types/isomorphic-fetch": "0.0.34",
     "@types/ws": "0.0.39",
-    "browserify": "^14.1.0",
     "ts-loader": "^2.1.0",
     "tsify": "^3.0.1",
     "tslint": "^5.3.2",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.3.3",
     "typedoc": "^0.5.7",
-    "watchify": "^3.9.0",
-    "webpack": "^2.2.1"
+    "typescript": "^2.3.3",
+    "watchify": "^3.9.0"
   },
   "optionalDependencies": {
     "bufferutil": "^3.0.0",
