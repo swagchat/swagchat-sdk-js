@@ -92,7 +92,9 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_client_.client.html#apiendpoint" class="tsd-kind-icon">api<wbr>Endpoint</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_client_.client.html#apikey" class="tsd-kind-icon">api<wbr>Key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_client_.client.html#apisecret" class="tsd-kind-icon">api<wbr>Secret</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_client_.client.html#connection" class="tsd-kind-icon">connection</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_client_.client.html#useraccesstoken" class="tsd-kind-icon">user<wbr>Access<wbr>Token</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -106,10 +108,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#createcustommessage" class="tsd-kind-icon">create<wbr>Custom<wbr>Message</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#createroom" class="tsd-kind-icon">create<wbr>Room</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#createtextmessage" class="tsd-kind-icon">create<wbr>Text<wbr>Message</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#createuser" class="tsd-kind-icon">create<wbr>User</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_client_.client.html#getapiheaders" class="tsd-kind-icon">get<wbr>Api<wbr>Headers</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#getroom" class="tsd-kind-icon">get<wbr>Room</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#getrooms" class="tsd-kind-icon">get<wbr>Rooms</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_client_.client.html#getuser" class="tsd-kind-icon">get<wbr>User</a></li>
@@ -128,19 +129,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iclientconfig.html" class="tsd-signature-type">IClientConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_client_.client.html" class="tsd-signature-type">Client</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iclientparams.html" class="tsd-signature-type">IClientParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_client_.client.html" class="tsd-signature-type">Client</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L10">Client.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L37">Client.ts:37</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>config: <a href="../interfaces/_interface_.iclientconfig.html" class="tsd-signature-type">IClientConfig</a></h5>
+									<h5>params: <a href="../interfaces/_interface_.iclientparams.html" class="tsd-signature-type">IClientParams</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_client_.client.html" class="tsd-signature-type">Client</a></h4>
@@ -156,7 +157,7 @@
 					<div class="tsd-signature tsd-kind-icon">api<wbr>Endpoint<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L9">Client.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L12">Client.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -166,7 +167,17 @@
 					<div class="tsd-signature tsd-kind-icon">api<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L8">Client.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L10">Client.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="apisecret" class="tsd-anchor"></a>
+					<h3>api<wbr>Secret</h3>
+					<div class="tsd-signature tsd-kind-icon">api<wbr>Secret<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L11">Client.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -176,7 +187,17 @@
 					<div class="tsd-signature tsd-kind-icon">connection<span class="tsd-signature-symbol">:</span> <a href="_realtime_.realtime.html" class="tsd-signature-type">Realtime</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L10">Client.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L14">Client.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="useraccesstoken" class="tsd-anchor"></a>
+					<h3>user<wbr>Access<wbr>Token</h3>
+					<div class="tsd-signature tsd-kind-icon">user<wbr>Access<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L13">Client.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -187,19 +208,19 @@
 					<a name="onclosed" class="tsd-anchor"></a>
 					<h3>on<wbr>Closed</h3>
 					<ul class="tsd-signatures tsd-kind-set-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onClosed<span class="tsd-signature-symbol">(</span>onClosed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onClosed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L33">Client.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L24">Client.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>onClosed: <span class="tsd-signature-type">Function</span></h5>
+									<h5>callback: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -210,19 +231,19 @@
 					<a name="onconnected" class="tsd-anchor"></a>
 					<h3>on<wbr>Connected</h3>
 					<ul class="tsd-signatures tsd-kind-set-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onConnected<span class="tsd-signature-symbol">(</span>onConnected<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onConnected<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L25">Client.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L16">Client.ts:16</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>onConnected: <span class="tsd-signature-type">Function</span></h5>
+									<h5>callback: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -233,19 +254,19 @@
 					<a name="onerror" class="tsd-anchor"></a>
 					<h3>on<wbr>Error</h3>
 					<ul class="tsd-signatures tsd-kind-set-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onError<span class="tsd-signature-symbol">(</span>onError<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> onError<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L29">Client.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L20">Client.ts:20</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>onError: <span class="tsd-signature-type">Function</span></h5>
+									<h5>callback: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -256,48 +277,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createcustommessage" class="tsd-anchor"></a>
-					<h3>create<wbr>Custom<wbr>Message</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Custom<wbr>Message<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.imessage.html" class="tsd-signature-type">IMessage</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L216">Client.ts:216</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>roomId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>userId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>payload: <span class="tsd-signature-type">Object</span></h5>
-								</li>
-								<li>
-									<h5>type: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_interface_.imessage.html" class="tsd-signature-type">IMessage</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="createroom" class="tsd-anchor"></a>
 					<h3>create<wbr>Room</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Room<span class="tsd-signature-symbol">(</span>createRoomObject<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iroom.html" class="tsd-signature-type">IRoom</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Room<span class="tsd-signature-symbol">(</span>createRoomObject<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iroom.html" class="tsd-signature-type">IRoom</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomresponse.html" class="tsd-signature-type">IFetchRoomResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L121">Client.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L222">Client.ts:222</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -306,36 +295,7 @@
 									<h5>createRoomObject: <a href="../interfaces/_interface_.iroom.html" class="tsd-signature-type">IRoom</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createtextmessage" class="tsd-anchor"></a>
-					<h3>create<wbr>Text<wbr>Message</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Text<wbr>Message<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.imessage.html" class="tsd-signature-type">IMessage</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L201">Client.ts:201</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>roomId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>userId: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>text: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_interface_.imessage.html" class="tsd-signature-type">IMessage</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomresponse.html" class="tsd-signature-type">IFetchRoomResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -343,13 +303,13 @@
 					<a name="createuser" class="tsd-anchor"></a>
 					<h3>create<wbr>User</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>User<span class="tsd-signature-symbol">(</span>createUserObject<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iuser.html" class="tsd-signature-type">IUser</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>User<span class="tsd-signature-symbol">(</span>createUserObject<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interface_.iuser.html" class="tsd-signature-type">IUser</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchuserresponse.html" class="tsd-signature-type">IFetchUserResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L41">Client.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L58">Client.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -358,7 +318,35 @@
 									<h5>createUserObject: <a href="../interfaces/_interface_.iuser.html" class="tsd-signature-type">IUser</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchuserresponse.html" class="tsd-signature-type">IFetchUserResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getapiheaders" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Api<wbr>Headers</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Api<wbr>Headers<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L28">Client.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> Content-<wbr><wbr>Type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>X-<wbr><wbr>Swag<wbr>Chat-<wbr><wbr>Api-<wbr><wbr>Key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>X-<wbr><wbr>Swag<wbr>Chat-<wbr><wbr>Api-<wbr><wbr>Secret<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</section>
@@ -366,13 +354,13 @@
 					<a name="getroom" class="tsd-anchor"></a>
 					<h3>get<wbr>Room</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Room<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Room<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomresponse.html" class="tsd-signature-type">IFetchRoomResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L158">Client.ts:158</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L297">Client.ts:297</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -381,7 +369,7 @@
 									<h5>roomId: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomresponse.html" class="tsd-signature-type">IFetchRoomResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -389,16 +377,16 @@
 					<a name="getrooms" class="tsd-anchor"></a>
 					<h3>get<wbr>Rooms</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Rooms<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Rooms<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomsresponse.html" class="tsd-signature-type">IFetchRoomsResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L145">Client.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L263">Client.ts:263</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchroomsresponse.html" class="tsd-signature-type">IFetchRoomsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -406,13 +394,13 @@
 					<a name="getuser" class="tsd-anchor"></a>
 					<h3>get<wbr>User</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>User<span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>User<span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, accessToken<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchuserresponse.html" class="tsd-signature-type">IFetchUserResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L78">Client.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L133">Client.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -420,8 +408,11 @@
 								<li>
 									<h5>userId: <span class="tsd-signature-type">string</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> accessToken: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchuserresponse.html" class="tsd-signature-type">IFetchUserResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -429,16 +420,16 @@
 					<a name="getusers" class="tsd-anchor"></a>
 					<h3>get<wbr>Users</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Users<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Users<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchusersresponse.html" class="tsd-signature-type">IFetchUsersResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L65">Client.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L99">Client.ts:99</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ifetchusersresponse.html" class="tsd-signature-type">IFetchUsersResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -446,13 +437,13 @@
 					<a name="removeroom" class="tsd-anchor"></a>
 					<h3>remove<wbr>Room</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Room<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Room<span class="tsd-signature-symbol">(</span>roomId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ierrorresponse.html" class="tsd-signature-type">IErrorResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L178">Client.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L345">Client.ts:345</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -461,7 +452,7 @@
 									<h5>roomId: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ierrorresponse.html" class="tsd-signature-type">IErrorResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -469,13 +460,13 @@
 					<a name="removeuser" class="tsd-anchor"></a>
 					<h3>remove<wbr>User</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>User<span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>User<span class="tsd-signature-symbol">(</span>userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ierrorresponse.html" class="tsd-signature-type">IErrorResponse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L98">Client.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L183">Client.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -484,7 +475,7 @@
 									<h5>userId: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interface_.ierrorresponse.html" class="tsd-signature-type">IErrorResponse</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -498,7 +489,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/Client.ts#L37">Client.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/Client.ts#L54">Client.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -556,7 +547,13 @@
 								<a href="_client_.client.html#apikey" class="tsd-kind-icon">api<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_client_.client.html#apisecret" class="tsd-kind-icon">api<wbr>Secret</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_client_.client.html#connection" class="tsd-kind-icon">connection</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_client_.client.html#useraccesstoken" class="tsd-kind-icon">user<wbr>Access<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-set-signature tsd-parent-kind-class">
 								<a href="_client_.client.html#onclosed" class="tsd-kind-icon">on<wbr>Closed</a>
@@ -568,16 +565,13 @@
 								<a href="_client_.client.html#onerror" class="tsd-kind-icon">on<wbr>Error</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_client_.client.html#createcustommessage" class="tsd-kind-icon">create<wbr>Custom<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_client_.client.html#createroom" class="tsd-kind-icon">create<wbr>Room</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_client_.client.html#createtextmessage" class="tsd-kind-icon">create<wbr>Text<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_client_.client.html#createuser" class="tsd-kind-icon">create<wbr>User</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_client_.client.html#getapiheaders" class="tsd-kind-icon">get<wbr>Api<wbr>Headers</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_client_.client.html#getroom" class="tsd-kind-icon">get<wbr>Room</a>

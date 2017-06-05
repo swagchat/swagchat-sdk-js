@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IRoom | swagchat-sdk</title>
+	<title>IFetchUserResponse | swagchat-sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_interface_.html">&quot;interface&quot;</a>
 				</li>
 				<li>
-					<a href="_interface_.iroom.html">IRoom</a>
+					<a href="_interface_.ifetchuserresponse.html">IFetchUserResponse</a>
 				</li>
 			</ul>
-			<h1>Interface IRoom</h1>
+			<h1>Interface IFetchUserResponse</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IRoom</span>
+						<span class="target">IFetchUserResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -84,19 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#created" class="tsd-kind-icon">created</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#informationurl" class="tsd-kind-icon">information<wbr>Url</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#ispublic" class="tsd-kind-icon">is<wbr>Public</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#lastmessage" class="tsd-kind-icon">last<wbr>Message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#lastmessageupdated" class="tsd-kind-icon">last<wbr>Message<wbr>Updated</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#messagecount" class="tsd-kind-icon">message<wbr>Count</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#metadata" class="tsd-kind-icon">meta<wbr>Data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#modified" class="tsd-kind-icon">modified</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#pictureurl" class="tsd-kind-icon">picture<wbr>Url</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#roomid" class="tsd-kind-icon">room<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#userid" class="tsd-kind-icon">user<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroom.html#users" class="tsd-kind-icon">users</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchuserresponse.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchuserresponse.html#user" class="tsd-kind-icon">user</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,140 +94,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="created" class="tsd-anchor"></a>
-					<h3>created</h3>
-					<div class="tsd-signature tsd-kind-icon">created<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="error" class="tsd-anchor"></a>
+					<h3>error</h3>
+					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <a href="_interface_.iproblemdetail.html" class="tsd-signature-type">IProblemDetail</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L91">interface.ts:91</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L177">interface.ts:177</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="informationurl" class="tsd-anchor"></a>
-					<h3>information<wbr>Url</h3>
-					<div class="tsd-signature tsd-kind-icon">information<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="user" class="tsd-anchor"></a>
+					<h3>user</h3>
+					<div class="tsd-signature tsd-kind-icon">user<span class="tsd-signature-symbol">:</span> <a href="../classes/_user_.user.html" class="tsd-signature-type">User</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L85">interface.ts:85</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="ispublic" class="tsd-anchor"></a>
-					<h3>is<wbr>Public</h3>
-					<div class="tsd-signature tsd-kind-icon">is<wbr>Public<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L87">interface.ts:87</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lastmessage" class="tsd-anchor"></a>
-					<h3>last<wbr>Message</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L88">interface.ts:88</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lastmessageupdated" class="tsd-anchor"></a>
-					<h3>last<wbr>Message<wbr>Updated</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Message<wbr>Updated<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L89">interface.ts:89</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="messagecount" class="tsd-anchor"></a>
-					<h3>message<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">message<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L90">interface.ts:90</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="metadata" class="tsd-anchor"></a>
-					<h3>meta<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">meta<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L86">interface.ts:86</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Object</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="modified" class="tsd-anchor"></a>
-					<h3>modified</h3>
-					<div class="tsd-signature tsd-kind-icon">modified<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L92">interface.ts:92</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L83">interface.ts:83</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pictureurl" class="tsd-anchor"></a>
-					<h3>picture<wbr>Url</h3>
-					<div class="tsd-signature tsd-kind-icon">picture<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L84">interface.ts:84</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="roomid" class="tsd-anchor"></a>
-					<h3>room<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">room<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L81">interface.ts:81</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="userid" class="tsd-anchor"></a>
-					<h3>user<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">user<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L82">interface.ts:82</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="users" class="tsd-anchor"></a>
-					<h3>users</h3>
-					<div class="tsd-signature tsd-kind-icon">users<span class="tsd-signature-symbol">:</span> <a href="_interface_.iuserforroom.html" class="tsd-signature-type">IUserForRoom</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L93">interface.ts:93</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L176">interface.ts:176</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -311,9 +182,21 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchuserdeviceresponse.html" class="tsd-kind-icon">IFetch<wbr>User<wbr>Device<wbr>Response</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchuserresponse.html" class="tsd-kind-icon">IFetch<wbr>User<wbr>Response</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchuserresponse.html#error" class="tsd-kind-icon">error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchuserresponse.html#user" class="tsd-kind-icon">user</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchusersresponse.html" class="tsd-kind-icon">IFetch<wbr>Users<wbr>Response</a>
 					</li>
@@ -335,54 +218,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.irealtimeconfig.html" class="tsd-kind-icon">IRealtime<wbr>Config</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroom.html" class="tsd-kind-icon">IRoom</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#created" class="tsd-kind-icon">created</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#informationurl" class="tsd-kind-icon">information<wbr>Url</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#ispublic" class="tsd-kind-icon">is<wbr>Public</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#lastmessage" class="tsd-kind-icon">last<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#lastmessageupdated" class="tsd-kind-icon">last<wbr>Message<wbr>Updated</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#messagecount" class="tsd-kind-icon">message<wbr>Count</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#metadata" class="tsd-kind-icon">meta<wbr>Data</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#modified" class="tsd-kind-icon">modified</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#pictureurl" class="tsd-kind-icon">picture<wbr>Url</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#roomid" class="tsd-kind-icon">room<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#userid" class="tsd-kind-icon">user<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroom.html#users" class="tsd-kind-icon">users</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroomforuser.html" class="tsd-kind-icon">IRoom<wbr>For<wbr>User</a>
 					</li>

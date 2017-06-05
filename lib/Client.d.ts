@@ -1,23 +1,24 @@
 import Realtime from "./Realtime";
-import * as model from "./interface";
+import * as I from "./interface";
 import "isomorphic-fetch";
 export declare class Client {
     readonly apiKey: string;
+    readonly apiSecret: string;
     readonly apiEndpoint: string;
+    readonly userAccessToken: string;
     connection: Realtime;
-    constructor(config: model.IClientConfig);
     onConnected: Function;
     onError: Function;
     onClosed: Function;
+    private getApiHeaders();
+    constructor(params: I.IClientParams);
     socketClose(): void;
-    createUser(createUserObject: model.IUser): Promise<Response>;
-    getUsers(): Promise<Response>;
-    getUser(userId: string): Promise<Response>;
-    removeUser(userId: string): Promise<Response>;
-    createRoom(createRoomObject: model.IRoom): Promise<Response>;
-    getRooms(): Promise<Response>;
-    getRoom(roomId: string): Promise<Response>;
-    removeRoom(roomId: string): Promise<Response>;
-    createTextMessage(roomId: string, userId: string, text: string): model.IMessage;
-    createCustomMessage(roomId: string, userId: string, payload: Object, type: string): model.IMessage;
+    createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse>;
+    getUsers(): Promise<I.IFetchUsersResponse>;
+    getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse>;
+    removeUser(userId: string): Promise<I.IErrorResponse>;
+    createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse>;
+    getRooms(): Promise<I.IFetchRoomsResponse>;
+    getRoom(roomId: string): Promise<I.IFetchRoomResponse>;
+    removeRoom(roomId: string): Promise<I.IErrorResponse>;
 }

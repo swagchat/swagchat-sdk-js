@@ -66,13 +66,9 @@
 			<div class="tsd-panel tsd-typography">
 				<p><a href="LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="MIT License"></a>
 				<a href="https://badge.fury.io/js/swagchat-sdk"><img src="https://badge.fury.io/js/swagchat-sdk.svg" alt="npm version"></a></p>
-				<h1 id="swagchat-sdk-typescript-javascript-">Swagchat SDK(TypeScript &amp; JavaScript)</h1>
-				<p>Swagchat is an open source chat components for your webapps.</p>
-				<ul>
-					<li><strong>Easy to deploy</strong></li>
-					<li><strong>Easy to customize</strong></li>
-					<li><strong>Easy to scale</strong></li>
-				</ul>
+				<h1 id="swagchat-sdk-typescript-javascript-">SwagChat SDK(TypeScript &amp; JavaScript)</h1>
+				<p>SwagChat is an open source chat components for your webapps.</p>
+				<p>This is SDK for TypeScript &amp; JavaScript of <a href="http://github.com/fairway-corp/swagchat-api">SwagChat API</a></p>
 				<h2 id="components">Components</h2>
 				<ul>
 					<li><a href="http://github.com/fairway-corp/swagchat-api">RESTful API Server (Go)</a></li>
@@ -82,7 +78,62 @@
 				</ul>
 				<h2 id="architecture">Architecture</h2>
 				<p><img src="https://client.fairway.ne.jp/swagchat/img/architecture-201703011307.png" alt="Architecture" title="Architecture"></p>
-				<h2 id="document">Document</h2>
+				<h2 id="installation">Installation</h2>
+				<h3 id="cdn">CDN</h3>
+				<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/swagchat-sdk/dist/swagchat-sdk.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre><h3 id="npm">npm</h3>
+				<pre><code>npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save swagchat-sdk</span>
+</code></pre><p>Please use TypeScript for development, but you do not need to install <code>@types/swagchat-sdk</code>.</p>
+				<p>Type definitions are included in this repository.</p>
+				<h2 id="usage">Usage</h2>
+				<h3 id="browser">Browser</h3>
+				<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://unpkg.com/swagchat-sdk/dist/swagchat-sdk.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> &gt;</span><span class="javascript">
+<span class="hljs-comment">// Initialize client.</span>
+<span class="hljs-keyword">var</span> sc = <span class="hljs-keyword">new</span> SwagChat.Client({
+  <span class="hljs-attr">apiKey</span>: <span class="hljs-string">"API_KEY"</span>,
+  <span class="hljs-attr">apiSecret</span>: <span class="hljs-string">"API_SECRET"</span>,
+  <span class="hljs-attr">apiEndpoint</span>: <span class="hljs-string">"http://localhost:9000/v0"</span>,
+  <span class="hljs-attr">realtime</span>: {
+    <span class="hljs-attr">endpoint</span>: <span class="hljs-string">"ws://localhost:19200/v1"</span>
+  }
+});
+
+<span class="hljs-comment">// Create user.</span>
+sc.createUser({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">"USER_NAME"</span>,
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+  <span class="hljs-keyword">if</span> (res.error) {
+    <span class="hljs-built_in">console</span>.log(res.error);
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">console</span>.log(res.user);
+  }
+})
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre><h3 id="node">Node</h3>
+				<pre><code><span class="hljs-keyword">import</span> { Client } <span class="hljs-keyword">from</span> <span class="hljs-string">"swagchat-sdk"</span>;
+
+<span class="hljs-comment">// Initialize client.</span>
+<span class="hljs-keyword">const</span> sc = <span class="hljs-keyword">new</span> Client({
+  <span class="hljs-attr">apiKey</span>: <span class="hljs-string">"API_KEY"</span>,
+  <span class="hljs-attr">apiSecret</span>: <span class="hljs-string">"API_SECRET"</span>,
+  <span class="hljs-attr">apiEndpoint</span>: <span class="hljs-string">"http://localhost:9000/v0"</span>,
+  <span class="hljs-attr">realtime</span>: {
+    <span class="hljs-attr">endpoint</span>: <span class="hljs-string">"ws://localhost:19200/v1"</span>
+  }
+});
+
+<span class="hljs-comment">// Create user.</span>
+sc.createUser({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">"USER_NAME"</span>,
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+  <span class="hljs-keyword">if</span> (res.error) {
+    <span class="hljs-built_in">console</span>.log(res.error);
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">console</span>.log(res.user);
+  }
+})
+</code></pre><h2 id="document">Document</h2>
 				<p>Open <code>doc/index.html</code> in browser.</p>
 				<p><em>Generated using <a href="http://typedoc.org">TypeDoc</a></em></p>
 				<h2 id="license">License</h2>

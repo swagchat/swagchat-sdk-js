@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IRoomConfig | swagchat-sdk</title>
+	<title>IFetchRoomResponse | swagchat-sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_interface_.html">&quot;interface&quot;</a>
 				</li>
 				<li>
-					<a href="_interface_.iroomconfig.html">IRoomConfig</a>
+					<a href="_interface_.ifetchroomresponse.html">IFetchRoomResponse</a>
 				</li>
 			</ul>
-			<h1>Interface IRoomConfig</h1>
+			<h1>Interface IFetchRoomResponse</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IRoomConfig</span>
+						<span class="target">IFetchRoomResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroomconfig.html#client" class="tsd-kind-icon">client</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroomconfig.html#roomobj" class="tsd-kind-icon">room<wbr>Obj</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchroomresponse.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchroomresponse.html#room" class="tsd-kind-icon">room</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,22 +94,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="client" class="tsd-anchor"></a>
-					<h3>client</h3>
-					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <a href="../classes/_client_.client.html" class="tsd-signature-type">Client</a></div>
+					<a name="error" class="tsd-anchor"></a>
+					<h3>error</h3>
+					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <a href="_interface_.iproblemdetail.html" class="tsd-signature-type">IProblemDetail</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/interface.ts#L61">interface.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L192">interface.ts:192</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="roomobj" class="tsd-anchor"></a>
-					<h3>room<wbr>Obj</h3>
-					<div class="tsd-signature tsd-kind-icon">room<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="_interface_.iroom.html" class="tsd-signature-type">IRoom</a></div>
+					<a name="room" class="tsd-anchor"></a>
+					<h3>room</h3>
+					<div class="tsd-signature tsd-kind-icon">room<span class="tsd-signature-symbol">:</span> <a href="../classes/_room_.room.html" class="tsd-signature-type">Room</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/6fb0027/src/interface.ts#L62">interface.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L191">interface.ts:191</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -149,8 +149,14 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_interface_.platform.html" class="tsd-kind-icon">Platform</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iclientconfig.html" class="tsd-kind-icon">IClient<wbr>Config</a>
+						<a href="_interface_.iauthparams.html" class="tsd-kind-icon">IAuth<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iclientparams.html" class="tsd-kind-icon">IClient<wbr>Params</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.icloseevent.html" class="tsd-kind-icon">IClose<wbr>Event</a>
@@ -159,10 +165,55 @@
 						<a href="_interface_.idevice.html" class="tsd-kind-icon">IDevice</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ierrorresponse.html" class="tsd-kind-icon">IError<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchmessagesresponse.html" class="tsd-kind-icon">IFetch<wbr>Messages<wbr>Response</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchroomresponse.html" class="tsd-kind-icon">IFetch<wbr>Room<wbr>Response</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchroomresponse.html#error" class="tsd-kind-icon">error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchroomresponse.html#room" class="tsd-kind-icon">room</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchroomusersresponse.html" class="tsd-kind-icon">IFetch<wbr>Room<wbr>Users<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchroomsresponse.html" class="tsd-kind-icon">IFetch<wbr>Rooms<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchuserdeviceresponse.html" class="tsd-kind-icon">IFetch<wbr>User<wbr>Device<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchuserresponse.html" class="tsd-kind-icon">IFetch<wbr>User<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchusersresponse.html" class="tsd-kind-icon">IFetch<wbr>Users<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iinvalidparam.html" class="tsd-kind-icon">IInvalid<wbr>Param</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.imessage.html" class="tsd-kind-icon">IMessage</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.imessageevent.html" class="tsd-kind-icon">IMessage<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.imessages.html" class="tsd-kind-icon">IMessages</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iproblemdetail.html" class="tsd-kind-icon">IProblem<wbr>Detail</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.irealtimeconfig.html" class="tsd-kind-icon">IRealtime<wbr>Config</a>
@@ -170,32 +221,29 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroom.html" class="tsd-kind-icon">IRoom</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iroomconfig.html" class="tsd-kind-icon">IRoom<wbr>Config</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroomconfig.html#client" class="tsd-kind-icon">client</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroomconfig.html#roomobj" class="tsd-kind-icon">room<wbr>Obj</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroomforuser.html" class="tsd-kind-icon">IRoom<wbr>For<wbr>User</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iroomparams.html" class="tsd-kind-icon">IRoom<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iroomuser.html" class="tsd-kind-icon">IRoom<wbr>User</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.isendmessagesresponse.html" class="tsd-kind-icon">ISend<wbr>Messages<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iuisettings.html" class="tsd-kind-icon">IUISettings</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iuser.html" class="tsd-kind-icon">IUser</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iuserconfig.html" class="tsd-kind-icon">IUser<wbr>Config</a>
+						<a href="_interface_.iuserforroom.html" class="tsd-kind-icon">IUser<wbr>For<wbr>Room</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iuserforroom.html" class="tsd-kind-icon">IUser<wbr>For<wbr>Room</a>
+						<a href="_interface_.iuserparams.html" class="tsd-kind-icon">IUser<wbr>Params</a>
 					</li>
 				</ul>
 			</nav>

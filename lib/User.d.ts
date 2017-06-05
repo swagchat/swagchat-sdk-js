@@ -1,6 +1,7 @@
-import * as model from "./interface";
-import { Client } from "./Client";
 import "isomorphic-fetch";
+import * as I from "./interface";
+import { Platform } from "./interface";
+import { Client } from "./Client";
 /**
  * User class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -9,10 +10,11 @@ import "isomorphic-fetch";
  * user.name = "John";<br />
  * console.log(user.name);</code>
  */
-export default class User {
+export declare class User {
     readonly _client: Client;
     private _data;
-    constructor(option: model.IUserConfig);
+    static auth(params: I.IAuthParams): Promise<I.IFetchUserResponse>;
+    constructor(params: I.IUserParams);
     userId: string;
     name: string;
     pictureUrl: string;
@@ -25,10 +27,18 @@ export default class User {
     };
     readonly created: string;
     readonly modified: string;
-    readonly rooms: model.IRoomForUser[];
-    readonly devices: model.IDevice[];
-    private _setDevice(platform, token);
-    private _removeDevice(platform);
+    readonly rooms: I.IRoomForUser[];
+    readonly devices: I.IDevice[];
+    /**
+     * Register a new device token.
+     *
+     * @param token device token.
+     */
+    setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse>;
+    /**
+     * Delete device token.
+     */
+    removeDevice(platform: Platform): Promise<I.IErrorResponse>;
     /**
      * Register metadata in separate.
      * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
@@ -41,48 +51,28 @@ export default class User {
      */
     setMetaData(key: string, value: string | number | boolean | Object): void;
     /**
-     * Register a new iOS device token.
-     *
-     * @param token device token for iOS.
-     */
-    setDeviceIos(token: string): Promise<Response>;
-    /**
-     * Register a new Android device token.
-     *
-     * @param token device token for Android.
-     */
-    setDeviceAndroid(token: string): Promise<Response>;
-    /**
-     * Delete device token for iOS.
-     */
-    removeDeviceIos(): Promise<Response>;
-    /**
-     * Delete device token for Android.
-     */
-    removeDeviceAndroid(): Promise<Response>;
-    /**
      * Update user information.
      * Please set the data of this object beforehand.
      */
-    update(): Promise<Response>;
+    update(): Promise<I.IFetchUserResponse>;
     /**
      * Refresh user information to the latest.
      * A different client might update an existing user's information while you use the application continuously.
      */
-    reflesh(): Promise<Response>;
+    reflesh(): Promise<I.IFetchUserResponse>;
     /**
      * Send Message.
      * Please create message objects beforehand by using such as client.createTextMessage().
      * @param messages An array for message objects to send.
      */
-    sendMessages(...messages: model.IMessage[]): Promise<Response>;
+    sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse>;
     /**
      * Reset the number of unread for room specified by parameters.
      * @param roomId Room ID
      */
-    markAsRead(roomId: string): Promise<Response>;
+    markAsRead(roomId: string): Promise<I.IErrorResponse>;
     /**
      * Reset the number of unread for each room for the user.
      */
-    markAllAsRead(): Promise<Response>;
+    markAllAsRead(): Promise<I.IErrorResponse>;
 }

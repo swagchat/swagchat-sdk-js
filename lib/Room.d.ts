@@ -1,4 +1,4 @@
-import * as model from "./interface";
+import * as I from "./interface";
 import "isomorphic-fetch";
 /**
  * Room class has API client, own data and the behaivor for itself.
@@ -8,13 +8,13 @@ import "isomorphic-fetch";
  * room.name = "John's Room";<br />
  * console.log(room.name);</code>
  */
-export default class Room {
+export declare class Room {
     private _client;
     private _data;
     private _onMessageReceived;
     private _onUserJoined;
     private _onUserLeft;
-    constructor(option: model.IRoomConfig);
+    constructor(params: I.IRoomParams);
     readonly roomId: string;
     userId: string;
     name: string;
@@ -25,8 +25,11 @@ export default class Room {
     };
     isPublic: boolean;
     readonly created: string;
+    readonly lastMessage: string;
+    readonly lastMessageUpdated: string;
+    readonly messageCount: number;
     readonly modified: string;
-    readonly users: model.IUserForRoom[];
+    readonly users: I.IUserForRoom[] | null;
     /**
      * Register metadata in separate.
      * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
@@ -42,14 +45,14 @@ export default class Room {
      * Update room information.
      * Please set the data of this object beforehand.
      */
-    update(): Promise<Response>;
-    setUsers(userIds: string[]): Promise<never>;
-    addUsers(userIds: string[]): Promise<never>;
-    removeUsers(userIds: string[]): Promise<never>;
-    reflesh(): Promise<Response>;
+    update(): Promise<I.IFetchRoomResponse>;
+    setUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
+    addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
+    removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
+    reflesh(): Promise<I.IFetchRoomResponse>;
     getMessages(queryParams: {
-        [key: string]: string;
-    }): Promise<Response>;
+        [key: string]: string | number;
+    }): Promise<I.IFetchMessagesResponse>;
     subscribeMessage(onMessageReceived: Function): void;
     unsubscribeMessage(): void;
     subscribeUserJoin(onUserJoined: Function): void;

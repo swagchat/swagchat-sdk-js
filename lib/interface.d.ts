@@ -1,16 +1,29 @@
 /// <reference types="node" />
-import { Client } from "./Client";
-export interface IClientConfig {
+import { Client, User, Room } from ".";
+export declare enum Platform {
+    IOS = 1,
+    ANDROID = 2,
+}
+export interface IClientParams {
     apiKey: string;
+    apiSecret?: string;
     apiEndpoint: string;
+    userAccessToken?: string;
     realtime?: IRealtimeConfig;
 }
 export interface IRealtimeConfig {
     endpoint: string;
 }
-export interface IUserConfig {
+export interface IUserParams {
     client: Client;
-    userObj: IUser;
+    data: IUser;
+}
+export interface IAuthParams {
+    apiKey: string;
+    apiEndpoint: string;
+    realtimeEndpoint?: string;
+    userId: string;
+    accessToken: string;
 }
 export interface IDevice {
     userId: string;
@@ -57,9 +70,9 @@ export interface IRoomForUser {
     ruCreated: string;
     ruModified: string;
 }
-export interface IRoomConfig {
+export interface IRoomParams {
     client: Client;
-    roomObj: IRoom;
+    data: IRoom;
 }
 export interface IRoom {
     roomId: string;
@@ -71,11 +84,12 @@ export interface IRoom {
         [key: string]: string | number | boolean | Object;
     };
     isPublic: boolean;
-    lastMessage?: string;
-    lastMessageUpdated?: number;
+    lastMessage: string;
+    lastMessageUpdated: string;
+    messageCount: number;
     created: string;
     modified: string;
-    users: IUserForRoom[];
+    users: IUserForRoom[] | null;
 }
 export interface IUserForRoom {
     userId: string;
@@ -94,12 +108,32 @@ export interface IUserForRoom {
     ruCreated: string;
     ruModified: string;
 }
+export interface IRoomUser {
+    roomId: string;
+    userId: string;
+    unreadCount: number;
+    metaData?: {
+        [key: string]: string | number | boolean | Object;
+    };
+    created: string;
+    modified: string;
+}
+export interface IMessages {
+    allCount: number;
+    messages: IMessage[];
+}
 export interface IMessage {
+    messageId?: string;
     roomId: string;
     userId: string;
     type: string;
     eventName: string;
     payload: Object;
+    created?: string;
+}
+export interface ISendMessagesResponse {
+    messageIds: string[] | null;
+    error: IProblemDetail | null;
 }
 export interface ICloseEvent extends Event {
     code: number;
@@ -109,4 +143,52 @@ export interface IMessageEvent extends Event {
     data: (String | Buffer | ArrayBuffer | Buffer[]);
     isBinary: boolean;
     target: WebSocket;
+}
+export interface IUISettings {
+    menuHeight: number;
+    textInteractionFontSize: number;
+}
+export interface IInvalidParam {
+    name: string;
+    reason: string;
+}
+export interface IProblemDetail {
+    type?: string;
+    title: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+    errorName?: string;
+    invalidParams?: IInvalidParam[];
+}
+export interface IFetchUsersResponse {
+    users: IUser[] | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchUserResponse {
+    user: User | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchUserDeviceResponse {
+    device: IDevice | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchRoomsResponse {
+    rooms: IRoom[] | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchRoomResponse {
+    room: Room | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchRoomUsersResponse {
+    roomUsers: IRoomUser[] | null;
+    error: IProblemDetail | null;
+}
+export interface IFetchMessagesResponse {
+    messages: IMessages | null;
+    error: IProblemDetail | null;
+}
+export interface IErrorResponse {
+    error: IProblemDetail | null;
 }
