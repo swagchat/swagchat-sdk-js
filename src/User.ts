@@ -528,4 +528,52 @@ export class User {
             } as I.IErrorResponse;
         });
     }
+
+    /**
+     * File upload.
+     * @param file Image data.
+     */
+    public fileUpload(file: Blob): Promise<I.IPostAssetResponse> {
+        if (!file) {
+            throw Error("file upload failure. file is emptry.");
+        }
+        let formData = new FormData();
+        formData.append("asset", file);
+        return fetch(this._client.apiEndpoint + "/assets", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + this.accessToken,
+            },
+            body: formData,
+        }).then((response: Response) => {
+            if (response.status === 201) {
+                return response.json().then((asset) => {
+                    return (
+                        {
+                            asset: <I.IAsset>asset,
+                            error: null,
+                        } as I.IPostAssetResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            asset: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IPostAssetResponse
+                    );
+                });
+            }
+        }).catch((error) => {
+            return {
+                asset: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IPostAssetResponse;
+        });
+    }
+
+
 }

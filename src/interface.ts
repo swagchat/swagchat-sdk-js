@@ -136,6 +136,12 @@ export interface ISendMessagesResponse {
   error: IProblemDetail | null;
 }
 
+export interface IAsset {
+  assetId: string;
+  sourceUrl: string;
+  mime: string;
+}
+
 export interface ICloseEvent extends Event {
   code: number;
   reason: string;
@@ -199,6 +205,11 @@ export interface IFetchRoomUsersResponse {
 
 export interface IFetchMessagesResponse {
   messages: IMessages | null;
+  error: IProblemDetail | null;
+}
+
+export interface IPostAssetResponse {
+  asset: IAsset | null;
   error: IProblemDetail | null;
 }
 
