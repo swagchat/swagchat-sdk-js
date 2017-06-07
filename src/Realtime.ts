@@ -19,25 +19,37 @@ export default class Realtime {
         this.conn = new websocket(endpoint);
         this.conn.addEventListener("open", (e: Event) => {
             console.info("%c[SwagChat]Connecting Realtime Server OK", "color:" + realtimeLogColor);
-            this.onConnected(<WebSocket>e.target);
+            if (this.onConnected) {
+                this.onConnected(<WebSocket>e.target);
+            }
         });
         this.conn.addEventListener("error", (e: Event) => {
-            this.onError(<WebSocket>e.target);
+            if (this.onError) {
+                this.onError(<WebSocket>e.target);
+            }
         });
         this.conn.addEventListener("close", (e: I.ICloseEvent) => {
-            this.onClosed(e.code, e.reason);
+            if (this.onClosed) {
+                this.onClosed(e.code, e.reason);
+            }
         });
         this.conn.addEventListener("message", (e: I.IMessageEvent) => {
             let message = <I.IMessage>JSON.parse(<string>e.data);
             switch (message.eventName) {
             case "message":
-                this.onMessageReceived(message);
+                if (this.onMessageReceived) {
+                    this.onMessageReceived(message);
+                }
                 break;
             case "userJoin":
-                this.onUserJoined(message);
+                if (this.onUserJoined) {
+                    this.onUserJoined(message);
+                }
                 break;
             case "userLeft":
-                this.onUserLeft(message);
+                if (this.onUserLeft) {
+                    this.onUserLeft(message);
+                }
                 break;
             }
         });
