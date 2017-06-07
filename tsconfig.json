@@ -16,7 +16,7 @@
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "declaration": true,
-    "forceConsistentCasingInFileNames": false
+    "forceConsistentCasingInFileNames": true
   },
   "formatCodeOptions": {
     "indentSize": 2,
