@@ -1,8 +1,7 @@
 import "isomorphic-fetch";
 
+import { Client, Platform } from "./";
 import * as I from "./interface";
-import { Platform } from "./interface";
-import { Client } from "./Client";
 
 /**
  * User class has API client, own data and the behaivor for itself.
@@ -575,5 +574,39 @@ export class User {
         });
     }
 
-
+    public getContacts(): Promise<I.IFetchUsersResponse> {
+        return fetch(this._client.apiEndpoint + "/contacts/" + this.userId, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + this.accessToken,
+            },
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((users) => {
+                    return (
+                        {
+                            users: <I.IUser[]>users.users,
+                            error: null,
+                        } as I.IFetchUsersResponse
+                    );
+                });
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            users: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchUsersResponse
+                    );
+                });
+            }
+        }).catch((error) => {
+            return {
+                users: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchUsersResponse;
+        });
+    }
 }
