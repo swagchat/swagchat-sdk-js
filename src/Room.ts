@@ -70,12 +70,12 @@ export class Room {
         this._data.metaData = metaData;
     }
 
-    get isPublic(): boolean {
-        return this._data.isPublic;
+    get type(): number {
+        return this._data.type;
     }
 
-    set isPublic(isPublic: boolean) {
-        this._data.isPublic = isPublic;
+    set type(type: number) {
+        this._data.type = type;
     }
 
     get created(): string {
@@ -135,7 +135,7 @@ export class Room {
             pictureUrl: this._data.pictureUrl,
             informationUrl: this._data.informationUrl,
             metaData: this._data.metaData,
-            isPublic: this._data.isPublic
+            type: this._data.type
         };
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
@@ -172,61 +172,6 @@ export class Room {
                     title: error.message,
                 } as I.IProblemDetail,
             } as I.IFetchRoomResponse;
-        });
-    }
-
-    public setUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-        if (!userIds || !Array.isArray(userIds)) {
-            throw Error("setUsers failure. Parameter invalid.");
-        }
-        let fetchParam = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                userIds: userIds
-            })
-        };
-        if (!(userIds instanceof Array) || userIds.length === 0) {
-            fetchParam.body = JSON.stringify({});
-        }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
-            fetchParam
-        ).then((response: Response) => {
-            if (response.status === 201) {
-                return response.json().then((roomUsers) => {
-                    return (
-                        {
-                            roomUsers: roomUsers,
-                            error: null,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    roomUsers: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchRoomUsersResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            roomUsers: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                roomUsers: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchRoomUsersResponse;
         });
     }
 

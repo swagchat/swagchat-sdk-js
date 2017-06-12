@@ -1,8 +1,7 @@
-import { isBrowser } from "./const";
+import { isBrowser, realtimeLogColor } from "./const";
 import * as I from "./interface";
-import { realtimeLogColor } from "./const";
 
-export default class Realtime {
+export class Realtime {
     readonly conn: WebSocket;
 
     public onConnected: Function;

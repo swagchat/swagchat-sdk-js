@@ -2,8 +2,9 @@
  * Swagchat SDK.
  */
 export * from "./Client";
+export * from "./Realtime";
 export * from "./interface";
 export * from "./User";
 export * from "./Room";
-export { Platform } from "./interface";
-export { createMessage } from "./util";
+export * from "./const";
+export * from "./util";

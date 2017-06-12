@@ -1,6 +1,4 @@
-import Realtime from "./Realtime";
-import { User } from "./User";
-import { Room } from "./Room";
+import { Realtime, User, Room } from "./";
 import * as I from "./interface";
 import { apiLogColor } from "./const";
 

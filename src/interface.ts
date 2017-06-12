@@ -1,10 +1,5 @@
 import { Client, User, Room } from ".";
 
-export enum Platform {
-  IOS = 1,
-  ANDROID = 2,
-}
-
 export interface IClientParams {
   apiKey: string;
   apiSecret?: string;
@@ -61,7 +56,7 @@ export interface IRoomForUser {
   pictureUrl: string;
   informationUrl: string;
   metaData: {[key: string]: string | number | boolean | Object};
-  isPublic: boolean;
+  type: number;
   lastMessage: string;
   lastMessageUpdated: string;
   created: string;
@@ -84,7 +79,7 @@ export interface IRoom {
   pictureUrl: string;
   informationUrl: string;
   metaData: {[key: string]: string | number | boolean | Object};
-  isPublic: boolean;
+  type: number;
   lastMessage: string;
   lastMessageUpdated: string;
   messageCount: number;
@@ -111,7 +106,7 @@ export interface IRoomUser {
   roomId: string;
   userId: string;
   unreadCount: number;
-  metaData?: {[key: string]: string | number | boolean | Object}; 
+  metaData?: {[key: string]: string | number | boolean | Object};
   created: string;
   modified: string;
 }
