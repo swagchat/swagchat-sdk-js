@@ -1,6 +1,7 @@
 import * as I from "./interface";
 import { Client } from "./Client";
 import { createQueryParams } from "./util";
+import { realtimeLogColor } from "./const";
 import "isomorphic-fetch";
 
 /**
@@ -175,7 +176,7 @@ export class Room {
         });
     }
 
-    public addUsers(userIds: string[]) {
+    public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
         if (!userIds || !Array.isArray(userIds)) {
             throw Error("addUsers failure. Parameter invalid.");
         }
@@ -230,7 +231,7 @@ export class Room {
         });
     }
 
-    public removeUsers(userIds: string[]) {
+    public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
         if (!userIds || !Array.isArray(userIds)) {
             throw Error("removeUsers failure. Parameter invalid.");
         }
@@ -384,7 +385,7 @@ export class Room {
             this._client.connection.onMessageReceived = (data: I.IMessage) => {
                 this._onMessageReceived(data);
             };
-            console.info("Subscribe message success roomId[" + this._data.roomId + "]");
+            console.info("%c[SwagChat]Subscribe message success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
         } else {
             throw Error("Subscribe message failure roomId[" + this._data.roomId + "]");
         }
@@ -416,7 +417,7 @@ export class Room {
                 this._data.users = users;
                 this._onUserJoined(users);
             };
-            console.info("Subscribe userJoin success roomId[" + this._data.roomId + "]");
+            console.info("%c[SwagChat]Subscribe userJoin success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
         } else {
             throw Error("Subscribe userJoin failure roomId[" + this._data.roomId + "]");
         }
@@ -428,7 +429,7 @@ export class Room {
         }
         this._onUserJoined = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {
-            console.info("Unsubscribe userJoin success roomId[" + this._data.roomId + "]");
+            console.info("%c[SwagChat]Unsubscribe userJoin success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
         } else {
             throw Error("Unsubscribe userJoin failure roomId[" + this._data.roomId + "]");
         }
@@ -448,7 +449,8 @@ export class Room {
                 this._data.users = users;
                 this._onUserLeft(users);
             };
-            console.info("Subscribe userLeft success roomId[" + this._data.roomId + "]");
+            console.info("%c[SwagChat]Subscribe userLeft success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
+
         } else {
             throw Error("Subscribe userLeft failure roomId[" + this._data.roomId + "]");
         }
@@ -463,7 +465,7 @@ export class Room {
         }
         this._onUserLeft = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "unbind")) {
-            console.info("Unsubscribe userLeft success roomId[" + this._data.roomId + "]");
+            console.info("%c[SwagChat]Unsubscribe userLeft success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
         } else {
             throw Error("Unsubscribe userLeft failure roomId[" + this._data.roomId + "]");
         }
