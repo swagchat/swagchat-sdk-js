@@ -40,6 +40,7 @@ export interface IUser {
   unreadCount: number;
   metaData: {[key: string]: string | number | boolean | Object};
   isPublic: boolean;
+  isCanBlock: boolean;
   accessToken: string;
   created: string;
   modified: string;
@@ -95,6 +96,7 @@ export interface IUserForRoom {
   pictureUrl: string;
   informationUrl: string;
   metaData?: {[key: string]: string | number | boolean | Object};
+  isCanBlock: boolean;
   created: string;
   modified: string;
   ruUnreadCount: number;

@@ -136,6 +136,14 @@ export class User {
         this._data.isPublic = isPublic;
     }
 
+    get isCanBlock(): boolean {
+        return this._data.isCanBlock;
+    }
+
+    set isCanBlock(isCanBlock: boolean) {
+        this._data.isCanBlock = isCanBlock;
+    }
+
     get accessToken(): string {
         return this._data.accessToken;
     }
