@@ -45,7 +45,7 @@ export interface IUser {
   modified: string;
   rooms: IRoomForUser[];
   devices: IDevice[];
-  blockedUsers?: string[];
+  blocks: string[];
   mutedRooms?: string[];
 }
 
@@ -109,6 +109,12 @@ export interface IRoomUser {
   metaData?: {[key: string]: string | number | boolean | Object};
   created: string;
   modified: string;
+}
+
+export interface IBlockUser {
+  userId: string;
+  blockUserId: string;
+  created: string;
 }
 
 export interface IMessages {
@@ -195,6 +201,11 @@ export interface IFetchRoomResponse {
 
 export interface IFetchRoomUsersResponse {
   roomUsers: IRoomUser[] | null;
+  error: IProblemDetail | null;
+}
+
+export interface IFetchBlockUsersResponse {
+  blockUsers: string[] | null;
   error: IProblemDetail | null;
 }
 

@@ -166,6 +166,10 @@ export class User {
         return this._data.devices;
     }
 
+    get blocks(): string[] {
+        return this._data.blocks;
+    }
+
     /**
      * Register a new device token.
      *
@@ -420,10 +424,10 @@ export class User {
             body: JSON.stringify({messages: messages})
         }).then((response: Response) => {
             if (response.status === 201) {
-                return response.json().then((res) => {
+                return response.json().then((messagesRes) => {
                     return (
                         {
-                            messageIds: <string[]>res.messageIds,
+                            messageIds: <string[]>messagesRes.messageIds,
                             error: null,
                         } as I.ISendMessagesResponse
                     );
@@ -582,10 +586,10 @@ export class User {
             },
         }).then((response: Response) => {
             if (response.status === 200) {
-                return response.json().then((users) => {
+                return response.json().then((usersRes) => {
                     return (
                         {
-                            users: <I.IUser[]>users.users,
+                            users: <I.IUser[]>usersRes.users,
                             error: null,
                         } as I.IFetchUsersResponse
                     );
@@ -609,4 +613,116 @@ export class User {
             } as I.IFetchUsersResponse;
         });
     }
+
+    public addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("addUsers failure. Parameter invalid.");
+        }
+        let fetchParam = {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userIds: userIds
+            })
+        };
+        if (!(userIds instanceof Array) || userIds.length === 0) {
+            fetchParam.body = JSON.stringify({});
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/blocks",
+            fetchParam
+        ).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((blockUsersRes) => {
+                    return (
+                        {
+                            blockUsers: blockUsersRes.blockUsers,
+                            error: null,
+                        } as I.IFetchBlockUsersResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    blockUsers: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchBlockUsersResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            blockUsers: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchBlockUsersResponse
+                    );
+                });
+            }
+        }).catch((error) => {
+            return {
+                blockUsers: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchBlockUsersResponse;
+        });
+    }
+
+    public removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
+        if (!userIds || !Array.isArray(userIds)) {
+            throw Error("removeUsers failure. Parameter invalid.");
+        }
+        let fetchParam = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userIds: userIds
+            })
+        };
+        if (!(userIds instanceof Array) || userIds.length === 0) {
+            fetchParam.body = JSON.stringify({});
+        }
+        return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/blocks",
+            fetchParam
+        ).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((blockUsersRes) => {
+                    return (
+                        {
+                            blockUsers: blockUsersRes.blockUsers,
+                            error: null,
+                        } as I.IFetchBlockUsersResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    blockUsers: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchBlockUsersResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            blockUsers: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchBlockUsersResponse
+                    );
+                });
+            }
+        }).catch((error) => {
+            return {
+                blockUsers: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchBlockUsersResponse;
+        });
+    }
+
+
 }
