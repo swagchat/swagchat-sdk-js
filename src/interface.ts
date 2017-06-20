@@ -60,6 +60,7 @@ export interface IRoomForUser {
   type: number;
   lastMessage: string;
   lastMessageUpdated: string;
+  isCanLeft: boolean;
   created: string;
   modified: string;
   ruUnreadCount: number;
@@ -85,6 +86,7 @@ export interface IRoom {
   lastMessage: string;
   lastMessageUpdated: string;
   messageCount: number;
+  isCanLeft: boolean;
   created: string;
   modified: string;
   users: IUserForRoom[] | null;

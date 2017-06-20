@@ -83,10 +83,6 @@ export class Room {
         this._data.type = type;
     }
 
-    get created(): string {
-        return this._data.created;
-    }
-
     get lastMessage(): string {
         return this._data.lastMessage;
     }
@@ -97,6 +93,18 @@ export class Room {
 
     get messageCount(): number {
         return this._data.messageCount;
+    }
+
+    get isCanLeft(): boolean {
+        return this._data.isCanLeft;
+    }
+
+    set isCanLeft(isCanLeft: boolean) {
+        this._data.isCanLeft = isCanLeft;
+    }
+
+    get created(): string {
+        return this._data.created;
     }
 
     get modified(): string {
