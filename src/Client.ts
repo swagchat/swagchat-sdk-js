@@ -1,6 +1,6 @@
 import { Realtime, User, Room } from "./";
 import * as I from "./interface";
-import { apiLogColor } from "./const";
+import { logger } from "./util";
 
 import "isomorphic-fetch";
 
@@ -35,8 +35,7 @@ export class Client {
     }
 
     constructor(params: I.IClientParams) {
-        console.info("%c[SwagChat]Initializing API Client...", "color:" + apiLogColor);
-
+        logger("api", "info", "Initializing API Client...");
         this.apiKey = params.apiKey;
         this.apiSecret = params.apiSecret || "";
         this.apiEndpoint = params.apiEndpoint;
@@ -46,7 +45,7 @@ export class Client {
             this.connection = new Realtime(realtimeConfig.endpoint);
         }
 
-        console.info("%c[SwagChat]Initialized API Client OK", "color:" + apiLogColor);
+        logger("api", "info", "Initialized API Client OK");
     }
 
     public socketClose() {
@@ -129,10 +128,6 @@ export class Client {
     }
 
     public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
-        if (!userId || typeof(userId) !== "string") {
-            throw Error("Get user failure. Parameter invalid [userId].");
-        }
-
         const self = this;
         return fetch(this.apiEndpoint + "/users/" + userId, {
             method: "GET",
@@ -179,10 +174,6 @@ export class Client {
     }
 
     public removeUser(userId: string): Promise<I.IErrorResponse> {
-        if (!userId || typeof(userId) !== "string") {
-            throw Error("Remove user failure. Parameter invalid.");
-        }
-
         let headers = this.getApiHeaders();
         headers["Content-Type"] = "application/json";
         return fetch(this.apiEndpoint + "/users/" + userId, {
@@ -293,9 +284,6 @@ export class Client {
     }
 
     public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-        if (!roomId || typeof(roomId) !== "string") {
-            throw Error("Get room failure. Parameter invalid.");
-        }
         const self = this;
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
             method: "GET",
@@ -341,10 +329,6 @@ export class Client {
     }
 
     public removeRoom(roomId: string): Promise<I.IErrorResponse> {
-        if (!roomId || typeof(roomId) !== "string") {
-            throw Error("Remove room failure. Parameter invalid.");
-        }
-
         let headers = this.getApiHeaders();
         headers["Content-Type"] = "application/json";
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {

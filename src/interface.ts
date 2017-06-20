@@ -79,6 +79,7 @@ export interface IRoom {
   pictureUrl: string;
   informationUrl: string;
   metaData: {[key: string]: string | number | boolean | Object};
+  availableMessageTypes: string[];
   type: number;
   lastMessage: string;
   lastMessageUpdated: string;

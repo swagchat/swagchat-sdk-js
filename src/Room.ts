@@ -1,7 +1,6 @@
 import * as I from "./interface";
 import { Client } from "./Client";
-import { createQueryParams } from "./util";
-import { realtimeLogColor } from "./const";
+import { createQueryParams, logger } from "./util";
 import "isomorphic-fetch";
 
 /**
@@ -66,9 +65,14 @@ export class Room {
 
     set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
         if (!metaData || typeof(metaData) !== "object") {
-            throw Error("Set metaData failure. metaData is not setting.");
+            logger("api", "error", "Set metaData failure. metaData is not setting.");
+        } else {
+            this._data.metaData = metaData;
         }
-        this._data.metaData = metaData;
+    }
+
+    get availableMessageTypes(): string[] {
+        return this._data.availableMessageTypes;
     }
 
     get type(): number {
@@ -115,13 +119,14 @@ export class Room {
      */
     public setMetaData(key: string, value: string | number | boolean | Object): void {
         if (!key || typeof(key) !== "string") {
-            throw Error("set metaData failure. Parameter invalid.");
-        }
-        if (this._data.metaData === undefined) {
-            let metaData = {key: value};
-            this._data.metaData = metaData;
+            logger("api", "error", "set metaData failure. Parameter invalid.");
         } else {
-            this._data.metaData[key] = value;
+            if (this._data.metaData === undefined) {
+                let metaData = {key: value};
+                this._data.metaData = metaData;
+            } else {
+                this._data.metaData[key] = value;
+            }
         }
     }
 
@@ -177,9 +182,6 @@ export class Room {
     }
 
     public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-        if (!userIds || !Array.isArray(userIds)) {
-            throw Error("addUsers failure. Parameter invalid.");
-        }
         let fetchParam = {
             method: "PUT",
             headers: {
@@ -232,9 +234,6 @@ export class Room {
     }
 
     public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-        if (!userIds || !Array.isArray(userIds)) {
-            throw Error("removeUsers failure. Parameter invalid.");
-        }
         let fetchParam = {
             method: "DELETE",
             headers: {
@@ -375,40 +374,45 @@ export class Room {
 
     public subscribeMessage(onMessageReceived: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Subscribe message failure. roomId is not setting.");
+            logger("realtime", "error", "Subscribe message failure. roomId is not setting.");
+            return;
         }
         if (onMessageReceived === undefined) {
-            throw Error("Subscribe message failure. Parameter invalid.");
+            logger("realtime", "error", "Subscribe message failure. onMessageReceived is undefined.");
+            return;
         }
         this._onMessageReceived = onMessageReceived;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "bind")) {
             this._client.connection.onMessageReceived = (data: I.IMessage) => {
                 this._onMessageReceived(data);
             };
-            console.info("%c[SwagChat]Subscribe message success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
+            logger("realtime", "info", "Subscribe message success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Subscribe message failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Subscribe message failure roomId[" + this._data.roomId + "]");
         }
     }
 
     public unsubscribeMessage(): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Unsubscribe message failure. roomId is not setting.");
+            logger("realtime", "error", "Unsubscribe message failure. roomId is not setting.");
+            return;
         }
         this._onMessageReceived = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "unbind")) {
-            console.info("Unsubscribe message success roomId[" + this._data.roomId + "]");
+            logger("realtime", "info", "Unsubscribe message success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Unsubscribe message failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Unsubscribe message failure roomId[" + this._data.roomId + "]");
         }
     }
 
     public subscribeUserJoin(onUserJoined: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Subscribe userJoin failure. roomId is not setting.");
+            logger("realtime", "error", "Subscribe userJoin failure. roomId is not setting.");
+            return;
         }
         if (onUserJoined === undefined) {
-            throw Error("Subscribe userJoin failure. Parameter invalid.");
+            logger("realtime", "error", "Subscribe userJoin failure. onUserJoined is undefined.");
+            return;
         }
         this._onUserJoined = onUserJoined;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "bind")) {
@@ -417,30 +421,33 @@ export class Room {
                 this._data.users = users;
                 this._onUserJoined(users);
             };
-            console.info("%c[SwagChat]Subscribe userJoin success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
+            logger("realtime", "info", "Subscribe userJoin success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Subscribe userJoin failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Subscribe userJoin failure roomId[" + this._data.roomId + "]");
         }
     }
 
     public unsubscribeUserJoin(): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Unsubscribe userJoin failure. roomId is not setting.");
+            logger("realtime", "error", "Unsubscribe userJoin failure. roomId is not setting.");
+            return;
         }
         this._onUserJoined = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {
-            console.info("%c[SwagChat]Unsubscribe userJoin success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
+            logger("realtime", "info", "Unsubscribe userJoin success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Unsubscribe userJoin failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Unsubscribe userJoin failure roomId[" + this._data.roomId + "]");
         }
     }
 
     public subscribeUserLeft(onUserLeft: Function): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Subscribe userLeft failure. roomId is not setting.");
+            logger("realtime", "error", "Subscribe userLeft failure. roomId is not setting.");
+            return;
         }
         if (onUserLeft === undefined) {
-            throw Error("Subscribe userLeft failure. Parameter invalid.");
+            logger("realtime", "error", "Subscribe userLeft failure. Parameter invalid.");
+            return;
         }
         this._onUserLeft = onUserLeft;
         if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "bind")) {
@@ -449,25 +456,26 @@ export class Room {
                 this._data.users = users;
                 this._onUserLeft(users);
             };
-            console.info("%c[SwagChat]Subscribe userLeft success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
-
+            logger("realtime", "info", "Subscribe userLeft success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Subscribe userLeft failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Subscribe userLeft failure roomId[" + this._data.roomId + "]");
         }
     }
 
     public unsubscribeUserLeft(): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            throw Error("Unsubscribe userLeft failure. roomId is not setting.");
+            logger("realtime", "error", "Unsubscribe userLeft failure. roomId is not setting.");
+            return;
         }
         if (this._onUserLeft === undefined) {
-            throw Error("Unsubscribe userLeft failure. .");
+            logger("realtime", "error", "Unsubscribe userLeft failure. onUserLeft is undefined.");
+            return;
         }
         this._onUserLeft = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "unbind")) {
-            console.info("%c[SwagChat]Unsubscribe userLeft success roomId[" + this._data.roomId + "]", "color:" + realtimeLogColor);
+            logger("realtime", "info", "Unsubscribe userLeft success roomId[" + this._data.roomId + "]");
         } else {
-            throw Error("Unsubscribe userLeft failure roomId[" + this._data.roomId + "]");
+            logger("realtime", "error", "Unsubscribe userLeft failure roomId[" + this._data.roomId + "]");
         }
     }
 }

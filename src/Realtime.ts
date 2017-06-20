@@ -1,4 +1,5 @@
-import { isBrowser, realtimeLogColor } from "./const";
+import { isBrowser } from "./const";
+import { logger } from "./util";
 import * as I from "./interface";
 
 export class Realtime {
@@ -12,12 +13,12 @@ export class Realtime {
     public onUserLeft: Function;
 
     constructor(endpoint: string) {
-        console.info("%c[SwagChat]Connecting Realtime Server...", "color:" + realtimeLogColor);
+        logger("realtime", "info", "Connecting Realtime Server...");
 
         let websocket = isBrowser ? WebSocket : require("ws");
         this.conn = new websocket(endpoint);
         this.conn.addEventListener("open", (e: Event) => {
-            console.info("%c[SwagChat]Connecting Realtime Server OK", "color:" + realtimeLogColor);
+            logger("realtime", "info", "Connecting Realtime Server OK");
             if (this.onConnected) {
                 this.onConnected(<WebSocket>e.target);
             }

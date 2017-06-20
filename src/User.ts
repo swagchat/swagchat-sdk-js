@@ -2,6 +2,7 @@ import "isomorphic-fetch";
 
 import { Client, Platform } from "./";
 import * as I from "./interface";
+import { logger } from "./util";
 
 /**
  * User class has API client, own data and the behaivor for itself.
@@ -16,10 +17,6 @@ export class User {
     private _data: I.IUser;
 
     static auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
-        if (!params.userId || typeof(params.userId) !== "string") {
-            throw Error("Auth user failure. Parameter invalid [userId].");
-        }
-
         return fetch(params.apiEndpoint + "/users/" + params.userId, {
             headers: {
                 "Content-Type": "application/json",
@@ -85,9 +82,10 @@ export class User {
 
     set userId(userId: string) {
         if (!userId || userId === "" || typeof(userId) !== "string") {
-            throw Error("Set userId failure. userId is not setting.");
+            logger("api", "error", "Set userId failure. userId is not setting.");
+        } else {
+            this._data.userId = userId;
         }
-        this._data.userId = userId;
     }
 
     get name(): string {
@@ -96,9 +94,10 @@ export class User {
 
     set name(name: string) {
         if (!name || name === "" || typeof(name) !== "string") {
-            throw Error("Set userId failure. userId is not setting.");
+            logger("api", "error", "Set userId failure. userId is not setting.");
+        } else {
+            this._data.name = name;
         }
-        this._data.name = name;
     }
 
     get pictureUrl(): string {
@@ -107,9 +106,10 @@ export class User {
 
     set pictureUrl(pictureUrl: string) {
         if (!pictureUrl || pictureUrl === "" || typeof(pictureUrl) !== "string") {
-            throw Error("Set userId failure. userId is not setting.");
+            logger("api", "error", "Set userId failure. userId is not setting.");
+        } else {
+            this._data.pictureUrl = pictureUrl;
         }
-        this._data.pictureUrl = pictureUrl;
     }
 
     get informationUrl(): string {
@@ -118,9 +118,10 @@ export class User {
 
     set informationUrl(informationUrl: string) {
         if (!informationUrl || informationUrl === "" || typeof(informationUrl) !== "string") {
-            throw Error("Set userId failure. userId is not setting.");
+            logger("api", "error", "Set userId failure. userId is not setting.");
+        } else {
+            this._data.informationUrl = informationUrl;
         }
-        this._data.informationUrl = informationUrl;
     }
 
     get unreadCount(): number {
@@ -145,9 +146,10 @@ export class User {
 
     set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
         if (!metaData || typeof(metaData) !== "object") {
-            throw Error("Set metaData failure. metaData is not setting.");
+            logger("api", "error", "Set metaData failure. metaData is not setting.");
+        } else {
+            this._data.metaData = metaData;
         }
-        this._data.metaData = metaData;
     }
 
     get created(): string {
@@ -176,10 +178,6 @@ export class User {
      * @param token device token.
      */
     public setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse> {
-        if (!platform || typeof(platform) !== "number") {
-            throw Error("Set device failure. platform is not setting.");
-        }
-
         let method = "POST";
         if (this._data.devices) {
             for (let device of this._data.devices) {
@@ -239,9 +237,6 @@ export class User {
      * Delete device token.
      */
     public removeDevice(platform: Platform): Promise<I.IErrorResponse> {
-        if (!platform || typeof(platform) !== "number") {
-            throw Error("Set device failure. platform is not setting.");
-        }
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId + "/devices/" + String(platform), {
             method: "DELETE",
             headers: {
@@ -293,7 +288,8 @@ export class User {
      */
     public setMetaData(key: string, value: string | number | boolean | Object): void {
         if (!key || typeof(key) !== "string") {
-            throw Error("set metaData failure. Parameter invalid.");
+            logger("api", "error", "set metaData failure. Parameter invalid.");
+            return;
         }
         if (this._data.metaData === undefined) {
             let metaData = {key: value};
@@ -412,9 +408,6 @@ export class User {
      * @param messages An array for message objects to send.
      */
     public sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
-        if (!messages || !Array.isArray(messages)) {
-            throw Error("set metaData failure. Parameter invalid.");
-        }
         return fetch(this._client.apiEndpoint + "/messages", {
             method: "POST",
             headers: {
@@ -457,9 +450,6 @@ export class User {
      * @param roomId Room ID
      */
     public markAsRead(roomId: string): Promise<I.IErrorResponse> {
-        if (!roomId || typeof(roomId) !== "string") {
-            throw Error("markAsRead failure. Parameter invalid.");
-        }
         return fetch(this._client.apiEndpoint + "/rooms/" + roomId + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
@@ -537,9 +527,6 @@ export class User {
      * @param file Image data.
      */
     public fileUpload(file: Blob): Promise<I.IPostAssetResponse> {
-        if (!file) {
-            throw Error("file upload failure. file is emptry.");
-        }
         let formData = new FormData();
         formData.append("asset", file);
         return fetch(this._client.apiEndpoint + "/assets", {
@@ -615,9 +602,6 @@ export class User {
     }
 
     public addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-        if (!userIds || !Array.isArray(userIds)) {
-            throw Error("addUsers failure. Parameter invalid.");
-        }
         let fetchParam = {
             method: "PUT",
             headers: {
@@ -670,9 +654,6 @@ export class User {
     }
 
     public removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-        if (!userIds || !Array.isArray(userIds)) {
-            throw Error("removeUsers failure. Parameter invalid.");
-        }
         let fetchParam = {
             method: "DELETE",
             headers: {
