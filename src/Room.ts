@@ -150,15 +150,8 @@ export class Room {
      * Update room information.
      * Please set the data of this object beforehand.
      */
-    public update(): Promise<I.IFetchRoomResponse> {
+    public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
         const self = this;
-        const putRoom = {
-            name: this._data.name,
-            pictureUrl: this._data.pictureUrl,
-            informationUrl: this._data.informationUrl,
-            metaData: this._data.metaData,
-            type: this._data.type
-        };
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
             headers: {
@@ -169,10 +162,12 @@ export class Room {
         }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json().then((room) => {
-                    self._data = <I.IRoom>room;
                     return (
                         {
-                            room: self,
+                            room: new Room({
+                                client: self._client,
+                                data: <I.IRoom>room,
+                            }),
                             error: null,
                         } as I.IFetchRoomResponse
                     );

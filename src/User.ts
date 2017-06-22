@@ -311,15 +311,8 @@ export class User {
      * Update user information.
      * Please set the data of this object beforehand.
      */
-    public update(): Promise<I.IFetchUserResponse> {
+    public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
         const self = this;
-        const putUser = {
-            name: this._data.name,
-            pictureUrl: this._data.pictureUrl,
-            informationUrl: this._data.informationUrl,
-            unreadCount: this._data.unreadCount,
-            metaData: this._data.metaData
-        };
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
@@ -330,10 +323,12 @@ export class User {
         }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json().then((user) => {
-                    self._data = <I.IUser>user;
                     return (
                         {
-                            user: self,
+                            user: new User({
+                                client: self._client,
+                                data: <I.IUser>user,
+                            }),
                             error: null,
                         } as I.IFetchUserResponse
                     );
