@@ -71,7 +71,7 @@ export class Room {
         }
     }
 
-    get availableMessageTypes(): string[] {
+    get availableMessageTypes(): string[] | null {
         return this._data.availableMessageTypes;
     }
 
@@ -101,6 +101,14 @@ export class Room {
 
     set isCanLeft(isCanLeft: boolean) {
         this._data.isCanLeft = isCanLeft;
+    }
+
+    get isShowUsers(): boolean {
+        return this._data.isShowUsers;
+    }
+
+    set isShowUsers(isShowUsers: boolean) {
+        this._data.isShowUsers = isShowUsers;
     }
 
     get created(): string {

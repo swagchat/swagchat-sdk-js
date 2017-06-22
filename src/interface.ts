@@ -81,12 +81,13 @@ export interface IRoom {
   pictureUrl: string;
   informationUrl: string;
   metaData: {[key: string]: string | number | boolean | Object};
-  availableMessageTypes: string[];
+  availableMessageTypes: string[] | null;
   type: number;
   lastMessage: string;
   lastMessageUpdated: string;
   messageCount: number;
   isCanLeft: boolean;
+  isShowUsers: boolean;
   created: string;
   modified: string;
   users: IUserForRoom[] | null;
