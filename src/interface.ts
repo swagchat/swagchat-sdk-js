@@ -41,6 +41,7 @@ export interface IUser {
   metaData: {[key: string]: string | number | boolean | Object};
   isPublic: boolean;
   isCanBlock: boolean;
+  isShowUsers: boolean;
   accessToken: string;
   created: string;
   modified: string;
@@ -48,6 +49,13 @@ export interface IUser {
   devices: IDevice[];
   blocks: string[];
   mutedRooms?: string[];
+}
+
+export interface IUserMini {
+  roomId: string;
+  userId: string;
+  name: string;
+  pictureUrl: string;
 }
 
 export interface IRoomForUser {
@@ -63,6 +71,7 @@ export interface IRoomForUser {
   isCanLeft: boolean;
   created: string;
   modified: string;
+  users: IUserMini[];
   ruUnreadCount: number;
   ruMetaData: {[key: string]: string | number | boolean | Object};
   ruCreated: string;
@@ -100,6 +109,7 @@ export interface IUserForRoom {
   informationUrl: string;
   metaData?: {[key: string]: string | number | boolean | Object};
   isCanBlock: boolean;
+  isShowUsers: boolean;
   created: string;
   modified: string;
   ruUnreadCount: number;

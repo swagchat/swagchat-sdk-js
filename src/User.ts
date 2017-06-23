@@ -144,6 +144,14 @@ export class User {
         this._data.isCanBlock = isCanBlock;
     }
 
+    get isShowUsers(): boolean {
+        return this._data.isShowUsers;
+    }
+
+    set isShowUsers(isShowUsers: boolean) {
+        this._data.isShowUsers = isShowUsers;
+    }
+
     get accessToken(): string {
         return this._data.accessToken;
     }
