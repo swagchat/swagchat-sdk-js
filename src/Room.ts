@@ -392,6 +392,10 @@ export class Room {
             logger("realtime", "error", "Subscribe message failure. onMessageReceived is undefined.");
             return;
         }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            return;
+        }
         this._onMessageReceived = onMessageReceived;
         if (this._client.connection.sendEvent(this._data.roomId, "message", "bind")) {
             this._client.connection.onMessageReceived = (data: I.IMessage) => {
@@ -406,6 +410,10 @@ export class Room {
     public unsubscribeMessage(): void {
         if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
             logger("realtime", "error", "Unsubscribe message failure. roomId is not setting.");
+            return;
+        }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
             return;
         }
         this._onMessageReceived = Function;
@@ -423,6 +431,10 @@ export class Room {
         }
         if (onUserJoined === undefined) {
             logger("realtime", "error", "Subscribe userJoin failure. onUserJoined is undefined.");
+            return;
+        }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
             return;
         }
         this._onUserJoined = onUserJoined;
@@ -443,6 +455,10 @@ export class Room {
             logger("realtime", "error", "Unsubscribe userJoin failure. roomId is not setting.");
             return;
         }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            return;
+        }
         this._onUserJoined = Function;
         if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {
             logger("realtime", "info", "Unsubscribe userJoin success roomId[" + this._data.roomId + "]");
@@ -458,6 +474,10 @@ export class Room {
         }
         if (onUserLeft === undefined) {
             logger("realtime", "error", "Subscribe userLeft failure. Parameter invalid.");
+            return;
+        }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
             return;
         }
         this._onUserLeft = onUserLeft;
@@ -480,6 +500,10 @@ export class Room {
         }
         if (this._onUserLeft === undefined) {
             logger("realtime", "error", "Unsubscribe userLeft failure. onUserLeft is undefined.");
+            return;
+        }
+        if (!this._client.connection) {
+            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
             return;
         }
         this._onUserLeft = Function;
