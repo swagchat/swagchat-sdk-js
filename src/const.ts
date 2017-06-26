@@ -9,4 +9,5 @@ export enum RoomType {
   ONE_ON_ONE = 1,
   PRIVATE_ROOM = 2,
   PUBLIC_ROOM = 3,
+  NOTICE_ROOM = 4,
 }
