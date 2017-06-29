@@ -1,6 +1,5 @@
-import { Realtime, User, Room } from "./";
+import { Realtime, User, Room, logger } from "./";
 import * as I from "./interface";
-import { logger } from "./util";
 
 import "isomorphic-fetch";
 

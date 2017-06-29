@@ -1,7 +1,6 @@
-import * as I from "./interface";
-import { Client } from "./Client";
-import { createQueryParams, logger } from "./util";
 import "isomorphic-fetch";
+import * as I from "./interface";
+import { Client, createQueryParams, logger } from "./";
 
 /**
  * Room class has API client, own data and the behaivor for itself.

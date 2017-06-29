@@ -1,5 +1,4 @@
-import { isBrowser } from "./const";
-import { logger } from "./util";
+import { isBrowser, logger } from "./";
 import * as I from "./interface";
 
 export class Realtime {

@@ -1,8 +1,6 @@
 import "isomorphic-fetch";
-
-import { Client, Platform } from "./";
+import { Client, Platform, logger } from "./";
 import * as I from "./interface";
-import { logger } from "./util";
 
 /**
  * User class has API client, own data and the behaivor for itself.
