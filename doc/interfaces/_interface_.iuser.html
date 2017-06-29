@@ -85,11 +85,13 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#blockedusers" class="tsd-kind-icon">blocked<wbr>Users</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#blocks" class="tsd-kind-icon">blocks</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#created" class="tsd-kind-icon">created</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#devices" class="tsd-kind-icon">devices</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#informationurl" class="tsd-kind-icon">information<wbr>Url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#iscanblock" class="tsd-kind-icon">is<wbr>Can<wbr>Block</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#ispublic" class="tsd-kind-icon">is<wbr>Public</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#isshowusers" class="tsd-kind-icon">is<wbr>Show<wbr>Users</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#metadata" class="tsd-kind-icon">meta<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#modified" class="tsd-kind-icon">modified</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iuser.html#mutedrooms" class="tsd-kind-icon">muted<wbr>Rooms</a></li>
@@ -111,17 +113,17 @@
 					<div class="tsd-signature tsd-kind-icon">access<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L48">interface.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L45">interface.ts:45</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="blockedusers" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> blocked<wbr>Users</h3>
-					<div class="tsd-signature tsd-kind-icon">blocked<wbr>Users<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="blocks" class="tsd-anchor"></a>
+					<h3>blocks</h3>
+					<div class="tsd-signature tsd-kind-icon">blocks<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L53">interface.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L50">interface.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -131,7 +133,7 @@
 					<div class="tsd-signature tsd-kind-icon">created<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L49">interface.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L46">interface.ts:46</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -141,7 +143,7 @@
 					<div class="tsd-signature tsd-kind-icon">devices<span class="tsd-signature-symbol">:</span> <a href="_interface_.idevice.html" class="tsd-signature-type">IDevice</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L52">interface.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L49">interface.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,7 +153,17 @@
 					<div class="tsd-signature tsd-kind-icon">information<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L44">interface.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L39">interface.ts:39</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="iscanblock" class="tsd-anchor"></a>
+					<h3>is<wbr>Can<wbr>Block</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Can<wbr>Block<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L43">interface.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -161,7 +173,17 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Public<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L47">interface.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L42">interface.ts:42</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isshowusers" class="tsd-anchor"></a>
+					<h3>is<wbr>Show<wbr>Users</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Show<wbr>Users<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L44">interface.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,7 +193,7 @@
 					<div class="tsd-signature tsd-kind-icon">meta<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L46">interface.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L41">interface.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -189,7 +211,7 @@
 					<div class="tsd-signature tsd-kind-icon">modified<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L50">interface.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L47">interface.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +221,7 @@
 					<div class="tsd-signature tsd-kind-icon">muted<wbr>Rooms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L54">interface.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L51">interface.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +231,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L42">interface.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L37">interface.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +241,7 @@
 					<div class="tsd-signature tsd-kind-icon">picture<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L43">interface.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L38">interface.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +251,7 @@
 					<div class="tsd-signature tsd-kind-icon">rooms<span class="tsd-signature-symbol">:</span> <a href="_interface_.iroomforuser.html" class="tsd-signature-type">IRoomForUser</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L51">interface.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L48">interface.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -239,7 +261,7 @@
 					<div class="tsd-signature tsd-kind-icon">unread<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L45">interface.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L40">interface.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -249,7 +271,7 @@
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/5e076e1/src/interface.ts#L41">interface.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/fairway-corp/swagchat-sdk/blob/3a1156b/src/interface.ts#L36">interface.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -289,11 +311,14 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
-						<a href="../enums/_interface_.platform.html" class="tsd-kind-icon">Platform</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iasset.html" class="tsd-kind-icon">IAsset</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iauthparams.html" class="tsd-kind-icon">IAuth<wbr>Params</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iblockuser.html" class="tsd-kind-icon">IBlock<wbr>User</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iclientparams.html" class="tsd-kind-icon">IClient<wbr>Params</a>
@@ -306,6 +331,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ierrorresponse.html" class="tsd-kind-icon">IError<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchblockusersresponse.html" class="tsd-kind-icon">IFetch<wbr>Block<wbr>Users<wbr>Response</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchmessagesresponse.html" class="tsd-kind-icon">IFetch<wbr>Messages<wbr>Response</a>
@@ -341,6 +369,9 @@
 						<a href="_interface_.imessages.html" class="tsd-kind-icon">IMessages</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ipostassetresponse.html" class="tsd-kind-icon">IPost<wbr>Asset<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iproblemdetail.html" class="tsd-kind-icon">IProblem<wbr>Detail</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -373,7 +404,7 @@
 								<a href="_interface_.iuser.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iuser.html#blockedusers" class="tsd-kind-icon">blocked<wbr>Users</a>
+								<a href="_interface_.iuser.html#blocks" class="tsd-kind-icon">blocks</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interface_.iuser.html#created" class="tsd-kind-icon">created</a>
@@ -385,7 +416,13 @@
 								<a href="_interface_.iuser.html#informationurl" class="tsd-kind-icon">information<wbr>Url</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.iuser.html#iscanblock" class="tsd-kind-icon">is<wbr>Can<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interface_.iuser.html#ispublic" class="tsd-kind-icon">is<wbr>Public</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.iuser.html#isshowusers" class="tsd-kind-icon">is<wbr>Show<wbr>Users</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interface_.iuser.html#metadata" class="tsd-kind-icon">meta<wbr>Data</a>
@@ -417,6 +454,9 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iuserforroom.html" class="tsd-kind-icon">IUser<wbr>For<wbr>Room</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.iusermini.html" class="tsd-kind-icon">IUser<wbr>Mini</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iuserparams.html" class="tsd-kind-icon">IUser<wbr>Params</a>

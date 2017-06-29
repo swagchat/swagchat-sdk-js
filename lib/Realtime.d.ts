@@ -1,4 +1,4 @@
-export default class Realtime {
+export declare class Realtime {
     readonly conn: WebSocket;
     onConnected: Function;
     onError: Function;

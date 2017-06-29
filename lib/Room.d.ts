@@ -1,5 +1,5 @@
-import * as I from "./interface";
 import "isomorphic-fetch";
+import * as I from "./interface";
 /**
  * Room class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -23,11 +23,14 @@ export declare class Room {
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    isPublic: boolean;
-    readonly created: string;
+    readonly availableMessageTypes: string[] | null;
+    type: number;
     readonly lastMessage: string;
     readonly lastMessageUpdated: string;
     readonly messageCount: number;
+    isCanLeft: boolean;
+    isShowUsers: boolean;
+    readonly created: string;
     readonly modified: string;
     readonly users: I.IUserForRoom[] | null;
     /**
@@ -45,8 +48,7 @@ export declare class Room {
      * Update room information.
      * Please set the data of this object beforehand.
      */
-    update(): Promise<I.IFetchRoomResponse>;
-    setUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
+    update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse>;
     addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
     removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse>;
     reflesh(): Promise<I.IFetchRoomResponse>;

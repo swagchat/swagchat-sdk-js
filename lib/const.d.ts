@@ -1,3 +1,11 @@
 export declare const isBrowser: boolean;
-export declare const apiLogColor = "#03A9F4";
-export declare const realtimeLogColor = "#009688";
+export declare enum Platform {
+    IOS = 1,
+    ANDROID = 2,
+}
+export declare enum RoomType {
+    ONE_ON_ONE = 1,
+    PRIVATE_ROOM = 2,
+    PUBLIC_ROOM = 3,
+    NOTICE_ROOM = 4,
+}

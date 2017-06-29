@@ -1,9 +1,5 @@
 /// <reference types="node" />
 import { Client, User, Room } from ".";
-export declare enum Platform {
-    IOS = 1,
-    ANDROID = 2,
-}
 export interface IClientParams {
     apiKey: string;
     apiSecret?: string;
@@ -41,13 +37,21 @@ export interface IUser {
         [key: string]: string | number | boolean | Object;
     };
     isPublic: boolean;
+    isCanBlock: boolean;
+    isShowUsers: boolean;
     accessToken: string;
     created: string;
     modified: string;
     rooms: IRoomForUser[];
     devices: IDevice[];
-    blockedUsers?: string[];
+    blocks: string[];
     mutedRooms?: string[];
+}
+export interface IUserMini {
+    roomId: string;
+    userId: string;
+    name: string;
+    pictureUrl: string;
 }
 export interface IRoomForUser {
     roomId: string;
@@ -58,11 +62,13 @@ export interface IRoomForUser {
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    isPublic: boolean;
+    type: number;
     lastMessage: string;
     lastMessageUpdated: string;
+    isCanLeft: boolean;
     created: string;
     modified: string;
+    users: IUserMini[];
     ruUnreadCount: number;
     ruMetaData: {
         [key: string]: string | number | boolean | Object;
@@ -83,10 +89,13 @@ export interface IRoom {
     metaData: {
         [key: string]: string | number | boolean | Object;
     };
-    isPublic: boolean;
+    availableMessageTypes: string[] | null;
+    type: number;
     lastMessage: string;
     lastMessageUpdated: string;
     messageCount: number;
+    isCanLeft: boolean;
+    isShowUsers: boolean;
     created: string;
     modified: string;
     users: IUserForRoom[] | null;
@@ -99,6 +108,8 @@ export interface IUserForRoom {
     metaData?: {
         [key: string]: string | number | boolean | Object;
     };
+    isCanBlock: boolean;
+    isShowUsers: boolean;
     created: string;
     modified: string;
     ruUnreadCount: number;
@@ -118,6 +129,11 @@ export interface IRoomUser {
     created: string;
     modified: string;
 }
+export interface IBlockUser {
+    userId: string;
+    blockUserId: string;
+    created: string;
+}
 export interface IMessages {
     allCount: number;
     messages: IMessage[];
@@ -134,6 +150,11 @@ export interface IMessage {
 export interface ISendMessagesResponse {
     messageIds: string[] | null;
     error: IProblemDetail | null;
+}
+export interface IAsset {
+    assetId: string;
+    sourceUrl: string;
+    mime: string;
 }
 export interface ICloseEvent extends Event {
     code: number;
@@ -185,8 +206,16 @@ export interface IFetchRoomUsersResponse {
     roomUsers: IRoomUser[] | null;
     error: IProblemDetail | null;
 }
+export interface IFetchBlockUsersResponse {
+    blockUsers: string[] | null;
+    error: IProblemDetail | null;
+}
 export interface IFetchMessagesResponse {
     messages: IMessages | null;
+    error: IProblemDetail | null;
+}
+export interface IPostAssetResponse {
+    asset: IAsset | null;
     error: IProblemDetail | null;
 }
 export interface IErrorResponse {

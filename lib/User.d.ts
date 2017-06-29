@@ -1,7 +1,6 @@
 import "isomorphic-fetch";
+import { Client, Platform } from "./";
 import * as I from "./interface";
-import { Platform } from "./interface";
-import { Client } from "./Client";
 /**
  * User class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -21,6 +20,8 @@ export declare class User {
     informationUrl: string;
     readonly unreadCount: number;
     isPublic: boolean;
+    isCanBlock: boolean;
+    isShowUsers: boolean;
     readonly accessToken: string;
     metaData: {
         [key: string]: string | number | boolean | Object;
@@ -29,6 +30,7 @@ export declare class User {
     readonly modified: string;
     readonly rooms: I.IRoomForUser[];
     readonly devices: I.IDevice[];
+    readonly blocks: string[];
     /**
      * Register a new device token.
      *
@@ -54,7 +56,7 @@ export declare class User {
      * Update user information.
      * Please set the data of this object beforehand.
      */
-    update(): Promise<I.IFetchUserResponse>;
+    update(putUser: I.IUser): Promise<I.IFetchUserResponse>;
     /**
      * Refresh user information to the latest.
      * A different client might update an existing user's information while you use the application continuously.
@@ -75,4 +77,12 @@ export declare class User {
      * Reset the number of unread for each room for the user.
      */
     markAllAsRead(): Promise<I.IErrorResponse>;
+    /**
+     * File upload.
+     * @param file Image data.
+     */
+    fileUpload(file: Blob): Promise<I.IPostAssetResponse>;
+    getContacts(): Promise<I.IFetchUsersResponse>;
+    addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse>;
+    removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse>;
 }
