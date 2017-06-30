@@ -51,11 +51,7 @@ var sc = new SwagChat.Client({
   apiSecret: "API_SECRET",
   apiEndpoint: "http://localhost:9000/v0",
   realtime: {
-<<<<<<< HEAD
     endpoint: "ws://localhost:9100/v0"
-=======
-    endpoint: "ws://localhost:9000/v0"
->>>>>>> 2b98fcd8018954995f5e3bd799f58e1d566f0cad
   }
 });
 
