@@ -11,9 +11,9 @@ This is SDK for TypeScript & JavaScript of [SwagChat API](http://github.com/fair
 ## Components
 
 * [RESTful API Server (Go)](http://github.com/fairway-corp/swagchat-api)
-* Realtime Messaging (Go) ---> In development ...
-* **Client SDK (TypeScript & JavaScript) ---> This repository**
-* UIKit (Typescript - React) ---> In development ...
+* [Realtime Messaging (Go)](http://github.com/fairway-corp/swagchat-realtime)
+* [Client SDK (TypeScript & JavaScript)](http://github.com/fairway-corp/swagchat-sdk)
+* [UIKit (Typescript - React)](http://github.com/fairway-corp/react-swagchat)
 
 ## Architecture
 
@@ -51,7 +51,7 @@ var sc = new SwagChat.Client({
   apiSecret: "API_SECRET",
   apiEndpoint: "http://localhost:9000/v0",
   realtime: {
-    endpoint: "ws://localhost:19200/v1"
+    endpoint: "ws://localhost:9000/v0"
   }
 });
 
@@ -79,7 +79,7 @@ const sc = new Client({
   apiSecret: "API_SECRET",
   apiEndpoint: "http://localhost:9000/v0",
   realtime: {
-    endpoint: "ws://localhost:19200/v1"
+    endpoint: "ws://localhost:9100/v0"
   }
 });
 
