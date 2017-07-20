@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.34",
+    "@types/node": "^8.0.8",
     "@types/ws": "0.0.39",
     "ts-loader": "^2.1.0",
     "tsify": "^3.0.1",
