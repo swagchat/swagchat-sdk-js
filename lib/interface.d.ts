@@ -81,24 +81,25 @@ export interface IRoomParams {
     data: IRoom;
 }
 export interface IRoom {
-    roomId: string;
+    roomId?: string;
     userId: string;
-    name: string;
-    pictureUrl: string;
-    informationUrl: string;
-    metaData: {
+    name?: string;
+    pictureUrl?: string;
+    informationUrl?: string;
+    metaData?: {
         [key: string]: string | number | boolean | Object;
     };
-    availableMessageTypes: string[] | null;
+    availableMessageTypes?: string[] | null;
     type: number;
-    lastMessage: string;
-    lastMessageUpdated: string;
-    messageCount: number;
-    isCanLeft: boolean;
-    isShowUsers: boolean;
-    created: string;
-    modified: string;
-    users: IUserForRoom[] | null;
+    lastMessage?: string;
+    lastMessageUpdated?: string;
+    messageCount?: number;
+    isCanLeft?: boolean;
+    isShowUsers?: boolean;
+    created?: string;
+    modified?: string;
+    users?: IUserForRoom[] | null;
+    userIds?: string[];
 }
 export interface IUserForRoom {
     userId: string;
