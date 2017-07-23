@@ -100,6 +100,7 @@ export interface IRoom {
   created?: string;
   modified?: string;
   users?: IUserForRoom[] | null;
+  userIds?: string[];
 }
 
 export interface IUserForRoom {
