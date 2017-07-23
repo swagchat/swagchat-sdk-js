@@ -208,10 +208,10 @@ export class Room {
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
-                return response.json().then((roomUsers) => {
+                return response.json().then((addUsersRes) => {
                     return (
                         {
-                            roomUsers: roomUsers,
+                            roomUsers: addUsersRes.roomUsers,
                             error: null,
                         } as I.IFetchRoomUsersResponse
                     );
@@ -260,10 +260,10 @@ export class Room {
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
-                return response.json().then((roomUsers) => {
+                return response.json().then((removeUsersRes) => {
                     return (
                         {
-                            roomUsers: roomUsers,
+                            roomUsers: removeUsersRes.roomUsers,
                             error: null,
                         } as I.IFetchRoomUsersResponse
                     );
