@@ -23,7 +23,7 @@ export class Room {
     }
 
     get roomId(): string {
-        return this._data.roomId;
+        return this._data.roomId ? this._data.roomId : "";
     }
 
     get userId(): string {
@@ -35,7 +35,7 @@ export class Room {
     }
 
     get name(): string {
-        return this._data.name;
+        return this._data.name ? this._data.name : "";
     }
 
     set name(name: string) {
@@ -43,7 +43,7 @@ export class Room {
     }
 
     get pictureUrl(): string {
-        return this._data.pictureUrl;
+        return this._data.pictureUrl ? this._data.pictureUrl : "";
     }
 
     set pictureUrl(pictureUrl: string) {
@@ -51,7 +51,7 @@ export class Room {
     }
 
     get informationUrl(): string {
-        return this._data.informationUrl;
+        return this._data.informationUrl ? this._data.informationUrl : "";
     }
 
     set informationUrl(informationUrl: string) {
@@ -59,7 +59,7 @@ export class Room {
     }
 
     get metaData(): {[key: string]: string | number | boolean | Object} {
-        return this._data.metaData;
+        return this._data.metaData ? this._data.metaData : {};
     }
 
     set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
@@ -71,7 +71,7 @@ export class Room {
     }
 
     get availableMessageTypes(): string[] | null {
-        return this._data.availableMessageTypes;
+        return this._data.availableMessageTypes ? this._data.availableMessageTypes : null;
     }
 
     get type(): number {
@@ -83,19 +83,19 @@ export class Room {
     }
 
     get lastMessage(): string {
-        return this._data.lastMessage;
+        return this._data.lastMessage ? this._data.lastMessage : "";
     }
 
     get lastMessageUpdated(): string {
-        return this._data.lastMessageUpdated;
+        return this._data.lastMessageUpdated ? this._data.lastMessageUpdated : "";
     }
 
     get messageCount(): number {
-        return this._data.messageCount;
+        return this._data.messageCount ? this._data.messageCount : 0;
     }
 
     get isCanLeft(): boolean {
-        return this._data.isCanLeft;
+        return this._data.isCanLeft ? this._data.isCanLeft : true;
     }
 
     set isCanLeft(isCanLeft: boolean) {
@@ -103,7 +103,7 @@ export class Room {
     }
 
     get isShowUsers(): boolean {
-        return this._data.isShowUsers;
+        return this._data.isShowUsers ? this._data.isShowUsers : true;
     }
 
     set isShowUsers(isShowUsers: boolean) {
@@ -111,11 +111,11 @@ export class Room {
     }
 
     get created(): string {
-        return this._data.created;
+        return this._data.created ? this._data.created : "";
     }
 
     get modified(): string {
-        return this._data.modified;
+        return this._data.modified ? this._data.modified : "";
     }
 
     get users(): I.IUserForRoom[] | null {
@@ -208,10 +208,10 @@ export class Room {
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
-                return response.json().then((roomUsers) => {
+                return response.json().then((addUsersRes) => {
                     return (
                         {
-                            roomUsers: roomUsers,
+                            roomUsers: addUsersRes.roomUsers,
                             error: null,
                         } as I.IFetchRoomUsersResponse
                     );
@@ -260,10 +260,10 @@ export class Room {
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
-                return response.json().then((roomUsers) => {
+                return response.json().then((removeUsersRes) => {
                     return (
                         {
-                            roomUsers: roomUsers,
+                            roomUsers: removeUsersRes.roomUsers,
                             error: null,
                         } as I.IFetchRoomUsersResponse
                     );
