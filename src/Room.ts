@@ -27,7 +27,7 @@ export class Room {
     }
 
     get userId(): string {
-        return this._data.userId;
+        return this._data.userId ? this._data.userId : "";
     }
 
     set userId(userId: string) {
@@ -75,7 +75,7 @@ export class Room {
     }
 
     get type(): number {
-        return this._data.type;
+        return this._data.type ? this._data.type : 0;
     }
 
     set type(type: number) {
@@ -120,6 +120,10 @@ export class Room {
 
     get users(): I.IUserForRoom[] | null {
         return this._data.users || null;
+    }
+
+    get userIds(): string[] {
+        return this._data.userIds ? this._data.userIds : [];
     }
 
     /**
