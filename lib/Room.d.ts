@@ -33,6 +33,7 @@ export declare class Room {
     readonly created: string;
     readonly modified: string;
     readonly users: I.IUserForRoom[] | null;
+    readonly userIds: string[];
     /**
      * Register metadata in separate.
      * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.

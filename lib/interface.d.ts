@@ -82,15 +82,15 @@ export interface IRoomParams {
 }
 export interface IRoom {
     roomId?: string;
-    userId: string;
+    userId?: string;
     name?: string;
     pictureUrl?: string;
     informationUrl?: string;
     metaData?: {
         [key: string]: string | number | boolean | Object;
     };
-    availableMessageTypes?: string[] | null;
-    type: number;
+    availableMessageTypes?: string[];
+    type?: number;
     lastMessage?: string;
     lastMessageUpdated?: string;
     messageCount?: number;
@@ -98,7 +98,7 @@ export interface IRoom {
     isShowUsers?: boolean;
     created?: string;
     modified?: string;
-    users?: IUserForRoom[] | null;
+    users?: IUserForRoom[];
     userIds?: string[];
 }
 export interface IUserForRoom {
