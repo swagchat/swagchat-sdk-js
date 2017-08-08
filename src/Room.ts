@@ -396,7 +396,7 @@ export class Room {
             return;
         }
         if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            logger("realtime", "error", "Subscribe message failure. Realtime connection is not setting.");
             return;
         }
         this._onMessageReceived = onMessageReceived;
@@ -407,6 +407,10 @@ export class Room {
             logger("realtime", "info", "Subscribe message success roomId[" + this._data.roomId + "]");
         } else {
             logger("realtime", "error", "Subscribe message failure roomId[" + this._data.roomId + "]");
+            let self = this;
+            setTimeout(function() {
+                self.subscribeMessage(onMessageReceived);
+            }, 3000);
         }
     }
 
@@ -416,7 +420,7 @@ export class Room {
             return;
         }
         if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            logger("realtime", "error", "Subscribe message failure. Realtime connection is not setting.");
             return;
         }
         this._onMessageReceived = Function;
@@ -424,6 +428,10 @@ export class Room {
             logger("realtime", "info", "Unsubscribe message success roomId[" + this._data.roomId + "]");
         } else {
             logger("realtime", "error", "Unsubscribe message failure roomId[" + this._data.roomId + "]");
+            let self = this;
+            setTimeout(function() {
+                self.unsubscribeMessage();
+            }, 3000);
         }
     }
 
@@ -437,7 +445,7 @@ export class Room {
             return;
         }
         if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            logger("realtime", "error", "Subscribe userJoin failure. Realtime connection is not setting.");
             return;
         }
         this._onUserJoined = onUserJoined;
@@ -450,6 +458,10 @@ export class Room {
             logger("realtime", "info", "Subscribe userJoin success roomId[" + this._data.roomId + "]");
         } else {
             logger("realtime", "error", "Subscribe userJoin failure roomId[" + this._data.roomId + "]");
+            let self = this;
+            setTimeout(function() {
+                self.subscribeUserJoin(onUserJoined);
+            }, 3000);
         }
     }
 
@@ -459,7 +471,7 @@ export class Room {
             return;
         }
         if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
+            logger("realtime", "error", "Subscribe userJoin failure. Realtime connection is not setting.");
             return;
         }
         this._onUserJoined = Function;
@@ -468,6 +480,10 @@ export class Room {
         } else {
             logger("realtime", "error", "Unsubscribe userJoin failure roomId[" + this._data.roomId + "]");
         }
+        let self = this;
+        setTimeout(function() {
+            self.unsubscribeUserJoin();
+        }, 3000);
     }
 
     public subscribeUserLeft(onUserLeft: Function): void {
@@ -493,6 +509,10 @@ export class Room {
             logger("realtime", "info", "Subscribe userLeft success roomId[" + this._data.roomId + "]");
         } else {
             logger("realtime", "error", "Subscribe userLeft failure roomId[" + this._data.roomId + "]");
+            let self = this;
+            setTimeout(function() {
+                self.subscribeUserLeft(onUserLeft);
+            }, 3000);
         }
     }
 
@@ -514,6 +534,10 @@ export class Room {
             logger("realtime", "info", "Unsubscribe userLeft success roomId[" + this._data.roomId + "]");
         } else {
             logger("realtime", "error", "Unsubscribe userLeft failure roomId[" + this._data.roomId + "]");
+            let self = this;
+            setTimeout(function() {
+                self.unsubscribeUserLeft();
+            }, 3000);
         }
     }
 }

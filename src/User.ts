@@ -27,6 +27,7 @@ export class User {
                     const client = new Client({
                         apiKey: params.apiKey,
                         apiEndpoint: params.apiEndpoint,
+                        userId: params.userId,
                         userAccessToken: params.accessToken || "",
                         realtime: {
                             endpoint: params.realtimeEndpoint || "",

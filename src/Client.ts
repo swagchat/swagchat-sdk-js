@@ -7,6 +7,7 @@ export class Client {
     readonly apiKey: string;
     readonly apiSecret: string;
     readonly apiEndpoint: string;
+    readonly userId: string;
     readonly userAccessToken: string;
     public connection: Realtime;
 
@@ -38,10 +39,11 @@ export class Client {
         this.apiKey = params.apiKey;
         this.apiSecret = params.apiSecret || "";
         this.apiEndpoint = params.apiEndpoint;
+        this.userId = params.userId || "";
         this.userAccessToken = params.userAccessToken || "";
         if (params.hasOwnProperty("realtime") && params.realtime!.hasOwnProperty("endpoint") && params.realtime!.endpoint !== "") {
             const realtimeConfig = <I.IRealtimeConfig>params.realtime;
-            this.connection = new Realtime(realtimeConfig.endpoint);
+            this.connection = new Realtime(realtimeConfig.endpoint, this.userId);
         }
 
         logger("api", "info", "Initialized API Client OK");
