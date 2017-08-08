@@ -4,6 +4,7 @@ export interface IClientParams {
     apiKey: string;
     apiSecret?: string;
     apiEndpoint: string;
+    userId: string;
     userAccessToken?: string;
     realtime?: IRealtimeConfig;
 }

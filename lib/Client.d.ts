@@ -5,6 +5,7 @@ export declare class Client {
     readonly apiKey: string;
     readonly apiSecret: string;
     readonly apiEndpoint: string;
+    readonly userId: string;
     readonly userAccessToken: string;
     connection: Realtime;
     onConnected: Function;
