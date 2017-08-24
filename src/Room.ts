@@ -13,13 +13,14 @@ import { Client, createQueryParams, logger } from "./";
 export class Room {
     private _client: Client;
     private _data: I.IRoom;
-    private _onMessageReceived: Function;
-    private _onUserJoined: Function;
-    private _onUserLeft: Function;
 
     constructor(params: I.IRoomParams) {
         this._client = params.client;
         this._data = params.data;
+    }
+
+    set onMessageReceived(onMessageReceived: Function) {
+        this._client.connection.onMessageReceived = onMessageReceived;
     }
 
     get roomId(): string {
@@ -154,7 +155,6 @@ export class Room {
      * Please set the data of this object beforehand.
      */
     public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
-        const self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "PUT",
             headers: {
@@ -168,7 +168,7 @@ export class Room {
                     return (
                         {
                             room: new Room({
-                                client: self._client,
+                                client: this._client,
                                 data: <I.IRoom>room,
                             }),
                             error: null,
@@ -300,7 +300,6 @@ export class Room {
     }
 
     public reflesh(): Promise<I.IFetchRoomResponse> {
-        const self = this;
         return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
             method: "GET",
             headers: {
@@ -310,10 +309,10 @@ export class Room {
         }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json().then((room) => {
-                    self._data = <I.IRoom>room;
+                    this._data = <I.IRoom>room;
                     return (
                         {
-                            room: self,
+                            room: this,
                             error: null,
                         } as I.IFetchRoomResponse
                     );
@@ -387,157 +386,26 @@ export class Room {
     }
 
     public subscribeMessage(onMessageReceived: Function): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Subscribe message failure. roomId is not setting.");
-            return;
-        }
-        if (onMessageReceived === undefined) {
-            logger("realtime", "error", "Subscribe message failure. onMessageReceived is undefined.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe message failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onMessageReceived = onMessageReceived;
-        if (this._client.connection.sendEvent(this._data.roomId, "message", "bind")) {
-            this._client.connection.onMessageReceived = (data: I.IMessage) => {
-                this._onMessageReceived(data);
-            };
-            logger("realtime", "info", "Subscribe message success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Subscribe message failure roomId[" + this._data.roomId + "]");
-            let self = this;
-            setTimeout(function() {
-                self.subscribeMessage(onMessageReceived);
-            }, 3000);
-        }
+        this._client.connection ? this._client.connection.subscribeMessage(onMessageReceived, this.roomId) : null;
     }
 
     public unsubscribeMessage(): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Unsubscribe message failure. roomId is not setting.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe message failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onMessageReceived = Function;
-        if (this._client.connection.sendEvent(this._data.roomId, "message", "unbind")) {
-            logger("realtime", "info", "Unsubscribe message success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Unsubscribe message failure roomId[" + this._data.roomId + "]");
-            let self = this;
-            setTimeout(function() {
-                self.unsubscribeMessage();
-            }, 3000);
-        }
+        this._client.connection ? this._client.connection.unsubscribeMessage(this.roomId) : null;
     }
 
     public subscribeUserJoin(onUserJoined: Function): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Subscribe userJoin failure. roomId is not setting.");
-            return;
-        }
-        if (onUserJoined === undefined) {
-            logger("realtime", "error", "Subscribe userJoin failure. onUserJoined is undefined.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userJoin failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onUserJoined = onUserJoined;
-        if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "bind")) {
-            this._client.connection.onUserJoined = (data: I.IMessage) => {
-                let users = <I.IUserForRoom[]>data.payload;
-                this._data.users = users;
-                this._onUserJoined(users);
-            };
-            logger("realtime", "info", "Subscribe userJoin success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Subscribe userJoin failure roomId[" + this._data.roomId + "]");
-            let self = this;
-            setTimeout(function() {
-                self.subscribeUserJoin(onUserJoined);
-            }, 3000);
-        }
+        this._client.connection ? this._client.connection.subscribeUserJoin(onUserJoined, this.roomId) : null;
     }
 
     public unsubscribeUserJoin(): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Unsubscribe userJoin failure. roomId is not setting.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userJoin failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onUserJoined = Function;
-        if (this._client.connection.sendEvent(this._data.roomId, "userJoin", "unbind")) {
-            logger("realtime", "info", "Unsubscribe userJoin success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Unsubscribe userJoin failure roomId[" + this._data.roomId + "]");
-        }
-        let self = this;
-        setTimeout(function() {
-            self.unsubscribeUserJoin();
-        }, 3000);
+        this._client.connection ? this._client.connection.unsubscribeUserJoin(this.roomId) : null;
     }
 
     public subscribeUserLeft(onUserLeft: Function): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Subscribe userLeft failure. roomId is not setting.");
-            return;
-        }
-        if (onUserLeft === undefined) {
-            logger("realtime", "error", "Subscribe userLeft failure. Parameter invalid.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onUserLeft = onUserLeft;
-        if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "bind")) {
-            this._client.connection.onUserLeft = (data: I.IMessage) => {
-                let users = <I.IUserForRoom[]>data.payload;
-                this._data.users = users;
-                this._onUserLeft(users);
-            };
-            logger("realtime", "info", "Subscribe userLeft success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Subscribe userLeft failure roomId[" + this._data.roomId + "]");
-            let self = this;
-            setTimeout(function() {
-                self.subscribeUserLeft(onUserLeft);
-            }, 3000);
-        }
+        this._client.connection ? this._client.connection.subscribeUserLeft(onUserLeft, this.roomId) : null;
     }
 
     public unsubscribeUserLeft(): void {
-        if (!this._data.roomId || typeof(this._data.roomId) !== "string") {
-            logger("realtime", "error", "Unsubscribe userLeft failure. roomId is not setting.");
-            return;
-        }
-        if (this._onUserLeft === undefined) {
-            logger("realtime", "error", "Unsubscribe userLeft failure. onUserLeft is undefined.");
-            return;
-        }
-        if (!this._client.connection) {
-            logger("realtime", "error", "Subscribe userLeft failure. Realtime connection is not setting.");
-            return;
-        }
-        this._onUserLeft = Function;
-        if (this._client.connection.sendEvent(this._data.roomId, "userLeft", "unbind")) {
-            logger("realtime", "info", "Unsubscribe userLeft success roomId[" + this._data.roomId + "]");
-        } else {
-            logger("realtime", "error", "Unsubscribe userLeft failure roomId[" + this._data.roomId + "]");
-            let self = this;
-            setTimeout(function() {
-                self.unsubscribeUserLeft();
-            }, 3000);
-        }
+        this._client.connection ? this._client.connection.unsubscribeUserLeft(this.roomId) : null;
     }
 }

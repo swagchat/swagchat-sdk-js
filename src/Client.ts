@@ -56,7 +56,6 @@ export class Client {
     public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
         let headers = this.getApiHeaders();
         headers["Content-Type"] = "application/json";
-        const self = this;
         return fetch(this.apiEndpoint + "/users", {
             method: "POST",
             headers: headers,
@@ -67,7 +66,7 @@ export class Client {
                     return (
                         {
                             user: new User({
-                                client: self,
+                                client: this,
                                 data: <I.IUser>user,
                             }),
                             error: null,
@@ -129,7 +128,6 @@ export class Client {
     }
 
     public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
-        const self = this;
         return fetch(this.apiEndpoint + "/users/" + userId, {
             method: "GET",
             headers: this.getApiHeaders(),
@@ -140,7 +138,7 @@ export class Client {
                     return (
                         {
                             user: new User({
-                                client: self,
+                                client: this,
                                 data: <I.IUser>user,
                             }),
                             error: null,
@@ -212,7 +210,6 @@ export class Client {
     public createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse> {
         let headers = this.getApiHeaders();
         headers["Content-Type"] = "application/json";
-        const self = this;
         return fetch(this.apiEndpoint + "/rooms", {
             method: "POST",
             headers: headers,
@@ -223,7 +220,7 @@ export class Client {
                     return (
                         {
                             room: new Room({
-                                client: self,
+                                client: this,
                                 data: <I.IRoom>room,
                             }),
                             error: null,
@@ -285,7 +282,6 @@ export class Client {
     }
 
     public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-        const self = this;
         return fetch(this.apiEndpoint + "/rooms/" + roomId, {
             method: "GET",
             headers: this.getApiHeaders(),
@@ -295,7 +291,7 @@ export class Client {
                     return (
                         {
                             room: new Room({
-                                client: self,
+                                client: this,
                                 data: <I.IRoom>room
                             }),
                             error: null,

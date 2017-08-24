@@ -319,7 +319,6 @@ export class User {
      * Please set the data of this object beforehand.
      */
     public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
-        const self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "PUT",
             headers: {
@@ -333,7 +332,7 @@ export class User {
                     return (
                         {
                             user: new User({
-                                client: self._client,
+                                client: this._client,
                                 data: <I.IUser>user,
                             }),
                             error: null,
@@ -365,7 +364,6 @@ export class User {
      * A different client might update an existing user's information while you use the application continuously.
      */
     public reflesh(): Promise<I.IFetchUserResponse> {
-        const self = this;
         return fetch(this._client.apiEndpoint + "/users/" + this._data.userId, {
             method: "GET",
             headers: {
@@ -375,12 +373,12 @@ export class User {
         }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json().then((user) => {
-                    const accessToken = self.accessToken;
-                    self._data = <I.IUser>user;
-                    self._data.accessToken = accessToken;
+                    const accessToken = this.accessToken;
+                    this._data = <I.IUser>user;
+                    this._data.accessToken = accessToken;
                     return (
                         {
-                            user: self,
+                            user: this,
                             error: null,
                         } as I.IFetchUserResponse
                     );
