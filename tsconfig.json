@@ -2,6 +2,7 @@
   "version": "2.2.1",
   "compilerOptions": {
     "module": "commonjs",
+    "lib": ["dom", "es6", "es7"],
     "target": "es5",
     "sourceMap": true,
     "outDir": "lib",
