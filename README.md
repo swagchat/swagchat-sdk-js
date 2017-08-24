@@ -1,18 +1,18 @@
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 [![npm version](https://badge.fury.io/js/swagchat-sdk.svg)](https://badge.fury.io/js/swagchat-sdk)
 
-# SwagChat SDK(TypeScript & JavaScript)
+# swagchat SDK(TypeScript & JavaScript)
 
-SwagChat is an open source chat components for your webapps.
+swagchat is an open source chat components for your webapps.
 
-This is SDK for TypeScript & JavaScript of [SwagChat API](http://github.com/fairway-corp/swagchat-api)
+This is SDK for TypeScript & JavaScript of [Chat API](http://github.com/fairway-corp/swagchat-chat-api)
 
 
 ## Components
 
-* [RESTful API Server (Go)](http://github.com/fairway-corp/swagchat-api)
-* [Realtime Messaging (Go)](http://github.com/fairway-corp/swagchat-realtime)
-* **Client SDK (TypeScript & JavaScript) ---> This repository**
+* [Chat API (Go)](http://github.com/fairway-corp/swagchat-chat-api)
+* [RTM API (Real Time Messaging) (Go)](http://github.com/fairway-corp/swagchat-rtm-api)
+* **SDK (TypeScript & JavaScript)**
 * [UIKit (Typescript - React)](http://github.com/fairway-corp/react-swagchat)
 
 ## Architecture

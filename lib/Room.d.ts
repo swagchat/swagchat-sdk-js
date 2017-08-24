@@ -11,10 +11,8 @@ import * as I from "./interface";
 export declare class Room {
     private _client;
     private _data;
-    private _onMessageReceived;
-    private _onUserJoined;
-    private _onUserLeft;
     constructor(params: I.IRoomParams);
+    onMessageReceived: Function;
     readonly roomId: string;
     userId: string;
     name: string;
