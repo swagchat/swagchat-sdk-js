@@ -1,6 +1,6 @@
 {
   "name": "swagchat-sdk",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Open source chat components - swagchat SDK(TypeScript & JavaScript)",
   "keywords": [
     "swagchat",
