@@ -1,6 +1,6 @@
-import { Realtime } from "./";
-import * as I from "./interface";
-import "isomorphic-fetch";
+import { Realtime } from './';
+import * as I from './interface';
+import 'isomorphic-fetch';
 export declare class Client {
     readonly apiKey: string;
     readonly apiSecret: string;

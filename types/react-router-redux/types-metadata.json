@@ -1,0 +1,49 @@
+{
+    "name": "react-router-redux",
+    "libraryName": "react-router-redux",
+    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+    "data": {
+        "contributors": [
+            {
+                "name": "Isman Usoh",
+                "url": "http://github.com/isman-usoh"
+            },
+            {
+                "name": "Noah Shipley",
+                "url": "https://github.com/noah79"
+            },
+            {
+                "name": "Dimitri Rosenberg",
+                "url": "https://github.com/rosendi"
+            },
+            {
+                "name": "Karol Janyst",
+                "url": "https://github.com/LKay"
+            }
+        ],
+        "dependencies": {
+            "history": 3,
+            "redux": "*"
+        },
+        "pathMappings": {
+            "history": 3
+        },
+        "libraryMajorVersion": 4,
+        "libraryMinorVersion": 0,
+        "typeScriptVersion": "2.1",
+        "libraryName": "react-router-redux",
+        "typingsPackageName": "react-router-redux",
+        "projectName": "https://github.com/rackt/react-router-redux",
+        "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+        "globals": [],
+        "declaredModules": [
+            "react-router-redux/."
+        ],
+        "files": [
+            "index.d.ts"
+        ],
+        "hasPackageJson": true,
+        "contentHash": "ebbb1857753d4d42f9372a35ed744697583ec47a6981555f84663fcfa8a20157"
+    },
+    "isLatest": true
+}

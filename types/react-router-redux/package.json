@@ -1,0 +1,96 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "@types/react-router-redux@4.0.41",
+        "scope": "@types",
+        "escapedName": "@types%2freact-router-redux",
+        "name": "@types/react-router-redux",
+        "rawSpec": "4.0.41",
+        "spec": "4.0.41",
+        "type": "version"
+      },
+      "/Users/minobe/code/swagchat/swagchat-sdk"
+    ]
+  ],
+  "_from": "@types/react-router-redux@4.0.41",
+  "_id": "@types/react-router-redux@4.0.41",
+  "_inCache": true,
+  "_location": "/@types/react-router-redux",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/react-router-redux-4.0.41.tgz_1487577484745_0.253533344483003"
+  },
+  "_npmUser": {
+    "name": "types",
+    "email": "ts-npm-types@microsoft.com"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "@types/react-router-redux@4.0.41",
+    "scope": "@types",
+    "escapedName": "@types%2freact-router-redux",
+    "name": "@types/react-router-redux",
+    "rawSpec": "4.0.41",
+    "spec": "4.0.41",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/react-router-redux/-/react-router-redux-4.0.41.tgz",
+  "_shasum": "429d9ae7964240dd6d80fc006b406176ce5aa9b6",
+  "_shrinkwrap": null,
+  "_spec": "@types/react-router-redux@4.0.41",
+  "_where": "/Users/minobe/code/swagchat/swagchat-sdk",
+  "contributors": [
+    {
+      "name": "Isman Usoh",
+      "url": "http://github.com/isman-usoh"
+    },
+    {
+      "name": "Noah Shipley",
+      "url": "https://github.com/noah79"
+    },
+    {
+      "name": "Dimitri Rosenberg",
+      "url": "https://github.com/rosendi"
+    },
+    {
+      "name": "Karol Janyst",
+      "url": "https://github.com/LKay"
+    }
+  ],
+  "dependencies": {
+    "@types/history": "^3",
+    "redux": "^3.6.0"
+  },
+  "description": "TypeScript definitions for react-router-redux",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "429d9ae7964240dd6d80fc006b406176ce5aa9b6",
+    "tarball": "https://registry.npmjs.org/@types/react-router-redux/-/react-router-redux-4.0.41.tgz"
+  },
+  "license": "MIT",
+  "main": "",
+  "maintainers": [
+    {
+      "name": "types",
+      "email": "ryan.cavanaugh@microsoft.com"
+    }
+  ],
+  "name": "@types/react-router-redux",
+  "optionalDependencies": {},
+  "peerDependencies": {},
+  "readme": "# Installation\r\n> `npm install --save @types/react-router-redux`\r\n\r\n# Summary\r\nThis package contains type definitions for react-router-redux (https://github.com/rackt/react-router-redux).\r\n\r\n# Details\r\nFiles were exported from https://www.github.com/DefinitelyTyped/DefinitelyTyped/tree/master/react-router-redux\r\n\r\nAdditional Details\r\n * Last updated: Mon, 20 Feb 2017 07:57:31 GMT\r\n * Dependencies: history, redux\r\n * Global values: none\r\n\r\n# Credits\r\nThese definitions were written by Isman Usoh <http://github.com/isman-usoh>, Noah Shipley <https://github.com/noah79>, Dimitri Rosenberg <https://github.com/rosendi>, Karol Janyst <https://github.com/LKay>.\r\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.1",
+  "typesPublisherContentHash": "ebbb1857753d4d42f9372a35ed744697583ec47a6981555f84663fcfa8a20157",
+  "version": "4.0.41"
+}

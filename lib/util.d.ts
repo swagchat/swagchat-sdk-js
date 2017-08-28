@@ -1,4 +1,4 @@
-import * as I from "./interface";
+import * as I from './interface';
 export declare function createQueryParams(params: {
     [key: string]: string | number;
 }): string;

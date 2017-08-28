@@ -16,7 +16,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "react-router-redux": ["types/react-router-redux"]
+    }
   },
   "formatCodeOptions": {
     "indentSize": 2,

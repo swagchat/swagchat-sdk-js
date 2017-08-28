@@ -1,7 +1,7 @@
-import { Realtime, User, Room, logger } from "./";
-import * as I from "./interface";
+import { Realtime, User, Room, logger } from './';
+import * as I from './interface';
 
-import "isomorphic-fetch";
+import 'isomorphic-fetch';
 
 export class Client {
     readonly apiKey: string;
@@ -24,29 +24,29 @@ export class Client {
     }
 
     private getApiHeaders(): {
-            "X-SwagChat-Api-Key": string;
-            "X-SwagChat-Api-Secret": string;
-            "Content-Type"?: string;
+            'X-SwagChat-Api-Key': string;
+            'X-SwagChat-Api-Secret': string;
+            'Content-Type'?: string;
         } {
         return {
-            "X-SwagChat-Api-Key": this.apiKey,
-            "X-SwagChat-Api-Secret": this.apiSecret,
+            'X-SwagChat-Api-Key': this.apiKey,
+            'X-SwagChat-Api-Secret': this.apiSecret,
         };
     }
 
     constructor(params: I.IClientParams) {
-        logger("api", "info", "Initializing API Client...");
+        logger('api', 'info', 'Initializing API Client...');
         this.apiKey = params.apiKey;
-        this.apiSecret = params.apiSecret || "";
+        this.apiSecret = params.apiSecret || '';
         this.apiEndpoint = params.apiEndpoint;
-        this.userId = params.userId || "";
-        this.userAccessToken = params.userAccessToken || "";
-        if (params.hasOwnProperty("realtime") && params.realtime!.hasOwnProperty("endpoint") && params.realtime!.endpoint !== "") {
+        this.userId = params.userId || '';
+        this.userAccessToken = params.userAccessToken || '';
+        if (params.hasOwnProperty('realtime') && params.realtime!.hasOwnProperty('endpoint') && params.realtime!.endpoint !== '') {
             const realtimeConfig = <I.IRealtimeConfig>params.realtime;
             this.connection = new Realtime(realtimeConfig.endpoint, this.userId);
         }
 
-        logger("api", "info", "Initialized API Client OK");
+        logger('api', 'info', 'Initialized API Client OK');
     }
 
     public socketClose() {
@@ -55,9 +55,9 @@ export class Client {
 
     public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
         let headers = this.getApiHeaders();
-        headers["Content-Type"] = "application/json";
-        return fetch(this.apiEndpoint + "/users", {
-            method: "POST",
+        headers['Content-Type'] = 'application/json';
+        return fetch(this.apiEndpoint + '/users', {
+            method: 'POST',
             headers: headers,
             body: JSON.stringify(createUserObject)
         }).then((response: Response) => {
@@ -94,8 +94,8 @@ export class Client {
     }
 
     public getUsers(): Promise<I.IFetchUsersResponse> {
-        return fetch(this.apiEndpoint + "/users", {
-            method: "GET",
+        return fetch(this.apiEndpoint + '/users', {
+            method: 'GET',
             headers: this.getApiHeaders(),
         }).then((response: Response) => {
             if (response.status === 200) {
@@ -128,13 +128,13 @@ export class Client {
     }
 
     public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
-        return fetch(this.apiEndpoint + "/users/" + userId, {
-            method: "GET",
+        return fetch(this.apiEndpoint + '/users/' + userId, {
+            method: 'GET',
             headers: this.getApiHeaders(),
         }).then((response: Response) => {
             if (response.status === 200) {
                 return response.json().then((user) => {
-                    user.accessToken = accessToken || "";
+                    user.accessToken = accessToken || '';
                     return (
                         {
                             user: new User({
@@ -174,9 +174,9 @@ export class Client {
 
     public removeUser(userId: string): Promise<I.IErrorResponse> {
         let headers = this.getApiHeaders();
-        headers["Content-Type"] = "application/json";
-        return fetch(this.apiEndpoint + "/users/" + userId, {
-            method: "DELETE",
+        headers['Content-Type'] = 'application/json';
+        return fetch(this.apiEndpoint + '/users/' + userId, {
+            method: 'DELETE',
             headers: headers,
         }).then((response: Response) => {
             if (response.status === 204) {
@@ -209,9 +209,9 @@ export class Client {
 
     public createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse> {
         let headers = this.getApiHeaders();
-        headers["Content-Type"] = "application/json";
-        return fetch(this.apiEndpoint + "/rooms", {
-            method: "POST",
+        headers['Content-Type'] = 'application/json';
+        return fetch(this.apiEndpoint + '/rooms', {
+            method: 'POST',
             headers: headers,
             body: JSON.stringify(createRoomObject)
         }).then((response: Response) => {
@@ -248,8 +248,8 @@ export class Client {
     }
 
     public getRooms(): Promise<I.IFetchRoomsResponse> {
-        return fetch(this.apiEndpoint + "/rooms", {
-            method: "GET",
+        return fetch(this.apiEndpoint + '/rooms', {
+            method: 'GET',
             headers: this.getApiHeaders(),
         }).then((response: Response) => {
             if (response.status === 200) {
@@ -282,8 +282,8 @@ export class Client {
     }
 
     public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-        return fetch(this.apiEndpoint + "/rooms/" + roomId, {
-            method: "GET",
+        return fetch(this.apiEndpoint + '/rooms/' + roomId, {
+            method: 'GET',
             headers: this.getApiHeaders(),
         }).then((response: Response) => {
             if (response.status === 200) {
@@ -327,9 +327,9 @@ export class Client {
 
     public removeRoom(roomId: string): Promise<I.IErrorResponse> {
         let headers = this.getApiHeaders();
-        headers["Content-Type"] = "application/json";
-        return fetch(this.apiEndpoint + "/rooms/" + roomId, {
-            method: "DELETE",
+        headers['Content-Type'] = 'application/json';
+        return fetch(this.apiEndpoint + '/rooms/' + roomId, {
+            method: 'DELETE',
             headers: headers,
         }).then((response: Response) => {
             if (response.status === 204) {

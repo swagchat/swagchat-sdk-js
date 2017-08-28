@@ -1,13 +1,13 @@
-import "isomorphic-fetch";
-import * as I from "./interface";
-import { Client, createQueryParams, logger } from "./";
+import 'isomorphic-fetch';
+import * as I from './interface';
+import { Client, createQueryParams, logger } from './';
 
 /**
  * Room class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
  *
  * ex)<br /><code>
- * room.name = "John's Room";<br />
+ * room.name = 'John's Room';<br />
  * console.log(room.name);</code>
  */
 export class Room {
@@ -24,11 +24,11 @@ export class Room {
     }
 
     get roomId(): string {
-        return this._data.roomId ? this._data.roomId : "";
+        return this._data.roomId ? this._data.roomId : '';
     }
 
     get userId(): string {
-        return this._data.userId ? this._data.userId : "";
+        return this._data.userId ? this._data.userId : '';
     }
 
     set userId(userId: string) {
@@ -36,7 +36,7 @@ export class Room {
     }
 
     get name(): string {
-        return this._data.name ? this._data.name : "";
+        return this._data.name ? this._data.name : '';
     }
 
     set name(name: string) {
@@ -44,7 +44,7 @@ export class Room {
     }
 
     get pictureUrl(): string {
-        return this._data.pictureUrl ? this._data.pictureUrl : "";
+        return this._data.pictureUrl ? this._data.pictureUrl : '';
     }
 
     set pictureUrl(pictureUrl: string) {
@@ -52,7 +52,7 @@ export class Room {
     }
 
     get informationUrl(): string {
-        return this._data.informationUrl ? this._data.informationUrl : "";
+        return this._data.informationUrl ? this._data.informationUrl : '';
     }
 
     set informationUrl(informationUrl: string) {
@@ -64,8 +64,8 @@ export class Room {
     }
 
     set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
-        if (!metaData || typeof(metaData) !== "object") {
-            logger("api", "error", "Set metaData failure. metaData is not setting.");
+        if (!metaData || typeof(metaData) !== 'object') {
+            logger('api', 'error', 'Set metaData failure. metaData is not setting.');
         } else {
             this._data.metaData = metaData;
         }
@@ -84,11 +84,11 @@ export class Room {
     }
 
     get lastMessage(): string {
-        return this._data.lastMessage ? this._data.lastMessage : "";
+        return this._data.lastMessage ? this._data.lastMessage : '';
     }
 
     get lastMessageUpdated(): string {
-        return this._data.lastMessageUpdated ? this._data.lastMessageUpdated : "";
+        return this._data.lastMessageUpdated ? this._data.lastMessageUpdated : '';
     }
 
     get messageCount(): number {
@@ -112,11 +112,11 @@ export class Room {
     }
 
     get created(): string {
-        return this._data.created ? this._data.created : "";
+        return this._data.created ? this._data.created : '';
     }
 
     get modified(): string {
-        return this._data.modified ? this._data.modified : "";
+        return this._data.modified ? this._data.modified : '';
     }
 
     get users(): I.IUserForRoom[] | null {
@@ -133,13 +133,13 @@ export class Room {
      * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
      *
      * ex)<br />
-     * <code>room.metaData = {"key1": "value1", "key2": 2, "key3": true, "key4": {"key5": "value5"}};</code>
+     * <code>room.metaData = {'key1': 'value1', 'key2': 2, 'key3': true, 'key4': {'key5': 'value5'}};</code>
      * @param key Key for register.
      * @param value A value for key.
      */
     public setMetaData(key: string, value: string | number | boolean | Object): void {
-        if (!key || typeof(key) !== "string") {
-            logger("api", "error", "set metaData failure. Parameter invalid.");
+        if (!key || typeof(key) !== 'string') {
+            logger('api', 'error', 'set metaData failure. Parameter invalid.');
         } else {
             if (this._data.metaData === undefined) {
                 let metaData = {key: value};
@@ -155,11 +155,11 @@ export class Room {
      * Please set the data of this object beforehand.
      */
     public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
-            method: "PUT",
+        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId, {
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + this._client.userAccessToken,
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this._client.userAccessToken,
             },
             body: JSON.stringify(putRoom)
         }).then((response: Response) => {
@@ -197,9 +197,9 @@ export class Room {
 
     public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
         let fetchParam = {
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 userIds: userIds
@@ -208,7 +208,7 @@ export class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
+        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/users',
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
@@ -249,9 +249,9 @@ export class Room {
 
     public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
         let fetchParam = {
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 userIds: userIds
@@ -260,7 +260,7 @@ export class Room {
         if (!(userIds instanceof Array) || userIds.length === 0) {
             fetchParam.body = JSON.stringify({});
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/users",
+        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/users',
             fetchParam
         ).then((response: Response) => {
             if (response.status === 200) {
@@ -300,11 +300,11 @@ export class Room {
     }
 
     public reflesh(): Promise<I.IFetchRoomResponse> {
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId, {
-            method: "GET",
+        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId, {
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + this._client.userAccessToken,
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this._client.userAccessToken,
             },
         }).then((response: Response) => {
             if (response.status === 200) {
@@ -345,15 +345,15 @@ export class Room {
     }
 
     public getMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
-        let queryParamsString = "";
+        let queryParamsString = '';
         if (queryParams !== undefined) {
             queryParamsString = createQueryParams(queryParams);
         }
-        return fetch(this._client.apiEndpoint + "/rooms/" + this._data.roomId + "/messages?" + queryParamsString, {
-            method: "GET",
+        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/messages?' + queryParamsString, {
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + this._client.userAccessToken,
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this._client.userAccessToken,
             },
         }).then((response: Response) => {
             if (response.status === 200) {
