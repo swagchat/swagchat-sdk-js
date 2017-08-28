@@ -36,12 +36,12 @@
     "@types/isomorphic-fetch": "0.0.34",
     "@types/node": "^8.0.8",
     "@types/ws": "0.0.39",
-    "ts-loader": "^2.1.0",
+    "ts-loader": "^2.3.4",
     "tsify": "^3.0.1",
-    "tslint": "^5.3.2",
+    "tslint": "^5.7.0",
     "tslint-loader": "^3.5.3",
-    "typedoc": "^0.5.7",
-    "typescript": "^2.3.3",
+    "typedoc": "^0.8.0",
+    "typescript": "^2.4.2",
     "watchify": "^3.9.0"
   },
   "optionalDependencies": {
