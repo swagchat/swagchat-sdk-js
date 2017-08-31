@@ -85,7 +85,16 @@ export function message(state: IMessageState = getInitialState(), action: Messag
     case CREATE_MESSAGE:
       const createMessageAction = <ICreateMessageAction>action;
       const rootState: State = store.getState();
-      const message = createMessage(rootState.room.room!.roomId, rootState.user.user!.userId, createMessageAction.messageType, createMessageAction.payload);
+      if (rootState.room.room === null) {
+        return state;
+      }
+      let roomId: string;
+      if (rootState.room.room.roomId === undefined) {
+        return state;
+      } else {
+        roomId = rootState.room.room.roomId;
+      }
+      const message = createMessage(roomId, rootState.user.user!.userId, createMessageAction.messageType, createMessageAction.payload);
       let createMessages = state.createMessages.slice();
       createMessages.push(message);
       return Object.assign(

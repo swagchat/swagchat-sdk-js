@@ -1,17 +1,15 @@
-import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
-import { IPostAssetResponse } from '../';
+import { takeLatest, call, put, ForkEffect } from 'redux-saga/effects';
+import { IPostAssetResponse, fileUpload } from '../';
 import {
   ASSET_POST_REQUEST,
   IAssetPostRequestAction,
   assetPostRequestSuccessActionCreator,
   assetPostRequestFailureActionCreator,
 } from '../actions/asset';
-import { State } from '../stores';
 
 function* postAsset(action: IAssetPostRequestAction) {
-  const state: State = yield select();
   const res: IPostAssetResponse = yield call((file: Blob) => {
-    return state.user.user!.fileUpload(file);
+    return fileUpload(file);
   }, action.file);
   if (res.asset) {
     yield put(assetPostRequestSuccessActionCreator(res.asset));

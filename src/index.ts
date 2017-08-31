@@ -4,8 +4,8 @@
 export * from './Client';
 export * from './Realtime';
 export * from './interface';
-export * from './User';
-export * from './Room';
+export * from './user';
+export * from './room';
 export * from './const';
 export * from './utils';
 

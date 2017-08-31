@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
-import { IFetchMessagesResponse, ISendMessagesResponse } from '../';
+import { IFetchMessagesResponse, ISendMessagesResponse, sendMessages } from '../';
 import * as Scroll from 'react-scroll';
-
+import { getMessages } from '../room';
 import {
   MESSAGES_FETCH_REQUEST,
   MESSAGES_SEND_REQUEST,
@@ -13,10 +13,19 @@ import {
 import { State } from '../stores';
 import { date2ISO3339String } from '../utils';
 
-function* fetchMessages() {
-  const state: State = yield select();
+function* gGetMessages() {
+  const state: State  = yield select();
+  if (state.room.room === null) {
+    return;
+  }
+  let roomId: string;
+  if (state.room.room.roomId === undefined) {
+    return;
+  } else {
+    roomId = state.room.room.roomId;
+  }
   const {messages, error}: IFetchMessagesResponse = yield call(() => {
-      return state.room.room!.getMessages({
+      return getMessages(roomId, {
         limit: state.message.messagesLimit,
         offset: state.message.messagesOffset,
       });
@@ -28,10 +37,10 @@ function* fetchMessages() {
   }
 }
 
-function* sendMessages() {
+function* gSendMessages() {
   const state: State = yield select();
   const {messageIds, error}: ISendMessagesResponse = yield call(() => {
-    return state.user.user!.sendMessages(...state.message.createMessages);
+    return sendMessages(...state.message.createMessages);
   });
   if (error) {
     yield put(messagesSendRequestFailureActionCreator(error!));
@@ -47,6 +56,6 @@ function* sendMessages() {
 }
 
 export function* messageSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(MESSAGES_FETCH_REQUEST, fetchMessages);
-  yield takeLatest(MESSAGES_SEND_REQUEST, sendMessages);
+  yield takeLatest(MESSAGES_FETCH_REQUEST, gGetMessages);
+  yield takeLatest(MESSAGES_SEND_REQUEST, gSendMessages);
 }

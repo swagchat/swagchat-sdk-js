@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import { Client, Platform, logger } from './';
 import * as I from './interface';
-
+import { store } from './stores';
 /**
  * User class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -13,62 +13,6 @@ import * as I from './interface';
 export class User {
     readonly  _client: Client;
     private _data: I.IUser;
-
-    static auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
-        return fetch(params.apiEndpoint + '/users/' + params.userId, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + params.accessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((user) => {
-                    user.accessToken = params.accessToken || '';
-                    const client = new Client({
-                        apiKey: params.apiKey,
-                        apiEndpoint: params.apiEndpoint,
-                        userId: params.userId,
-                        userAccessToken: params.accessToken || '',
-                        realtime: {
-                            endpoint: params.realtimeEndpoint || '',
-                        },
-                    });
-                    return (
-                        {
-                            user: new User({
-                                client: client,
-                                data: <User>user,
-                            }),
-                            error: null,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    user: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchUserResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            user: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                user: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchUserResponse;
-        });
-    }
 
     constructor(params: I.IUserParams) {
         this._client = params.client;
@@ -187,531 +131,491 @@ export class User {
         return this._data.blocks;
     }
 
-    /**
-     * Register a new device token.
-     *
-     * @param token device token.
-     */
-    public setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse> {
-        let method = 'POST';
-        if (this._data.devices) {
-            for (let device of this._data.devices) {
-                if (device.platform === platform) {
-                    method = 'PUT';
-                }
+
+}
+
+
+/**
+ * Register metadata in separate.
+ * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
+ * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
+ *
+ * ex)<br />
+ * <code>user.metaData = {'key1': 'value1', 'key2': 2, 'key3': true, 'key4': {'key5': 'value5'}};</code>
+ * @param key Key for register.
+ * @param value A value for key.
+ */
+export function setUserMetaData(user: I.IUser, key: string, value: string | number | boolean | Object): I.IUser {
+    if (!key || typeof(key) !== 'string') {
+        logger('api', 'error', 'set metaData failure. Parameter invalid.');
+    } else {
+        if (user.metaData === undefined) {
+            let metaData = {key: value};
+            user.metaData = metaData;
+        } else {
+            user.metaData[key] = value;
+        }
+    }
+    return user;
+}
+
+/**
+ * Register a new device token.
+ *
+ * @param token device token.
+ */
+export function setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse> {
+    const client = store.getState().client.client;
+    const user = store.getState().user.user;
+    let method = 'POST';
+    if (user.devices) {
+        for (let device of user.devices) {
+            if (device.platform === platform) {
+                method = 'PUT';
             }
         }
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId + '/devices/' + String(platform), {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: JSON.stringify({
-                token: token,
-            })
-        }).then((response: Response) => {
-            if (response.status === 200 || response.status === 201) {
-                this.reflesh();
-                return response.json().then((device) => {
-                    return (
-                        {
-                            device: device,
-                            error: null,
-                        } as I.IFetchUserDeviceResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    device: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchUserDeviceResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            device: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchUserDeviceResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+    }
+    return fetch(client.apiEndpoint + '/users/' + client.userId + '/devices/' + String(platform), {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: JSON.stringify({
+            token: token,
+        })
+    }).then((response: Response) => {
+        if (response.status === 200 || response.status === 201) {
+            // this.reflesh(); TODO
+            return response.json().then((device) => {
+                return (
+                    {
+                        device: device,
+                        error: null,
+                    } as I.IFetchUserDeviceResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 device: null,
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IFetchUserDeviceResponse;
-        });
-    }
-
-    /**
-     * Delete device token.
-     */
-    public removeDevice(platform: Platform): Promise<I.IErrorResponse> {
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId + '/devices/' + String(platform), {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 204) {
-                this.reflesh();
-                return response.json().then(() => {
-                    return (
-                        {
-                            error: null,
-                        } as I.IErrorResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IErrorResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            error: <I.IProblemDetail>json,
-                        } as I.IErrorResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IErrorResponse;
-        });
-    }
-
-    /**
-     * Register metadata in separate.
-     * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
-     * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
-     *
-     * ex)<br />
-     * <code>user.metaData = {'key1': 'value1', 'key2': 2, 'key3': true, 'key4': {'key5': 'value5'}};</code>
-     * @param key Key for register.
-     * @param value A value for key.
-     */
-    public setMetaData(key: string, value: string | number | boolean | Object): void {
-        if (!key || typeof(key) !== 'string') {
-            logger('api', 'error', 'set metaData failure. Parameter invalid.');
-            return;
-        }
-        if (this._data.metaData === undefined) {
-            let metaData = {key: value};
-            this._data.metaData = metaData;
         } else {
-            this._data.metaData[key] = value;
+            return response.json().then((json) => {
+                return (
+                    {
+                        device: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchUserDeviceResponse
+                );
+            });
         }
-    }
+    }).catch((error) => {
+        return {
+            device: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchUserDeviceResponse;
+    });
+}
 
-    /**
-     * Update user information.
-     * Please set the data of this object beforehand.
-     */
-    public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: JSON.stringify(putUser)
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((user) => {
-                    return (
-                        {
-                            user: new User({
-                                client: this._client,
-                                data: <I.IUser>user,
-                            }),
-                            error: null,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            user: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                user: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchUserResponse;
-        });
-    }
-
-    /**
-     * Refresh user information to the latest.
-     * A different client might update an existing user's information while you use the application continuously.
-     */
-    public reflesh(): Promise<I.IFetchUserResponse> {
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((user) => {
-                    const accessToken = this.accessToken;
-                    this._data = <I.IUser>user;
-                    this._data.accessToken = accessToken;
-                    return (
-                        {
-                            user: this,
-                            error: null,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    user: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchUserResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            user: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchUserResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                user: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchUserResponse;
-        });
-    }
-
-    /**
-     * Send Message.
-     * Please create message objects beforehand by using such as client.createTextMessage().
-     * @param messages An array for message objects to send.
-     */
-    public sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
-        return fetch(this._client.apiEndpoint + '/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: JSON.stringify({messages: messages})
-        }).then((response: Response) => {
-            if (response.status === 201) {
-                return response.json().then((messagesRes) => {
-                    return (
-                        {
-                            messageIds: <string[]>messagesRes.messageIds,
-                            error: null,
-                        } as I.ISendMessagesResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            messageIds: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.ISendMessagesResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                messageIds: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.ISendMessagesResponse;
-        });
-    }
-
-    /**
-     * Reset the number of unread for room specified by parameters.
-     * @param roomId Room ID
-     */
-    public markAsRead(roomId: string): Promise<I.IErrorResponse> {
-        return fetch(this._client.apiEndpoint + '/rooms/' + roomId + '/users/' + this._data.userId, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: JSON.stringify({unreadCount: 0})
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then(() => {
-                    return (
-                        {
-                            error: null,
-                        } as I.IErrorResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            error: <I.IProblemDetail>json,
-                        } as I.IErrorResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+/**
+ * Delete device token.
+ */
+export function removeDevice(platform: Platform): Promise<I.IErrorResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/users/' + client.userId + '/devices/' + String(platform), {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+    }).then((response: Response) => {
+        if (response.status === 204) {
+            // client.getUser();
+            return response.json().then(() => {
+                return (
+                    {
+                        error: null,
+                    } as I.IErrorResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IErrorResponse;
-        });
-    }
-
-    /**
-     * Reset the number of unread for each room for the user.
-     */
-    public markAllAsRead(): Promise<I.IErrorResponse> {
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: JSON.stringify({unreadCount: 0})
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then(() => {
-                    return (
-                        {
-                            error: null,
-                        } as I.IErrorResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            error: <I.IProblemDetail>json,
-                        } as I.IErrorResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IErrorResponse;
-        });
-    }
-
-    /**
-     * File upload.
-     * @param file Image data.
-     */
-    public fileUpload(file: Blob): Promise<I.IPostAssetResponse> {
-        let formData = new FormData();
-        formData.append('asset', file);
-        return fetch(this._client.apiEndpoint + '/assets', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-            body: formData,
-        }).then((response: Response) => {
-            if (response.status === 201) {
-                return response.json().then((asset) => {
-                    return (
-                        {
-                            asset: <I.IAsset>asset,
-                            error: null,
-                        } as I.IPostAssetResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            asset: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IPostAssetResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                asset: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IPostAssetResponse;
-        });
-    }
-
-    public getContacts(): Promise<I.IFetchUsersResponse> {
-        return fetch(this._client.apiEndpoint + '/contacts/' + this.userId, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + this.accessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((usersRes) => {
-                    return (
-                        {
-                            users: <I.IUser[]>usersRes.users,
-                            error: null,
-                        } as I.IFetchUsersResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            users: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                users: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchUsersResponse;
-        });
-    }
-
-    public addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-        let fetchParam = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userIds: userIds
-            })
-        };
-        if (!(userIds instanceof Array) || userIds.length === 0) {
-            fetchParam.body = JSON.stringify({});
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        error: <I.IProblemDetail>json,
+                    } as I.IErrorResponse
+                );
+            });
         }
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId + '/blocks',
-            fetchParam
-        ).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((blockUsersRes) => {
-                    return (
-                        {
-                            blockUsers: blockUsersRes.blockUsers,
-                            error: null,
-                        } as I.IFetchBlockUsersResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    blockUsers: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchBlockUsersResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            blockUsers: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchBlockUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+    }).catch((error) => {
+        return {
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IErrorResponse;
+    });
+}
+
+
+/**
+ * Update user information.
+ * Please set the data of this object beforehand.
+ */
+export function updateUser(user: I.IUser): Promise<I.IFetchUserResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/users/' + client.userId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: JSON.stringify(user)
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((user) => {
+                return (
+                    {
+                        user: user,
+                        error: null,
+                    } as I.IFetchUserResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        user: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchUserResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            user: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchUserResponse;
+    });
+}
+
+/**
+ * Send Message.
+ * Please create message objects beforehand by using such as client.createTextMessage().
+ * @param messages An array for message objects to send.
+ */
+export function sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: JSON.stringify({messages: messages})
+    }).then((response: Response) => {
+        if (response.status === 201) {
+            return response.json().then((messagesRes) => {
+                return (
+                    {
+                        messageIds: <string[]>messagesRes.messageIds,
+                        error: null,
+                    } as I.ISendMessagesResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        messageIds: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.ISendMessagesResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            messageIds: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.ISendMessagesResponse;
+    });
+}
+
+/**
+ * Reset the number of unread for room specified by parameters.
+ * @param roomId Room ID
+ */
+export function markAsRead(roomId: string): Promise<I.IErrorResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/rooms/' + roomId + '/users/' + client.userId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: JSON.stringify({unreadCount: 0})
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then(() => {
+                return (
+                    {
+                        error: null,
+                    } as I.IErrorResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        error: <I.IProblemDetail>json,
+                    } as I.IErrorResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IErrorResponse;
+    });
+}
+
+/**
+ * Reset the number of unread for each room for the user.
+ */
+export function markAllAsRead(): Promise<I.IErrorResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/users/' + client.userId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: JSON.stringify({unreadCount: 0})
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then(() => {
+                return (
+                    {
+                        error: null,
+                    } as I.IErrorResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        error: <I.IProblemDetail>json,
+                    } as I.IErrorResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IErrorResponse;
+    });
+}
+
+/**
+ * File upload.
+ * @param file Image data.
+ */
+export function fileUpload(file: Blob): Promise<I.IPostAssetResponse> {
+    const client = store.getState().client.client;
+    let formData = new FormData();
+    formData.append('asset', file);
+    return fetch(client.apiEndpoint + '/assets', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+        body: formData,
+    }).then((response: Response) => {
+        if (response.status === 201) {
+            return response.json().then((asset) => {
+                return (
+                    {
+                        asset: <I.IAsset>asset,
+                        error: null,
+                    } as I.IPostAssetResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        asset: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IPostAssetResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            asset: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IPostAssetResponse;
+    });
+}
+
+export function getContacts(): Promise<I.IFetchUsersResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/contacts/' + client.userId, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + client.accessToken,
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((usersRes) => {
+                return (
+                    {
+                        users: <I.IUser[]>usersRes.users,
+                        error: null,
+                    } as I.IFetchUsersResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        users: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchUsersResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            users: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchUsersResponse;
+    });
+}
+
+export function addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
+    const client = store.getState().client.client;
+    let fetchParam = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userIds: userIds
+        })
+    };
+    if (!(userIds instanceof Array) || userIds.length === 0) {
+        fetchParam.body = JSON.stringify({});
+    }
+    return fetch(client.apiEndpoint + '/users/' + client.userId + '/blocks',
+        fetchParam
+    ).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((blockUsersRes) => {
+                return (
+                    {
+                        blockUsers: blockUsersRes.blockUsers,
+                        error: null,
+                    } as I.IFetchBlockUsersResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 blockUsers: null,
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IFetchBlockUsersResponse;
-        });
-    }
-
-    public removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-        let fetchParam = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userIds: userIds
-            })
-        };
-        if (!(userIds instanceof Array) || userIds.length === 0) {
-            fetchParam.body = JSON.stringify({});
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        blockUsers: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchBlockUsersResponse
+                );
+            });
         }
-        return fetch(this._client.apiEndpoint + '/users/' + this._data.userId + '/blocks',
-            fetchParam
-        ).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((blockUsersRes) => {
-                    return (
-                        {
-                            blockUsers: blockUsersRes.blockUsers,
-                            error: null,
-                        } as I.IFetchBlockUsersResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    blockUsers: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchBlockUsersResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            blockUsers: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchBlockUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+    }).catch((error) => {
+        return {
+            blockUsers: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchBlockUsersResponse;
+    });
+}
+
+export function removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
+    const client = store.getState().client.client;
+    let fetchParam = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userIds: userIds
+        })
+    };
+    if (!(userIds instanceof Array) || userIds.length === 0) {
+        fetchParam.body = JSON.stringify({});
+    }
+    return fetch(client.apiEndpoint + '/users/' + client.userId + '/blocks',
+        fetchParam
+    ).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((blockUsersRes) => {
+                return (
+                    {
+                        blockUsers: blockUsersRes.blockUsers,
+                        error: null,
+                    } as I.IFetchBlockUsersResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 blockUsers: null,
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IFetchBlockUsersResponse;
-        });
-    }
-
-
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        blockUsers: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchBlockUsersResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            blockUsers: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchBlockUsersResponse;
+    });
 }

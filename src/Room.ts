@@ -1,411 +1,236 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
-import { Client, createQueryParams, logger } from './';
+import { IRoom, createQueryParams, logger } from './';
+import { store } from './stores';
 
-/**
- * Room class has API client, own data and the behaivor for itself.
- * Please use accessor to get or set although data is stored in variable <code>_data</code>.
- *
- * ex)<br /><code>
- * room.name = 'John's Room';<br />
- * console.log(room.name);</code>
- */
-export class Room {
-    private _client: Client;
-    private _data: I.IRoom;
-
-    constructor(params: I.IRoomParams) {
-        this._client = params.client;
-        this._data = params.data;
-    }
-
-    set onMessageReceived(onMessageReceived: Function) {
-        this._client.connection.onMessageReceived = onMessageReceived;
-    }
-
-    get roomId(): string {
-        return this._data.roomId ? this._data.roomId : '';
-    }
-
-    get userId(): string {
-        return this._data.userId ? this._data.userId : '';
-    }
-
-    set userId(userId: string) {
-        this._data.roomId = userId;
-    }
-
-    get name(): string {
-        return this._data.name ? this._data.name : '';
-    }
-
-    set name(name: string) {
-        this._data.name = name;
-    }
-
-    get pictureUrl(): string {
-        return this._data.pictureUrl ? this._data.pictureUrl : '';
-    }
-
-    set pictureUrl(pictureUrl: string) {
-        this._data.pictureUrl = pictureUrl;
-    }
-
-    get informationUrl(): string {
-        return this._data.informationUrl ? this._data.informationUrl : '';
-    }
-
-    set informationUrl(informationUrl: string) {
-        this._data.informationUrl = informationUrl;
-    }
-
-    get metaData(): {[key: string]: string | number | boolean | Object} {
-        return this._data.metaData ? this._data.metaData : {};
-    }
-
-    set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
-        if (!metaData || typeof(metaData) !== 'object') {
-            logger('api', 'error', 'Set metaData failure. metaData is not setting.');
+export function setRoomMetaData(room: IRoom, key: string, value: string | number | boolean | Object): IRoom {
+    if (!key || typeof(key) !== 'string') {
+        logger('api', 'error', 'set metaData failure. Parameter invalid.');
+    } else {
+        if (room.metaData === undefined) {
+            let metaData = {key: value};
+            room.metaData = metaData;
         } else {
-            this._data.metaData = metaData;
+            room.metaData[key] = value;
         }
     }
+    return room;
+}
 
-    get availableMessageTypes(): string[] | null {
-        return this._data.availableMessageTypes ? this._data.availableMessageTypes : null;
-    }
-
-    get type(): number {
-        return this._data.type ? this._data.type : 0;
-    }
-
-    set type(type: number) {
-        this._data.type = type;
-    }
-
-    get lastMessage(): string {
-        return this._data.lastMessage ? this._data.lastMessage : '';
-    }
-
-    get lastMessageUpdated(): string {
-        return this._data.lastMessageUpdated ? this._data.lastMessageUpdated : '';
-    }
-
-    get messageCount(): number {
-        return this._data.messageCount ? this._data.messageCount : 0;
-    }
-
-    get isCanLeft(): boolean {
-        return this._data.isCanLeft ? this._data.isCanLeft : true;
-    }
-
-    set isCanLeft(isCanLeft: boolean) {
-        this._data.isCanLeft = isCanLeft;
-    }
-
-    get isShowUsers(): boolean {
-        return this._data.isShowUsers ? this._data.isShowUsers : true;
-    }
-
-    set isShowUsers(isShowUsers: boolean) {
-        this._data.isShowUsers = isShowUsers;
-    }
-
-    get created(): string {
-        return this._data.created ? this._data.created : '';
-    }
-
-    get modified(): string {
-        return this._data.modified ? this._data.modified : '';
-    }
-
-    get users(): I.IUserForRoom[] | null {
-        return this._data.users || null;
-    }
-
-    get userIds(): string[] {
-        return this._data.userIds ? this._data.userIds : [];
-    }
-
-    /**
-     * Register metadata in separate.
-     * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
-     * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
-     *
-     * ex)<br />
-     * <code>room.metaData = {'key1': 'value1', 'key2': 2, 'key3': true, 'key4': {'key5': 'value5'}};</code>
-     * @param key Key for register.
-     * @param value A value for key.
-     */
-    public setMetaData(key: string, value: string | number | boolean | Object): void {
-        if (!key || typeof(key) !== 'string') {
-            logger('api', 'error', 'set metaData failure. Parameter invalid.');
+export function updateRoom(room: I.IRoom): Promise<I.IFetchRoomResponse> {
+    const client = store.getState().client.client;
+    return fetch(client.apiEndpoint + '/rooms/' + room.roomId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.userAccessToken,
+        },
+        body: JSON.stringify(room)
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((room) => {
+                return (
+                    {
+                        room: room,
+                        error: null,
+                    } as I.IFetchRoomResponse
+                );
+            });
         } else {
-            if (this._data.metaData === undefined) {
-                let metaData = {key: value};
-                this._data.metaData = metaData;
-            } else {
-                this._data.metaData[key] = value;
-            }
+            return response.json().then((json) => {
+                return (
+                    {
+                        room: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchRoomResponse
+                );
+            });
         }
-    }
+    }).catch((error) => {
+        return {
+            room: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchRoomResponse;
+    });
+}
 
-    /**
-     * Update room information.
-     * Please set the data of this object beforehand.
-     */
-    public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
-        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this._client.userAccessToken,
-            },
-            body: JSON.stringify(putRoom)
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((room) => {
-                    return (
-                        {
-                            room: new Room({
-                                client: this._client,
-                                data: <I.IRoom>room,
-                            }),
-                            error: null,
-                        } as I.IFetchRoomResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            room: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchRoomResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                room: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchRoomResponse;
-        });
+export function addRoomUsers(roomId: string, userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
+    const client = store.getState().client.client;
+    let fetchParam = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userIds: userIds
+        })
+    };
+    if (!(userIds instanceof Array) || userIds.length === 0) {
+        fetchParam.body = JSON.stringify({});
     }
-
-    public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-        let fetchParam = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userIds: userIds
-            })
-        };
-        if (!(userIds instanceof Array) || userIds.length === 0) {
-            fetchParam.body = JSON.stringify({});
-        }
-        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/users',
-            fetchParam
-        ).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((addUsersRes) => {
-                    return (
-                        {
-                            roomUsers: addUsersRes.roomUsers,
-                            error: null,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    roomUsers: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchRoomUsersResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            roomUsers: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+    return fetch(client.apiEndpoint + '/rooms/' + roomId + '/users',
+        fetchParam
+    ).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((addUsersRes) => {
+                return (
+                    {
+                        roomUsers: addUsersRes.roomUsers,
+                        error: null,
+                    } as I.IFetchRoomUsersResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 roomUsers: null,
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IFetchRoomUsersResponse;
-        });
-    }
-
-    public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-        let fetchParam = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userIds: userIds
-            })
-        };
-        if (!(userIds instanceof Array) || userIds.length === 0) {
-            fetchParam.body = JSON.stringify({});
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        roomUsers: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchRoomUsersResponse
+                );
+            });
         }
-        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/users',
-            fetchParam
-        ).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((removeUsersRes) => {
-                    return (
-                        {
-                            roomUsers: removeUsersRes.roomUsers,
-                            error: null,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    roomUsers: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchRoomUsersResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            roomUsers: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchRoomUsersResponse
-                    );
-                });
-            }
-        }).catch((error) => {
+    }).catch((error) => {
+        return {
+            roomUsers: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchRoomUsersResponse;
+    });
+}
+
+export function removeRoomUsers(roomId: string, userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
+    const client = store.getState().client.client;
+    let fetchParam = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userIds: userIds
+        })
+    };
+    if (!(userIds instanceof Array) || userIds.length === 0) {
+        fetchParam.body = JSON.stringify({});
+    }
+    return fetch(client.apiEndpoint + '/rooms/' + roomId + '/users',
+        fetchParam
+    ).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((removeUsersRes) => {
+                return (
+                    {
+                        roomUsers: removeUsersRes.roomUsers,
+                        error: null,
+                    } as I.IFetchRoomUsersResponse
+                );
+            });
+        } else if (response.status === 404) {
             return {
                 roomUsers: null,
                 error: {
-                    title: error.message,
+                    title: response.statusText,
                 } as I.IProblemDetail,
             } as I.IFetchRoomUsersResponse;
-        });
-    }
-
-    public reflesh(): Promise<I.IFetchRoomResponse> {
-        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this._client.userAccessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((room) => {
-                    this._data = <I.IRoom>room;
-                    return (
-                        {
-                            room: this,
-                            error: null,
-                        } as I.IFetchRoomResponse
-                    );
-                });
-            } else if (response.status === 404) {
-                return {
-                    room: null,
-                    error: {
-                        title: response.statusText,
-                    } as I.IProblemDetail,
-                } as I.IFetchRoomResponse;
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            room: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchRoomResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                room: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchRoomResponse;
-        });
-    }
-
-    public getMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
-        let queryParamsString = '';
-        if (queryParams !== undefined) {
-            queryParamsString = createQueryParams(queryParams);
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        roomUsers: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchRoomUsersResponse
+                );
+            });
         }
-        return fetch(this._client.apiEndpoint + '/rooms/' + this._data.roomId + '/messages?' + queryParamsString, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this._client.userAccessToken,
-            },
-        }).then((response: Response) => {
-            if (response.status === 200) {
-                return response.json().then((messages) => {
-                    return (
-                        {
-                            messages: <I.IMessages>messages,
-                            error: null,
-                        } as I.IFetchMessagesResponse
-                    );
-                });
-            } else {
-                return response.json().then((json) => {
-                    return (
-                        {
-                            messages: null,
-                            error: <I.IProblemDetail>json,
-                        } as I.IFetchMessagesResponse
-                    );
-                });
-            }
-        }).catch((error) => {
-            return {
-                messages: null,
-                error: {
-                    title: error.message,
-                } as I.IProblemDetail,
-            } as I.IFetchMessagesResponse;
-        });
-    }
+    }).catch((error) => {
+        return {
+            roomUsers: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchRoomUsersResponse;
+    });
+}
 
-    public subscribeMessage(onMessageReceived: Function): void {
-        this._client.connection ? this._client.connection.subscribeMessage(onMessageReceived, this.roomId) : null;
-    }
 
-    public unsubscribeMessage(): void {
-        this._client.connection ? this._client.connection.unsubscribeMessage(this.roomId) : null;
+export function getMessages(roomId: string, queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
+    const client = store.getState().client.client;
+    let queryParamsString = '';
+    if (queryParams !== undefined) {
+        queryParamsString = createQueryParams(queryParams);
     }
+    return fetch(client.apiEndpoint + '/rooms/' + roomId + '/messages?' + queryParamsString, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + client.userAccessToken,
+        },
+    }).then((response: Response) => {
+        if (response.status === 200) {
+            return response.json().then((messages) => {
+                return (
+                    {
+                        messages: <I.IMessages>messages,
+                        error: null,
+                    } as I.IFetchMessagesResponse
+                );
+            });
+        } else {
+            return response.json().then((json) => {
+                return (
+                    {
+                        messages: null,
+                        error: <I.IProblemDetail>json,
+                    } as I.IFetchMessagesResponse
+                );
+            });
+        }
+    }).catch((error) => {
+        return {
+            messages: null,
+            error: {
+                title: error.message,
+            } as I.IProblemDetail,
+        } as I.IFetchMessagesResponse;
+    });
+}
 
-    public subscribeUserJoin(onUserJoined: Function): void {
-        this._client.connection ? this._client.connection.subscribeUserJoin(onUserJoined, this.roomId) : null;
-    }
+export function subscribeMessage(roomId: string, onMessageReceived: Function): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.subscribeMessage(onMessageReceived, roomId) : null;
+}
 
-    public unsubscribeUserJoin(): void {
-        this._client.connection ? this._client.connection.unsubscribeUserJoin(this.roomId) : null;
-    }
+export function unsubscribeMessage(roomId: string): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.unsubscribeMessage(roomId) : null;
+}
 
-    public subscribeUserLeft(onUserLeft: Function): void {
-        this._client.connection ? this._client.connection.subscribeUserLeft(onUserLeft, this.roomId) : null;
-    }
+export function subscribeUserJoin(roomId: string, onUserJoined: Function): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.subscribeUserJoin(onUserJoined, roomId) : null;
+}
 
-    public unsubscribeUserLeft(): void {
-        this._client.connection ? this._client.connection.unsubscribeUserLeft(this.roomId) : null;
-    }
+export function unsubscribeUserJoin(roomId: string): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.unsubscribeUserJoin(roomId) : null;
+}
+
+export function subscribeUserLeft(roomId: string, onUserLeft: Function): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.subscribeUserLeft(onUserLeft, roomId) : null;
+}
+
+export function unsubscribeUserLeft(roomId: string): void {
+    const client = store.getState().client.client;
+    client.connection ? client.connection.unsubscribeUserLeft(roomId) : null;
 }

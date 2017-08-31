@@ -1,5 +1,14 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
-import { IRoom, IFetchRoomResponse, IFetchRoomUsersResponse } from '../';
+import {
+  IRoom,
+  IFetchRoomResponse,
+  IFetchRoomUsersResponse,
+} from '../';
+import {
+  updateRoom,
+  addRoomUsers,
+  removeRoomUsers,
+} from '../room';
 
 import {
   ROOM_FETCH_REQUEST,
@@ -20,7 +29,7 @@ import {
 import { userFetchRequestActionCreator } from '../actions/user';
 import { State } from '../stores';
 
-function* fetchRoom(action: IRoomFetchRequestAction) {
+function* gGetRoom(action: IRoomFetchRequestAction) {
   const state: State = yield select();
   const res: IFetchRoomResponse = yield call((roomId: string) => {
     return state.client.client!.getRoom(roomId);
@@ -32,10 +41,9 @@ function* fetchRoom(action: IRoomFetchRequestAction) {
   }
 }
 
-function* updateRoom(action: IRoomUpdateRequestAction) {
-  const state: State = yield select();
+function* gUpdateRoom(action: IRoomUpdateRequestAction) {
   const res: IFetchRoomResponse = yield call((putRoom: IRoom) => {
-    return state.room.room!.update(putRoom);
+    return updateRoom(putRoom);
   }, action.putRoom);
   if (res.room) {
     yield put(roomFetchRequestSuccessActionCreator(res.room));
@@ -44,24 +52,41 @@ function* updateRoom(action: IRoomUpdateRequestAction) {
   }
 }
 
-function* fetchRoomUserAdd(action: IRoomUserAddFetchRequestAction) {
+function* gRoomUserAdd(action: IRoomUserAddFetchRequestAction) {
   const state: State  = yield select();
+  if (state.room.room === null) {
+    return;
+  }
+  let roomId: string;
+  if (state.room.room.roomId === undefined) {
+    return;
+  } else {
+    roomId = state.room.room.roomId;
+  }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.room.room!.addUsers(userIds);
+    return addRoomUsers(roomId, userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(roomUserAddFetchRequestSuccessActionCreator(res.roomUsers));
     yield put(userFetchRequestActionCreator(state.user.user!.userId, state.user.user!.accessToken));
-    // location.href = '#';
   } else {
     yield put(roomUserAddFetchRequestFailureActionCreator(res.error!));
   }
 }
 
-function* fetchRoomUserRemove(action: IRoomUserRemoveFetchRequestAction) {
+function* gRoomUserRemove(action: IRoomUserRemoveFetchRequestAction) {
   const state: State  = yield select();
+  if (state.room.room === null) {
+    return;
+  }
+  let roomId: string;
+  if (state.room.room.roomId === undefined) {
+    return;
+  } else {
+    roomId = state.room.room.roomId;
+  }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.room.room!.removeUsers(userIds);
+    return removeRoomUsers(roomId, userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(roomUserRemoveFetchRequestSuccessActionCreator(res.roomUsers));
@@ -73,8 +98,8 @@ function* fetchRoomUserRemove(action: IRoomUserRemoveFetchRequestAction) {
 }
 
 export function* roomSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(ROOM_FETCH_REQUEST, fetchRoom);
-  yield takeLatest(ROOM_UPDATE_REQUEST, updateRoom);
-  yield takeLatest(ROOM_USER_ADD_FETCH_REQUEST, fetchRoomUserAdd);
-  yield takeLatest(ROOM_USER_REMOVE_FETCH_REQUEST, fetchRoomUserRemove);
+  yield takeLatest(ROOM_FETCH_REQUEST, gGetRoom);
+  yield takeLatest(ROOM_UPDATE_REQUEST, gUpdateRoom);
+  yield takeLatest(ROOM_USER_ADD_FETCH_REQUEST, gRoomUserAdd);
+  yield takeLatest(ROOM_USER_REMOVE_FETCH_REQUEST, gRoomUserRemove);
 }

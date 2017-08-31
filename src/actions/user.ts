@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { User, IUser, IProblemDetail } from '../';
+import { IUser, IProblemDetail } from '../';
 
 export const SET_USER_AUTH_PARAMS = 'SET_USER_AUTH_PARAMS';
 export const USER_AUTH_REQUEST = 'USER_AUTH_REQUEST';
@@ -110,9 +110,9 @@ export const userFetchRequestActionCreator = (userId: string, accessToken?: stri
 
 export interface IUserFetchRequestSuccessAction extends Action {
   type: UserActionTypes;
-  user: User;
+  user: IUser;
 }
-export const userFetchRequestSuccessActionCreator = (user: User): IUserFetchRequestSuccessAction => ({
+export const userFetchRequestSuccessActionCreator = (user: IUser): IUserFetchRequestSuccessAction => ({
   type: USER_FETCH_REQUEST_SUCCESS,
   user: user,
 });

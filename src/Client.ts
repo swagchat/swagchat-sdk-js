@@ -1,4 +1,4 @@
-import { Realtime, User, Room, logger } from './';
+import { Realtime, User, logger } from './';
 import * as I from './interface';
 
 import 'isomorphic-fetch';
@@ -51,6 +51,50 @@ export class Client {
 
     public socketClose() {
         this.connection.close();
+    }
+
+    static auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
+        return fetch(params.apiEndpoint + '/users/' + params.userId, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + params.accessToken,
+            },
+        }).then((response: Response) => {
+            if (response.status === 200) {
+                return response.json().then((user) => {
+                    user.accessToken = params.accessToken || '';
+                    return (
+                        {
+                            user: user,
+                            error: null,
+                        } as I.IFetchUserResponse
+                    );
+                });
+            } else if (response.status === 404) {
+                return {
+                    user: null,
+                    error: {
+                        title: response.statusText,
+                    } as I.IProblemDetail,
+                } as I.IFetchUserResponse;
+            } else {
+                return response.json().then((json) => {
+                    return (
+                        {
+                            user: null,
+                            error: <I.IProblemDetail>json,
+                        } as I.IFetchUserResponse
+                    );
+                });
+            }
+        }).catch((error) => {
+            return {
+                user: null,
+                error: {
+                    title: error.message,
+                } as I.IProblemDetail,
+            } as I.IFetchUserResponse;
+        });
     }
 
     public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
@@ -219,10 +263,7 @@ export class Client {
                 return response.json().then((room) => {
                     return (
                         {
-                            room: new Room({
-                                client: this,
-                                data: <I.IRoom>room,
-                            }),
+                            room: room,
                             error: null,
                         } as I.IFetchRoomResponse
                     );
@@ -290,10 +331,7 @@ export class Client {
                 return response.json().then((room) => {
                     return (
                         {
-                            room: new Room({
-                                client: this,
-                                data: <I.IRoom>room
-                            }),
+                            room: room,
                             error: null,
                         } as I.IFetchRoomResponse
                     );

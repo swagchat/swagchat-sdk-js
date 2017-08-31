@@ -1,6 +1,6 @@
 import { takeLatest, ForkEffect, select, put, call } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { IFetchUserResponse, User } from '../';
+import { IFetchUserResponse, Client } from '../';
 import { State } from '../stores';
 import { combinedRoomAndMessagesFetchRequestActionCreator } from '../actions/combined';
 import { userFetchRequestSuccessActionCreator, userFetchRequestFailureActionCreator } from '../actions/user';
@@ -26,7 +26,7 @@ function* locationChange() {
   let userRes: IFetchUserResponse;
   if (!user) {
     userRes = yield call(() => {
-      return User.auth({
+      return Client.auth({
         apiKey: state.user.apiKey,
         apiEndpoint: state.user.apiEndpoint,
         realtimeEndpoint: state.user.realtimeEndpoint,
@@ -36,7 +36,17 @@ function* locationChange() {
     });
     if (userRes.user) {
       user = userRes.user;
-      yield put(setClientActionCreator(user._client));
+      yield put(userFetchRequestSuccessActionCreator(user));
+      const client = new Client({
+        apiKey: state.user.apiKey,
+        apiEndpoint: state.user.apiEndpoint,
+        realtime: {
+          endpoint: state.user.realtimeEndpoint,
+        },
+        userId: state.user.userId,
+        userAccessToken: state.user.accessToken,
+      });
+      yield put(setClientActionCreator(client));
     } else {
       yield put(userFetchRequestFailureActionCreator(userRes.error!));
       return;
@@ -48,8 +58,6 @@ function* locationChange() {
     yield put(userFetchRequestActionCreator(user.userId));
   } else if (messagePathRegExp || roomSettingPathRegExp) {
     if (user) {
-      yield put(userFetchRequestSuccessActionCreator(user));
-
       let roomId;
       if (messagePathRegExp) {
         yield put(clearMessagesActionCreator());

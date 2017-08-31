@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Room, IRoom, IProblemDetail, IRoomUser } from '../';
+import { IRoom, IProblemDetail, IRoomUser } from '../';
 
 export const ROOM_FETCH_REQUEST = 'ROOM_FETCH_REQUEST';
 export const ROOM_FETCH_REQUEST_SUCCESS = 'ROOM_FETCH_REQUEST_SUCCESS';
@@ -45,9 +45,9 @@ export const roomFetchRequestActionCreator = (roomId: string): IRoomFetchRequest
 
 export interface IRoomFetchRequestSuccessAction extends Action {
   type: RoomActionTypes;
-  room: Room;
+  room: IRoom;
 }
-export const roomFetchRequestSuccessActionCreator = (room: Room): IRoomFetchRequestSuccessAction => ({
+export const roomFetchRequestSuccessActionCreator = (room: IRoom): IRoomFetchRequestSuccessAction => ({
   type: ROOM_FETCH_REQUEST_SUCCESS,
   room: room,
 });
