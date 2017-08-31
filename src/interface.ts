@@ -4,7 +4,6 @@ import {
   ISettingState,
   IUserState,
   IRoomState,
-  IPluginMessageTextInteractionStyle,
 } from './stores/';
 
 export interface IClientParams {
@@ -264,9 +263,6 @@ ownInteractionIndex: number;
   position: string;
   onTextareaFocus: () => void;
   onTextareaBlur: () => void;
-  updatePluginMessageTextInteractionStyle: (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle) => void;
-  assetPostAndSendMessage: (file: Blob) => void;
-  updateRoom: (putRoom: IRoom) => void;
 }
 
 export interface IPluginMessageMenuProps {

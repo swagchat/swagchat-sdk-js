@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { store } from '../stores';
 import { IMessage, IRoom } from '../';
 
 export const COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST = 'COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST';
@@ -117,3 +118,8 @@ export type CombinedActions = ICombinedRoomAndMessagesFetchRequestAction
   | ICombinedAssetPostAndRoomUpdateRequestAction
   | ICombinedAssetPostAndRoomCreatAndMessageFetchRequestAction
 ;
+
+export const combinedAssetPostAndRoomUpdateRequestActionDispatch = () => store.dispatch(combinedAssetPostAndRoomUpdateRequestActionCreator());
+export const combinedCreateRoomAndMessagesFetchRequestActionDispatch = (room: IRoom) => store.dispatch(combinedCreateRoomAndMessagesFetchRequestActionCreator(room));
+export const combinedAssetPostAndRoomCreateAndMessageFetchRequestActionDispatch = () => store.dispatch(combinedAssetPostAndRoomCreateAndMessageFetchRequestActionCreator());
+export const combinedAssetPostAndSendMessageRequestActionDispatch = (file: Blob) => store.dispatch(combinedAssetPostAndSendMessageRequestActionCreator(file));

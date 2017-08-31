@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { store } from '../stores';
 import { IPluginMessage, IPluginRoomListItem } from '../interface';
 
 export const SET_PLUGIN_MESSAGE = 'SET_PLUGIN_MESSAGE';
@@ -65,3 +66,5 @@ export type PluginMessageActions = IPluginBaseAction
   | ISetPluginRoomListItemAction
   | ISetCustomPluginRoomListItemAction
 ;
+
+export const pluginMessageUpdateMenuIndexActionDispatch = (currentMenuIndex: number) => store.dispatch(pluginMessageUpdateMenuIndexActionCreator(currentMenuIndex));

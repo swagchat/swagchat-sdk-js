@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { store } from '../stores';
 import { IMessages, IMessage, IProblemDetail } from '../';
 
 export const BEFORE_MESSAGES_FETCH = 'BEFORE_MESSAGES_FETCH';
@@ -127,3 +128,7 @@ export type MessageActions = IBeforeMessagesFetchAction
   | ISendMessagesAction
   | IClearMessagesAction
 ;
+
+export const messagesFetchRequestActionDispatch = () => store.dispatch(messagesFetchRequestActionCreator());
+export const createMessageActionDispatch = (messageType: string, payload: Object) => store.dispatch(createMessageActionCreator(messageType, payload));
+export const sendMessagesActionDispatch = () => store.dispatch(sendMessagesActionCreator());

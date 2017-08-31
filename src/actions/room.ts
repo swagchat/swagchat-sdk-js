@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+import { store } from '../stores';
 import { IRoom, IProblemDetail, IRoomUser } from '../';
 
 export const ROOM_FETCH_REQUEST = 'ROOM_FETCH_REQUEST';
@@ -182,3 +183,8 @@ export type RoomActions = IRoomFetchRequestAction
   | IRoomUpdateClearAction
   | IRoomUpdateTypeAction
 ;
+
+export const roomUserRemoveFetchRequestActionDispatch = (userIds: string[]) => store.dispatch(roomUserRemoveFetchRequestActionCreator(userIds));
+export const roomUpdateNameActionDispatch = (updateName: string) =>  store.dispatch(roomUpdateNameActionCreator(updateName));
+export const roomUpdatePictureActionDispatch = (updatePicture: Blob) => store.dispatch(roomUpdatePictureActionCreator(updatePicture));
+export const roomUpdateRequestActionDispatch = (putRoom: IRoom) => store.dispatch(roomUpdateRequestActionCreator(putRoom));

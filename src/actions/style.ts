@@ -51,5 +51,7 @@ export type StyleActions = IStyleBaseAction
   | IUpdatePluginMessageTextInteractionStyleAction
 ;
 
-
 export const dispatchUpdateStyle = (style: Object) => store.dispatch(updateStyleActionCreator(style));
+export const updateStyleActionDispatch = (style: Object) => store.dispatch(updateStyleActionCreator(style));
+export const updateMessageBodyMenuStyleActionDispatch = (messageBodyMenuStyle: IMessageBodyMenuStyle) => store.dispatch(updateMessageBodyMenuStyleActionCreator(messageBodyMenuStyle));
+export const updatePluginMessageTextInteractionStyle = (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle) => store.dispatch(updatePluginMessageTextInteractionStyleActionCreator(pluginMessageTextInteractionStyle));

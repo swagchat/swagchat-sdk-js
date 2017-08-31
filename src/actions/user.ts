@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { IUser, IProblemDetail } from '../';
+import { store } from '../stores';
 
 export const SET_USER_AUTH_PARAMS = 'SET_USER_AUTH_PARAMS';
 export const USER_AUTH_REQUEST = 'USER_AUTH_REQUEST';
@@ -242,3 +243,10 @@ export type UserActions = ISetUserAuthParamsAction
   | IUpdateSelectContactsAction
   | IClearSelectContactsAction
 ;
+
+export const userBlockFetchRequestActionDispatch = (blockUserIds: string[]) => store.dispatch(userBlockFetchRequestActionCreator(blockUserIds));
+export const userUnBlockFetchRequestActionDispatch = (blockUserIds: string[]) => store.dispatch(userUnBlockFetchRequestActionCreator(blockUserIds));
+export const contactsFetchRequestActionDispatch = () => store.dispatch(contactsFetchRequestActionCreator());
+export const updateSelectContactsActionDispatch = (contact: IUser) => store.dispatch(updateSelectContactsActionCreator(contact));
+export const clearSelectContactsActionDispatch = () => store.dispatch(clearSelectContactsActionCreator());
+export const markAsReadRequestActionDispatch = (roomId: string) => store.dispatch(markAsReadRequestActionCreator(roomId));
