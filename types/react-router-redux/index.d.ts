@@ -5,8 +5,8 @@
 // TypeScript Version: 2.1
 
 import * as React from 'react';
-import { Action, Middleware, Store } from "redux";
-import { History, Location, LocationDescriptor } from "history";
+import { Action, Middleware, Store } from 'redux';
+import { History, Location, LocationDescriptor } from 'history';
 
 export interface ConnectedRouterProps<State> {
     store?: Store<State>;

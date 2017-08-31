@@ -301,3 +301,11 @@ export interface IPluginRoomListItem {
   name: string;
   item: React.ComponentClass<IPluginRoomListItemProps>;
 }
+
+export interface IOnClickProps {
+  onClick?: (param?: any) => void;
+}
+export interface IIconProps {
+  className?: string;
+  style?: Object;
+}

@@ -7,7 +7,7 @@ export * from './interface';
 export * from './User';
 export * from './Room';
 export * from './const';
-export * from './util';
+export * from './utils';
 
 export * from './actions/asset';
 export * from './actions/client';
