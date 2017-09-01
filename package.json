@@ -14,7 +14,8 @@
   "scripts": {
     "build:lib": "./node_modules/.bin/tsc --pretty --watch",
     "build:browser": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.min.js",
-    "build:doc": "./node_modules/.bin/typedoc --out ./doc/ ./src/"
+    "build:doc": "./node_modules/.bin/typedoc --out ./doc/ ./src/",
+    "prepublish": "./node_modules/.bin/browserify src/index.ts -s SwagChat -p [tsify] -o dist/swagchat-sdk.min.js"
   },
   "author": "Betchi <shinichi.minobe@gmail.com>",
   "contributors": [
