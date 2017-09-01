@@ -1,7 +1,7 @@
 {
   "name": "swagchat-sdk",
-  "version": "0.9.0",
-  "description": "Open source chat components - swagchat SDK(TypeScript & JavaScript)",
+  "version": "0.9.1",
+  "description": "Swagchat SDK - TypeScript & JavaScript -",
   "keywords": [
     "swagchat",
     "chat",
@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/fairway-corp/swagchat-sdk"
+    "url": "git://github.com/swagchat/swagchat-sdk-js"
   },
   "license": "MIT",
   "dependencies": {
