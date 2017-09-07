@@ -2,8 +2,6 @@ import { Client } from '.';
 import {
   IStyleState,
   ISettingState,
-  IUserState,
-  IRoomState,
 } from './stores/';
 
 export interface IClientParams {
@@ -254,20 +252,19 @@ export interface IPluginMessageItemProps {
 }
 
 export interface IPluginMessageInteractionProps {
-ownInteractionIndex: number;
-  currentMenuIndex: number;
   styleState: IStyleState;
   settingState: ISettingState;
-  userState: IUserState;
-  roomState: IRoomState;
-  position: string;
+  user: IUser;
+  room: IRoom;
+  position: 'top' | 'bottom';
+  isAlwaysDisplay: boolean;
   onTextareaFocus: () => void;
   onTextareaBlur: () => void;
 }
 
 export interface IPluginMessageMenuProps {
-  userState: IUserState;
-  roomState: IRoomState;
+  user?: IUser;
+  room?: IRoom;
   ownMenuIndex: number;
   currentMenuIndex: number;
 }
@@ -278,7 +275,8 @@ export interface IPluginMessage {
   item: React.ComponentClass<IPluginMessageItemProps>;
   interaction: React.ComponentClass<IPluginMessageInteractionProps>;
   menu: React.ComponentClass<IPluginMessageMenuProps>;
-  position: string;
+  position: 'top' | 'bottom';
+  isAlwaysDisplay: boolean;
 }
 
 export interface IPluginRoomListItemProps {
@@ -291,12 +289,4 @@ export interface IPluginRoomListItemProps {
 export interface IPluginRoomListItem {
   name: string;
   item: React.ComponentClass<IPluginRoomListItemProps>;
-}
-
-export interface IOnClickProps {
-  onClick?: (param?: any) => void;
-}
-export interface IIconProps {
-  className?: string;
-  style?: Object;
 }
