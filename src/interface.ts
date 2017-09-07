@@ -1,6 +1,5 @@
 import { Client } from '.';
 import {
-  IStyleState,
   ISettingState,
 } from './stores/';
 
@@ -252,7 +251,6 @@ export interface IPluginMessageItemProps {
 }
 
 export interface IPluginMessageInteractionProps {
-  styleState: IStyleState;
   settingState: ISettingState;
   user: IUser;
   room: IRoom;
