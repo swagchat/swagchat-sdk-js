@@ -39,19 +39,19 @@ export interface IDevice {
 export interface IUser {
   userId: string;
   name: string;
-  pictureUrl: string;
-  informationUrl: string;
-  unreadCount: number;
-  metaData: {[key: string]: string | number | boolean | Object};
-  isPublic: boolean;
-  isCanBlock: boolean;
-  isShowUsers: boolean;
-  accessToken: string;
-  created: string;
-  modified: string;
-  rooms: IRoomForUser[];
-  devices: IDevice[];
-  blocks: string[];
+  pictureUrl?: string;
+  informationUrl?: string;
+  unreadCount?: number;
+  metaData?: {[key: string]: string | number | boolean | Object};
+  isPublic?: boolean;
+  isCanBlock?: boolean;
+  isShowUsers?: boolean;
+  accessToken?: string;
+  created?: string;
+  modified?: string;
+  rooms?: IRoomForUser[];
+  devices?: IDevice[];
+  blocks?: string[];
   mutedRooms?: string[];
 }
 
@@ -111,16 +111,16 @@ export interface IUserForRoom {
   userId: string;
   name: string;
   pictureUrl: string;
-  informationUrl: string;
+  informationUrl?: string;
   metaData?: {[key: string]: string | number | boolean | Object};
-  isCanBlock: boolean;
-  isShowUsers: boolean;
-  created: string;
-  modified: string;
-  ruUnreadCount: number;
+  isCanBlock?: boolean;
+  isShowUsers?: boolean;
+  created?: string;
+  modified?: string;
+  ruUnreadCount?: number;
   ruMetaData?: {[key: string]: string | number | boolean | Object};
-  ruCreated: string;
-  ruModified: string;
+  ruCreated?: string;
+  ruModified?: string;
 }
 
 export interface IRoomUser {
@@ -148,7 +148,7 @@ export interface IMessage {
   roomId: string;
   userId: string;
   type: string;
-  eventName: string;
+  eventName?: string;
   payload: Object;
   created?: string;
 }
@@ -244,47 +244,45 @@ export interface IErrorResponse {
   error: IProblemDetail | null;
 }
 
-export interface IPluginMessageItemProps {
+export interface IAddonMessage {
+  name: string;
+  messageListMarginBottom: number;
+  item: React.ComponentClass<IAddonMessageItemProps>;
+  interaction: React.ComponentClass<IAddonMessageInteractionProps>;
+  menu: React.ComponentClass<IAddonMessageMenuProps>;
+  position: 'top' | 'bottom';
+  isAlwaysDisplay: boolean;
+}
+
+export interface IAddonMessageItemProps {
   message: IMessage;
   user: IUserForRoom;
   myUserId: string;
 }
 
-export interface IPluginMessageInteractionProps {
+export interface IAddonMessageInteractionProps {
   settingState: ISettingState;
   user: IUser;
   room: IRoom;
   position: 'top' | 'bottom';
   isAlwaysDisplay: boolean;
-  onTextareaFocus: () => void;
-  onTextareaBlur: () => void;
 }
 
-export interface IPluginMessageMenuProps {
+export interface IAddonMessageMenuProps {
   user?: IUser;
   room?: IRoom;
   ownMenuIndex: number;
   currentMenuIndex: number;
 }
 
-export interface IPluginMessage {
+export interface IAddonRoomListItem {
   name: string;
-  messageListMarginBottom: number;
-  item: React.ComponentClass<IPluginMessageItemProps>;
-  interaction: React.ComponentClass<IPluginMessageInteractionProps>;
-  menu: React.ComponentClass<IPluginMessageMenuProps>;
-  position: 'top' | 'bottom';
-  isAlwaysDisplay: boolean;
+  item: React.ComponentClass<IAddonRoomListItemProps>;
 }
 
-export interface IPluginRoomListItemProps {
+export interface IAddonRoomListItemProps {
   myUserId: string;
   userRoom: IRoomForUser;
   noAvatarImages: string[];
   onClick?: Function;
-}
-
-export interface IPluginRoomListItem {
-  name: string;
-  item: React.ComponentClass<IPluginRoomListItemProps>;
 }

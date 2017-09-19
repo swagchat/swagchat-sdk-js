@@ -43,23 +43,23 @@ export class User {
         }
     }
 
-    get pictureUrl(): string {
+    get pictureUrl(): string | undefined {
         return this._data.pictureUrl;
     }
 
-    set pictureUrl(pictureUrl: string) {
+    set pictureUrl(pictureUrl: string | undefined) {
         if (!pictureUrl || pictureUrl === '' || typeof(pictureUrl) !== 'string') {
-            logger('api', 'error', 'Set userId failure. userId is not setting.');
+            logger('api', 'error', 'Set pictureUrl failure. pictureUrl is not setting.');
         } else {
             this._data.pictureUrl = pictureUrl;
         }
     }
 
-    get informationUrl(): string {
+    get informationUrl(): string | undefined {
         return this._data.informationUrl;
     }
 
-    set informationUrl(informationUrl: string) {
+    set informationUrl(informationUrl: string | undefined) {
         if (!informationUrl || informationUrl === '' || typeof(informationUrl) !== 'string') {
             logger('api', 'error', 'Set userId failure. userId is not setting.');
         } else {
@@ -67,43 +67,43 @@ export class User {
         }
     }
 
-    get unreadCount(): number {
+    get unreadCount(): number | undefined {
         return this._data.unreadCount;
     }
 
-    get isPublic(): boolean {
+    get isPublic(): boolean | undefined {
         return this._data.isPublic;
     }
 
-    set isPublic(isPublic: boolean) {
+    set isPublic(isPublic: boolean | undefined) {
         this._data.isPublic = isPublic;
     }
 
-    get isCanBlock(): boolean {
+    get isCanBlock(): boolean | undefined {
         return this._data.isCanBlock;
     }
 
-    set isCanBlock(isCanBlock: boolean) {
+    set isCanBlock(isCanBlock: boolean | undefined) {
         this._data.isCanBlock = isCanBlock;
     }
 
-    get isShowUsers(): boolean {
+    get isShowUsers(): boolean | undefined {
         return this._data.isShowUsers;
     }
 
-    set isShowUsers(isShowUsers: boolean) {
+    set isShowUsers(isShowUsers: boolean | undefined) {
         this._data.isShowUsers = isShowUsers;
     }
 
-    get accessToken(): string {
+    get accessToken(): string | undefined {
         return this._data.accessToken;
     }
 
-    get metaData(): {[key: string]: string | number | boolean | Object} {
+    get metaData(): {[key: string]: string | number | boolean | Object} | undefined {
         return this._data.metaData;
     }
 
-    set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
+    set metaData(metaData: {[key: string]: string | number | boolean | Object} | undefined) {
         if (!metaData || typeof(metaData) !== 'object') {
             logger('api', 'error', 'Set metaData failure. metaData is not setting.');
         } else {
@@ -111,27 +111,25 @@ export class User {
         }
     }
 
-    get created(): string {
+    get created(): string | undefined {
         return this._data.created;
     }
 
-    get modified(): string {
+    get modified(): string | undefined {
         return this._data.modified;
     }
 
-    get rooms(): I.IRoomForUser[] {
+    get rooms(): I.IRoomForUser[] | undefined {
         return this._data.rooms;
     }
 
-    get devices(): I.IDevice[] {
+    get devices(): I.IDevice[] | undefined {
         return this._data.devices;
     }
 
-    get blocks(): string[] {
+    get blocks(): string[] | undefined {
         return this._data.blocks;
     }
-
-
 }
 
 
