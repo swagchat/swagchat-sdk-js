@@ -73,9 +73,9 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_message_.html#fetchmessages" class="tsd-kind-icon">fetch<wbr>Messages</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_message_.html#gfetchmessagesrequest" class="tsd-kind-icon">g<wbr>Fetch<wbr>Messages<wbr>Request</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_message_.html#gsendmessagesrequest" class="tsd-kind-icon">g<wbr>Send<wbr>Messages<wbr>Request</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_sagas_message_.html#messagesaga" class="tsd-kind-icon">message<wbr>Saga</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_message_.html#sendmessages" class="tsd-kind-icon">send<wbr>Messages</a></li>
 							</ul>
 						</section>
 					</div>
@@ -84,19 +84,36 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="fetchmessages" class="tsd-anchor"></a>
-					<h3>fetch<wbr>Messages</h3>
+					<a name="gfetchmessagesrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Fetch<wbr>Messages<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Messages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagesfetchrequestfailureaction.html" class="tsd-signature-type">IMessagesFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagesfetchrequestsuccessaction.html" class="tsd-signature-type">IMessagesFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Fetch<wbr>Messages<wbr>Request<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.ifetchmessagesrequestsuccessaction.html" class="tsd-signature-type">IFetchMessagesRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.ifetchmessagesrequestfailureaction.html" class="tsd-signature-type">IFetchMessagesRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/message.ts:16</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/message.ts#L16">sagas/message.ts:16</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagesfetchrequestfailureaction.html" class="tsd-signature-type">IMessagesFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagesfetchrequestsuccessaction.html" class="tsd-signature-type">IMessagesFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.ifetchmessagesrequestsuccessaction.html" class="tsd-signature-type">IFetchMessagesRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.ifetchmessagesrequestfailureaction.html" class="tsd-signature-type">IFetchMessagesRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="gsendmessagesrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Send<wbr>Messages<wbr>Request</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Send<wbr>Messages<wbr>Request<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.isendmessagesrequestfailureaction.html" class="tsd-signature-type">ISendMessagesRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.isendmessagesrequestsuccessaction.html" class="tsd-signature-type">ISendMessagesRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/message.ts#L40">sagas/message.ts:40</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.isendmessagesrequestfailureaction.html" class="tsd-signature-type">ISendMessagesRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.isendmessagesrequestsuccessaction.html" class="tsd-signature-type">ISendMessagesRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -110,27 +127,10 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/message.ts:49</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/message.ts#L58">sagas/message.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ForkEffect</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="sendmessages" class="tsd-anchor"></a>
-					<h3>send<wbr>Messages</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">send<wbr>Messages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagessendrequestfailureaction.html" class="tsd-signature-type">IMessagesSendRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagessendrequestsuccessaction.html" class="tsd-signature-type">IMessagesSendRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in sagas/message.ts:31</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagessendrequestfailureaction.html" class="tsd-signature-type">IMessagesSendRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_message_.imessagessendrequestsuccessaction.html" class="tsd-signature-type">IMessagesSendRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -150,13 +150,13 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_message_.html#fetchmessages" class="tsd-kind-icon">fetch<wbr>Messages</a>
+						<a href="_sagas_message_.html#gfetchmessagesrequest" class="tsd-kind-icon">g<wbr>Fetch<wbr>Messages<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_sagas_message_.html#gsendmessagesrequest" class="tsd-kind-icon">g<wbr>Send<wbr>Messages<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_sagas_message_.html#messagesaga" class="tsd-kind-icon">message<wbr>Saga</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_message_.html#sendmessages" class="tsd-kind-icon">send<wbr>Messages</a>
 					</li>
 				</ul>
 			</nav>

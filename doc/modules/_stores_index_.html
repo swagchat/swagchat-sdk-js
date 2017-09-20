@@ -96,12 +96,15 @@
 					<div class="tsd-signature tsd-kind-icon">State<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in stores/index.ts:63</li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/index.ts#L66">stores/index.ts:66</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>addon<span class="tsd-signature-symbol">: </span><a href="../interfaces/_stores_addon_.iaddonstate.html" class="tsd-signature-type">IAddonState</a></h5>
+							</li>
 							<li class="tsd-parameter">
 								<h5>asset<span class="tsd-signature-symbol">: </span><a href="../interfaces/_stores_asset_.iassetstate.html" class="tsd-signature-type">IAssetState</a></h5>
 							</li>
@@ -110,9 +113,6 @@
 							</li>
 							<li class="tsd-parameter">
 								<h5>message<span class="tsd-signature-symbol">: </span><a href="../interfaces/_stores_message_.imessagestate.html" class="tsd-signature-type">IMessageState</a></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>plugin<span class="tsd-signature-symbol">: </span><a href="../interfaces/_stores_plugin_.ipluginstate.html" class="tsd-signature-type">IPluginState</a></h5>
 							</li>
 							<li class="tsd-parameter">
 								<h5>room<span class="tsd-signature-symbol">: </span><a href="../interfaces/_stores_room_.iroomstate.html" class="tsd-signature-type">IRoomState</a></h5>
@@ -141,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">middleware<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Middleware</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in stores/index.ts:34</li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/index.ts#L37">stores/index.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,7 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">router<wbr>History<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;createHistory()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in stores/index.ts:35</li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/index.ts#L38">stores/index.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -161,17 +161,17 @@
 					<div class="tsd-signature tsd-kind-icon">saga<wbr>Middleware<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SagaMiddleware</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">__type</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;sagaMiddlewareFactory()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in stores/index.ts:37</li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/index.ts#L40">stores/index.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
 					<a name="store" class="tsd-anchor"></a>
 					<h3>store</h3>
-					<div class="tsd-signature tsd-kind-icon">store<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Store</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;createStore(combineReducers({setting,client,plugin,user,room,message,asset,style,router: routerReducer,}),applyMiddleware(...middleware))</span></div>
+					<div class="tsd-signature tsd-kind-icon">store<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Store</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;createStore(combineReducers({addon,asset,client,message,room,setting,style,user,router: routerReducer,}),applyMiddleware(...middleware))</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in stores/index.ts:47</li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/index.ts#L50">stores/index.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>

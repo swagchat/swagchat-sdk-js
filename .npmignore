@@ -1,7 +1,7 @@
 src
 tsconfig.json
-tsling.json
+tslint.json
 __tests__
 coverage
-types
+customTypes
 doc

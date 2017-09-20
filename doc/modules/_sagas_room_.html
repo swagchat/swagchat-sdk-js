@@ -73,11 +73,11 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#fetchroom" class="tsd-kind-icon">fetch<wbr>Room</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#fetchroomuseradd" class="tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Add</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#fetchroomuserremove" class="tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Remove</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#gaddroomuserrequest" class="tsd-kind-icon">g<wbr>Add<wbr>Room<wbr>User<wbr>Request</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#gfetchroomrequest" class="tsd-kind-icon">g<wbr>Fetch<wbr>Room<wbr>Request</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#gremoveroomuserrequest" class="tsd-kind-icon">g<wbr>Remove<wbr>Room<wbr>User<wbr>Request</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#gupdateroomrequest" class="tsd-kind-icon">g<wbr>Update<wbr>Room<wbr>Request</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_sagas_room_.html#roomsaga" class="tsd-kind-icon">room<wbr>Saga</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_sagas_room_.html#updateroom" class="tsd-kind-icon">update<wbr>Room</a></li>
 							</ul>
 						</section>
 					</div>
@@ -86,71 +86,94 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="fetchroom" class="tsd-anchor"></a>
-					<h3>fetch<wbr>Room</h3>
+					<a name="gaddroomuserrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Add<wbr>Room<wbr>User<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Room<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iroomfetchrequestaction.html" class="tsd-signature-type">IRoomFetchRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestfailureaction.html" class="tsd-signature-type">IRoomFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Add<wbr>Room<wbr>User<wbr>Request<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iaddroomuserrequestaction.html" class="tsd-signature-type">IAddRoomUserRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iaddroomuserrequestsuccessaction.html" class="tsd-signature-type">IAddRoomUserRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.ifetchuserrequestaction.html" class="tsd-signature-type">IFetchUserRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iaddroomuserrequestfailureaction.html" class="tsd-signature-type">IAddRoomUserRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/room.ts:23</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/room.ts#L55">sagas/room.ts:55</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>action: <a href="../interfaces/_actions_room_.iroomfetchrequestaction.html" class="tsd-signature-type">IRoomFetchRequestAction</a></h5>
+									<h5>action: <a href="../interfaces/_actions_room_.iaddroomuserrequestaction.html" class="tsd-signature-type">IAddRoomUserRequestAction</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestfailureaction.html" class="tsd-signature-type">IRoomFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iaddroomuserrequestsuccessaction.html" class="tsd-signature-type">IAddRoomUserRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.ifetchuserrequestaction.html" class="tsd-signature-type">IFetchUserRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iaddroomuserrequestfailureaction.html" class="tsd-signature-type">IAddRoomUserRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="fetchroomuseradd" class="tsd-anchor"></a>
-					<h3>fetch<wbr>Room<wbr>User<wbr>Add</h3>
+					<a name="gfetchroomrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Fetch<wbr>Room<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Add<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iroomuseraddfetchrequestaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuseraddfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.iuserfetchrequestaction.html" class="tsd-signature-type">IUserFetchRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuseraddfetchrequestfailureaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Fetch<wbr>Room<wbr>Request<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.ifetchroomrequestaction.html" class="tsd-signature-type">IFetchRoomRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestsuccessaction.html" class="tsd-signature-type">IFetchRoomRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestfailureaction.html" class="tsd-signature-type">IFetchRoomRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/room.ts:47</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/room.ts#L32">sagas/room.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>action: <a href="../interfaces/_actions_room_.iroomuseraddfetchrequestaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestAction</a></h5>
+									<h5>action: <a href="../interfaces/_actions_room_.ifetchroomrequestaction.html" class="tsd-signature-type">IFetchRoomRequestAction</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuseraddfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.iuserfetchrequestaction.html" class="tsd-signature-type">IUserFetchRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuseraddfetchrequestfailureaction.html" class="tsd-signature-type">IRoomUserAddFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestsuccessaction.html" class="tsd-signature-type">IFetchRoomRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestfailureaction.html" class="tsd-signature-type">IFetchRoomRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="fetchroomuserremove" class="tsd-anchor"></a>
-					<h3>fetch<wbr>Room<wbr>User<wbr>Remove</h3>
+					<a name="gremoveroomuserrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Remove<wbr>Room<wbr>User<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Remove<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iroomuserremovefetchrequestaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.iuserfetchrequestaction.html" class="tsd-signature-type">IUserFetchRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuserremovefetchrequestsuccessaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuserremovefetchrequestfailureaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Remove<wbr>Room<wbr>User<wbr>Request<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iremoveroomuserrequestaction.html" class="tsd-signature-type">IRemoveRoomUserRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.ifetchuserrequestaction.html" class="tsd-signature-type">IFetchUserRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iremoveroomuserrequestsuccessaction.html" class="tsd-signature-type">IRemoveRoomUserRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iremoveroomuserrequestfailureaction.html" class="tsd-signature-type">IRemoveRoomUserRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/room.ts:61</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/room.ts#L77">sagas/room.ts:77</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>action: <a href="../interfaces/_actions_room_.iroomuserremovefetchrequestaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestAction</a></h5>
+									<h5>action: <a href="../interfaces/_actions_room_.iremoveroomuserrequestaction.html" class="tsd-signature-type">IRemoveRoomUserRequestAction</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.iuserfetchrequestaction.html" class="tsd-signature-type">IUserFetchRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuserremovefetchrequestsuccessaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomuserremovefetchrequestfailureaction.html" class="tsd-signature-type">IRoomUserRemoveFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_user_.ifetchuserrequestaction.html" class="tsd-signature-type">IFetchUserRequestAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iremoveroomuserrequestsuccessaction.html" class="tsd-signature-type">IRemoveRoomUserRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iremoveroomuserrequestfailureaction.html" class="tsd-signature-type">IRemoveRoomUserRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="gupdateroomrequest" class="tsd-anchor"></a>
+					<h3>g<wbr>Update<wbr>Room<wbr>Request</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">g<wbr>Update<wbr>Room<wbr>Request<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iupdateroomrequestaction.html" class="tsd-signature-type">IUpdateRoomRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestsuccessaction.html" class="tsd-signature-type">IFetchRoomRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestfailureaction.html" class="tsd-signature-type">IFetchRoomRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/room.ts#L44">sagas/room.ts:44</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <a href="../interfaces/_actions_room_.iupdateroomrequestaction.html" class="tsd-signature-type">IUpdateRoomRequestAction</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestsuccessaction.html" class="tsd-signature-type">IFetchRoomRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.ifetchroomrequestfailureaction.html" class="tsd-signature-type">IFetchRoomRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -164,33 +187,10 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in sagas/room.ts:75</li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/sagas/room.ts#L100">sagas/room.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ForkEffect</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="updateroom" class="tsd-anchor"></a>
-					<h3>update<wbr>Room</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">update<wbr>Room<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_actions_room_.iroomupdaterequestaction.html" class="tsd-signature-type">IRoomUpdateRequestAction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestfailureaction.html" class="tsd-signature-type">IRoomFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in sagas/room.ts:35</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>action: <a href="../interfaces/_actions_room_.iroomupdaterequestaction.html" class="tsd-signature-type">IRoomUpdateRequestAction</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SelectEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallEffect</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestsuccessaction.html" class="tsd-signature-type">IRoomFetchRequestSuccessAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">PutEffect</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_actions_room_.iroomfetchrequestfailureaction.html" class="tsd-signature-type">IRoomFetchRequestFailureAction</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -210,19 +210,19 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_room_.html#fetchroom" class="tsd-kind-icon">fetch<wbr>Room</a>
+						<a href="_sagas_room_.html#gaddroomuserrequest" class="tsd-kind-icon">g<wbr>Add<wbr>Room<wbr>User<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_room_.html#fetchroomuseradd" class="tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Add</a>
+						<a href="_sagas_room_.html#gfetchroomrequest" class="tsd-kind-icon">g<wbr>Fetch<wbr>Room<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_room_.html#fetchroomuserremove" class="tsd-kind-icon">fetch<wbr>Room<wbr>User<wbr>Remove</a>
+						<a href="_sagas_room_.html#gremoveroomuserrequest" class="tsd-kind-icon">g<wbr>Remove<wbr>Room<wbr>User<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_sagas_room_.html#gupdateroomrequest" class="tsd-kind-icon">g<wbr>Update<wbr>Room<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_sagas_room_.html#roomsaga" class="tsd-kind-icon">room<wbr>Saga</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_sagas_room_.html#updateroom" class="tsd-kind-icon">update<wbr>Room</a>
 					</li>
 				</ul>
 			</nav>
