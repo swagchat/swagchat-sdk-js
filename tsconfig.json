@@ -17,9 +17,10 @@
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "declaration": true,
+    "typeRoots" : ["./node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "react-router-redux": ["types/react-router-redux"]
+      "react-router-redux": ["customTypes/react-router-redux"]
     }
   },
   "formatCodeOptions": {
