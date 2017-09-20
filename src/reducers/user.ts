@@ -1,27 +1,27 @@
 import { IUserState } from '../stores/user';
 import {
-  ISetUserAuthParamsAction,
-  IContactsFetchRequestSuccessAction,
-  IContactsFetchRequestFailureAction,
-  IUserFetchRequestSuccessAction,
-  IUserFetchRequestFailureAction,
+  ISetAuthParamsAction,
+  IFetchContactsRequestSuccessAction,
+  IFetchContactsRequestFailureAction,
+  IFetchUserRequestSuccessAction,
+  IFetchUserRequestFailureAction,
   IMarkAsReadRequestFailureAction,
-  IUserBlockFetchRequestSuccessAction,
-  IUserBlockFetchRequestFailureAction,
-  IUserUnBlockFetchRequestSuccessAction,
-  IUserUnBlockFetchRequestFailureAction,
+  IUserBlockRequestSuccessAction,
+  IUserBlockRequestFailureAction,
+  IUserUnBlockRequestSuccessAction,
+  IUserUnBlockRequestFailureAction,
   IUpdateSelectContactsAction,
-  SET_USER_AUTH_PARAMS,
-  CONTACTS_FETCH_REQUEST_SUCCESS,
-  CONTACTS_FETCH_REQUEST_FAILURE,
-  USER_FETCH_REQUEST_SUCCESS,
-  USER_FETCH_REQUEST_FAILURE,
+  SET_AUTH_PARAMS,
+  FETCH_CONTACTS_REQUEST_SUCCESS,
+  FETCH_CONTACTS_REQUEST_FAILURE,
+  FETCH_USER_REQUEST_SUCCESS,
+  FETCH_USER_REQUEST_FAILURE,
   MARK_AS_READ_REQUEST_SUCCESS,
   MARK_AS_READ_REQUEST_FAILURE,
-  USER_BLOCK_FETCH_REQUEST_SUCCESS,
-  USER_BLOCK_FETCH_REQUEST_FAILURE,
-  USER_UNBLOCK_FETCH_REQUEST_SUCCESS,
-  USER_UNBLOCK_FETCH_REQUEST_FAILURE,
+  USER_BLOCK_REQUEST_SUCCESS,
+  USER_BLOCK_REQUEST_FAILURE,
+  USER_UNBLOCK_REQUEST_SUCCESS,
+  USER_UNBLOCK_REQUEST_FAILURE,
   UPDATE_SELECT_CONTACTS,
   CLEAR_SELECT_CONTACTS,
   UserActions,
@@ -44,8 +44,8 @@ const getInitialState = (): IUserState => ({
 
 export function user(state: IUserState = getInitialState(), action: UserActions): IUserState {
   switch (action.type) {
-    case SET_USER_AUTH_PARAMS:
-      const setUserAuthParamsAction = <ISetUserAuthParamsAction>action;
+    case SET_AUTH_PARAMS:
+      const setUserAuthParamsAction = <ISetAuthParamsAction>action;
       return Object.assign(
         {},
         state,
@@ -57,25 +57,25 @@ export function user(state: IUserState = getInitialState(), action: UserActions)
           accessToken: setUserAuthParamsAction.accessToken,
         }
       );
-    case CONTACTS_FETCH_REQUEST_SUCCESS:
+    case FETCH_CONTACTS_REQUEST_SUCCESS:
       return Object.assign(
         {},
         state,
         {
-          contacts: (<IContactsFetchRequestSuccessAction>action).contacts,
+          contacts: (<IFetchContactsRequestSuccessAction>action).contacts,
         }
       );
-    case CONTACTS_FETCH_REQUEST_FAILURE:
+    case FETCH_CONTACTS_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           users: null,
-          problemDetail: (<IContactsFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IFetchContactsRequestFailureAction>action).problemDetail,
         }
       );
-    case USER_FETCH_REQUEST_SUCCESS:
-      const userFetchRequestSuccessAction = <IUserFetchRequestSuccessAction>action;
+    case FETCH_USER_REQUEST_SUCCESS:
+      const userFetchRequestSuccessAction = <IFetchUserRequestSuccessAction>action;
       return Object.assign(
         {},
         state,
@@ -85,13 +85,13 @@ export function user(state: IUserState = getInitialState(), action: UserActions)
           blocks: userFetchRequestSuccessAction.user.blocks,
         }
       );
-    case USER_FETCH_REQUEST_FAILURE:
+    case FETCH_USER_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           user: null,
-          problemDetail: (<IUserFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IFetchUserRequestFailureAction>action).problemDetail,
         }
       );
     case MARK_AS_READ_REQUEST_SUCCESS:
@@ -104,38 +104,38 @@ export function user(state: IUserState = getInitialState(), action: UserActions)
           problemDetail: (<IMarkAsReadRequestFailureAction>action).problemDetail,
         }
       );
-    case USER_BLOCK_FETCH_REQUEST_SUCCESS:
+    case USER_BLOCK_REQUEST_SUCCESS:
       return Object.assign(
         {},
         state,
         {
-          blocks: (<IUserBlockFetchRequestSuccessAction>action).blocks,
+          blocks: (<IUserBlockRequestSuccessAction>action).blocks,
         }
       );
-    case USER_BLOCK_FETCH_REQUEST_FAILURE:
+    case USER_BLOCK_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           user: null,
-          problemDetail: (<IUserBlockFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IUserBlockRequestFailureAction>action).problemDetail,
         }
       );
-    case USER_UNBLOCK_FETCH_REQUEST_SUCCESS:
+    case USER_UNBLOCK_REQUEST_SUCCESS:
       return Object.assign(
         {},
         state,
         {
-          blocks: (<IUserUnBlockFetchRequestSuccessAction>action).blocks,
+          blocks: (<IUserUnBlockRequestSuccessAction>action).blocks,
         }
       );
-    case USER_UNBLOCK_FETCH_REQUEST_FAILURE:
+    case USER_UNBLOCK_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           user: null,
-          problemDetail: (<IUserUnBlockFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IUserUnBlockRequestFailureAction>action).problemDetail,
         }
       );
     case UPDATE_SELECT_CONTACTS:

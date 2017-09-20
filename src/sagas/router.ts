@@ -2,14 +2,14 @@ import { takeLatest, ForkEffect, select, put, call } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { IFetchUserResponse, Client } from '../';
 import { State } from '../stores';
-import { combinedRoomAndMessagesFetchRequestActionCreator } from '../actions/combined';
-import { userFetchRequestSuccessActionCreator, userFetchRequestFailureActionCreator } from '../actions/user';
+import { fetchRoomAndMessagesRequestActionCreator } from '../actions/combined';
+import { fetchUserRequestSuccessActionCreator, fetchUserRequestFailureActionCreator } from '../actions/user';
 import { setClientActionCreator } from '../actions/client';
-import { roomFetchRequestActionCreator } from '../actions/room';
+import { fetchRoomRequestActionCreator } from '../actions/room';
 import { clearMessagesActionCreator } from '../actions/message';
-import { userFetchRequestActionCreator, contactsFetchRequestActionCreator } from '../actions/user';
+import { fetchUserRequestActionCreator, fetchContactsRequestActionCreator } from '../actions/user';
 
-function* locationChange() {
+function* gLocationChange() {
   const state: State = yield select();
   if (!state.router.location) {
     return;
@@ -36,7 +36,7 @@ function* locationChange() {
     });
     if (userRes.user) {
       user = userRes.user;
-      yield put(userFetchRequestSuccessActionCreator(user));
+      yield put(fetchUserRequestSuccessActionCreator(user));
       const client = new Client({
         apiKey: state.user.apiKey,
         apiEndpoint: state.user.apiEndpoint,
@@ -48,14 +48,14 @@ function* locationChange() {
       });
       yield put(setClientActionCreator(client));
     } else {
-      yield put(userFetchRequestFailureActionCreator(userRes.error!));
+      yield put(fetchUserRequestFailureActionCreator(userRes.error!));
       return;
     }
   }
 
   if (roomListPathRegExp) {
     yield put(clearMessagesActionCreator());
-    yield put(userFetchRequestActionCreator(user.userId));
+    yield put(fetchUserRequestActionCreator(user.userId));
   } else if (messagePathRegExp || roomSettingPathRegExp) {
     if (user) {
       let roomId;
@@ -63,20 +63,20 @@ function* locationChange() {
         yield put(clearMessagesActionCreator());
         roomId = pathname.match(new RegExp(state.setting.messageRoutePath + '/([a-zA-z0-9-]+)'));
         if (roomId) {
-          yield put(combinedRoomAndMessagesFetchRequestActionCreator(roomId[1]));
+          yield put(fetchRoomAndMessagesRequestActionCreator(roomId[1]));
         }
       } else if (roomSettingPathRegExp) {
         roomId = pathname.match(new RegExp(state.setting.roomSettingRoutePath + '/([a-zA-z0-9-]+)'));
         if (roomId) {
-          yield put(roomFetchRequestActionCreator(roomId[1]));
+          yield put(fetchRoomRequestActionCreator(roomId[1]));
         }
       }
     }
   } else if (selectContactPathRegExp) {
-    yield put(contactsFetchRequestActionCreator());
+    yield put(fetchContactsRequestActionCreator());
   }
 }
 
 export function* routerSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(LOCATION_CHANGE, locationChange);
+  yield takeLatest(LOCATION_CHANGE, gLocationChange);
 }

@@ -3,17 +3,17 @@ import { IFetchMessagesResponse, ISendMessagesResponse, sendMessages } from '../
 import * as Scroll from 'react-scroll';
 import { getMessages } from '../room';
 import {
-  MESSAGES_FETCH_REQUEST,
-  MESSAGES_SEND_REQUEST,
-  messagesFetchRequestSuccessActionCreator,
-  messagesFetchRequestFailureActionCreator,
-  messageSendRequestSuccessActionCreator,
-  messagesSendRequestFailureActionCreator,
+  FETCH_MESSAGES_REQUEST,
+  SEND_MESSAGES_REQUEST,
+  fetchMessagesRequestSuccessActionCreator,
+  fetchMessagesRequestFailureActionCreator,
+  sendMessagesRequestSuccessActionCreator,
+  sendMessagesRequestFailureActionCreator,
 } from '../actions/message';
 import { State } from '../stores';
 import { date2ISO3339String } from '../utils';
 
-function* gGetMessages() {
+function* gFetchMessagesRequest() {
   const state: State  = yield select();
   if (state.room.room === null) {
     return;
@@ -31,31 +31,31 @@ function* gGetMessages() {
       });
   });
   if (error) {
-    yield put(messagesFetchRequestFailureActionCreator(error!));
+    yield put(fetchMessagesRequestFailureActionCreator(error!));
   } else {
-    yield put(messagesFetchRequestSuccessActionCreator(messages!));
+    yield put(fetchMessagesRequestSuccessActionCreator(messages!));
   }
 }
 
-function* gSendMessages() {
+function* gSendMessagesRequest() {
   const state: State = yield select();
   const {messageIds, error}: ISendMessagesResponse = yield call(() => {
     return sendMessages(...state.message.createMessages);
   });
   if (error) {
-    yield put(messagesSendRequestFailureActionCreator(error!));
+    yield put(sendMessagesRequestFailureActionCreator(error!));
   } else if (messageIds) {
     let messages = state.message.createMessages.slice();
     for (let i = 0; i < messages.length; i++) {
       messages[i].messageId = messageIds[i];
       messages[i].created = date2ISO3339String(new Date());
     }
-    yield put(messageSendRequestSuccessActionCreator(messages));
+    yield put(sendMessagesRequestSuccessActionCreator(messages));
     Scroll.animateScroll.scrollToBottom({duration: 300});
   }
 }
 
 export function* messageSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(MESSAGES_FETCH_REQUEST, gGetMessages);
-  yield takeLatest(MESSAGES_SEND_REQUEST, gSendMessages);
+  yield takeLatest(FETCH_MESSAGES_REQUEST, gFetchMessagesRequest);
+  yield takeLatest(SEND_MESSAGES_REQUEST, gSendMessagesRequest);
 }

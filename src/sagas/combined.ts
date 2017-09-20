@@ -18,60 +18,60 @@ import {
   setClientActionCreator,
 } from '../actions/client';
 import {
-  userFetchRequestSuccessActionCreator,
+  fetchUserRequestSuccessActionCreator,
   markAsReadRequestActionCreator,
-  userFetchRequestFailureActionCreator,
+  fetchUserRequestFailureActionCreator,
 } from  '../actions/user';
 import {
-  IRoomFetchRequestAction,
-  roomFetchRequestSuccessActionCreator,
-  roomFetchRequestFailureActionCreator,
-  roomUpdateClearActionCreator,
-  roomUpdateNameActionCreator,
-  roomUpdatePictureUrlActionCreator,
-  roomUpdateTypeActionCreator,
+  IFetchRoomRequestAction,
+  fetchRoomRequestSuccessActionCreator,
+  fetchRoomRequestFailureActionCreator,
+  clearRoomActionCreator,
+  updateRoomNameActionCreator,
+  updateRoomPictureUrlActionCreator,
+  updateRoomTypeActionCreator,
 } from '../actions/room';
-import { updateStyleActionCreator } from '../actions/style';
+// import { updateStyleActionCreator } from '../actions/style';
 import {
-  ICombinedAssetPostAndSendMessageRequestAction,
-  ICombinedUserAndRoomAndMessagesFetchRequestAction,
-  ICombinedUserAndRoomFetchRequestAction,
-  ICombinedUpdateMessagesAction,
-  ICombinedCreateRoomAndMessagesFetchRequestAction,
-  combinedUpdateMessagesActionCreator,
-  COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST,
-  COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST,
-  COMBINED_USER_AND_ROOM_FETCH_REQUEST,
-  COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST,
-  COMBINED_UPDATE_MESSAGES,
-  COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST,
-  COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST,
-  COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST,
+  IUploadAssetAndSendMessageRequestAction,
+  IFetchUserAndRoomAndMessagesRequestAction,
+  IFetchUserAndRoomRequestAction,
+  IUpdateMessagesAndScrollBottomAction,
+  ICreateRoomAndFetchMessagesRequestAction,
+  updateMessagesAndScrollBottomActionCreator,
+  FETCH_ROOM_AND_MESSAGES_REQUEST,
+  FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST,
+  FETCH_USER_AND_ROOM_REQUEST,
+  UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
+  UPDATE_MESSAGES_AND_SCROLL_BOTTOM,
+  CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
+  UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST,
+  UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
 } from '../actions/combined';
 import {
   updateMessagesActionCreator,
   createMessageActionCreator,
-  messagesSendRequestActionCreator,
-  beforeMessagesFetchActionActionCreator,
-  messagesFetchRequestSuccessActionCreator,
-  messagesFetchRequestFailureActionCreator,
+  sendMessagesRequestActionCreator,
+  beforeFetchMessagesRequestActionCreator,
+  fetchMessagesRequestSuccessActionCreator,
+  fetchMessagesRequestFailureActionCreator,
 } from '../actions/message';
 import {
-  assetPostRequestSuccessActionCreator,
-  assetPostRequestFailureActionCreator,
+  uploadAssetRequestSuccessActionCreator,
+  uploadAssetRequestFailureActionCreator,
 } from '../actions/asset';
 import { State, store } from '../stores';
 import { logColor } from '../';
 import { randomAvatarUrl } from '../utils';
 
-function* gGetRoomAndMessages(action: IRoomFetchRequestAction) {
+function* gFetchRoomAndMessagesRequest(action: IFetchRoomRequestAction) {
   const state: State = yield select();
   const fetchRoomRes: IFetchRoomResponse = yield call((roomId: string) => {
     return state.client.client!.getRoom(roomId);
   }, action.roomId);
   if (fetchRoomRes.room) {
-    yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
-    yield put(beforeMessagesFetchActionActionCreator(fetchRoomRes.room.messageCount!, 20));
+    yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
+    yield put(beforeFetchMessagesRequestActionCreator(fetchRoomRes.room.messageCount!, 20));
     const fetchMessageRes: IFetchMessagesResponse = yield call(() => {
       return getMessages(action.roomId, {
         limit: 20,
@@ -79,11 +79,11 @@ function* gGetRoomAndMessages(action: IRoomFetchRequestAction) {
       });
     });
     if (fetchMessageRes.messages) {
-      yield put(messagesFetchRequestSuccessActionCreator(fetchMessageRes.messages!));
+      yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(action.roomId));
       Scroll.animateScroll.scrollToBottom({duration: 0});
     } else {
-      yield put(messagesFetchRequestFailureActionCreator(fetchMessageRes.error!));
+      yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
     }
 
     const subMsgFunc = (message: IMessage) => {
@@ -102,11 +102,11 @@ function* gGetRoomAndMessages(action: IRoomFetchRequestAction) {
       }
     }
   } else {
-    yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+    yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
   }
 }
 
-function* gGetUserAndRoomAndMessages(action: ICombinedUserAndRoomAndMessagesFetchRequestAction) {
+function* gFetchUserAndRoomAndMessagesRequest(action: IFetchUserAndRoomAndMessagesRequestAction) {
   const state = yield select();
   const fetchUserRes: IFetchUserResponse = yield call((apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string) => {
     return Client.auth({
@@ -118,7 +118,7 @@ function* gGetUserAndRoomAndMessages(action: ICombinedUserAndRoomAndMessagesFetc
     });
   }, action.apiKey, action.apiEndpoint, action.realtimeEndpoint, action.userId, action.accessToken);
   if (fetchUserRes.user) {
-    yield put(userFetchRequestSuccessActionCreator(fetchUserRes.user));
+    yield put(fetchUserRequestSuccessActionCreator(fetchUserRes.user));
     const client = new Client({
       apiKey: state.user.apiKey,
       apiEndpoint: state.user.apiEndpoint,
@@ -133,8 +133,8 @@ function* gGetUserAndRoomAndMessages(action: ICombinedUserAndRoomAndMessagesFetc
       return client.getRoom(roomId);
     }, action.roomId);
     if (fetchRoomRes.room) {
-      yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
-      yield put(beforeMessagesFetchActionActionCreator(fetchRoomRes.room.messageCount!, 20));
+      yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
+      yield put(beforeFetchMessagesRequestActionCreator(fetchRoomRes.room.messageCount!, 20));
       const state: State = yield select();
       const fetchMessageRes: IFetchMessagesResponse = yield call(() => {
         return getMessages(action.roomId, {
@@ -143,7 +143,7 @@ function* gGetUserAndRoomAndMessages(action: ICombinedUserAndRoomAndMessagesFetc
         });
       });
       if (fetchMessageRes.messages) {
-        yield put(messagesFetchRequestSuccessActionCreator(fetchMessageRes.messages!));
+        yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
         yield put(markAsReadRequestActionCreator(action.roomId));
         Scroll.animateScroll.scrollToBottom({duration: 0});
 
@@ -152,17 +152,17 @@ function* gGetUserAndRoomAndMessages(action: ICombinedUserAndRoomAndMessagesFetc
         //   store.dispatch(combinedUpdateMessagesActionCreator([message]));
         // });
       } else {
-        yield put(messagesFetchRequestFailureActionCreator(fetchMessageRes.error!));
+        yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
       }
     } else {
-      yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+      yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
     }
   } else {
-    yield put(userFetchRequestFailureActionCreator(fetchUserRes.error!));
+    yield put(fetchUserRequestFailureActionCreator(fetchUserRes.error!));
   }
 }
 
-function* gGetUserAndRoom(action: ICombinedUserAndRoomFetchRequestAction) {
+function* gFetchUserAndRoomRequest(action: IFetchUserAndRoomRequestAction) {
   const state = yield select();
   const fetchUserRes: IFetchUserResponse = yield call((apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string) => {
     return Client.auth({
@@ -174,7 +174,7 @@ function* gGetUserAndRoom(action: ICombinedUserAndRoomFetchRequestAction) {
     });
   }, action.apiKey, action.apiEndpoint, action.realtimeEndpoint, action.userId, action.accessToken);
   if (fetchUserRes.user) {
-    yield put(userFetchRequestSuccessActionCreator(fetchUserRes.user));
+    yield put(fetchUserRequestSuccessActionCreator(fetchUserRes.user));
     const client = new Client({
       apiKey: state.user.apiKey,
       apiEndpoint: state.user.apiEndpoint,
@@ -189,37 +189,37 @@ function* gGetUserAndRoom(action: ICombinedUserAndRoomFetchRequestAction) {
       return client.getRoom(roomId);
     }, action.roomId);
     if (fetchRoomRes.room) {
-      yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
+      yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
     } else {
-      yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+      yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
     }
   } else {
-    yield put(userFetchRequestFailureActionCreator(fetchUserRes.error!));
+    yield put(fetchUserRequestFailureActionCreator(fetchUserRes.error!));
   }
 }
 
-function* gAssetPostAndSendMessage(action: ICombinedAssetPostAndSendMessageRequestAction) {
+function* gUploadAssetAndSendMessageRequest(action: IUploadAssetAndSendMessageRequestAction) {
   const res: IPostAssetResponse = yield call((file: Blob) => {
     return fileUpload(file);
   }, action.file);
   if (res.asset) {
-    yield put(assetPostRequestSuccessActionCreator(res.asset));
+    yield put(uploadAssetRequestSuccessActionCreator(res.asset));
     yield put(createMessageActionCreator('image', {
       mime: res.asset.mime,
       sourceUrl: res.asset.sourceUrl,
     }));
-    yield put(messagesSendRequestActionCreator());
+    yield put(sendMessagesRequestActionCreator());
   } else {
-    yield put(assetPostRequestFailureActionCreator(res.error!));
+    yield put(uploadAssetRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gUpdateMessages(action: ICombinedUpdateMessagesAction) {
+function* gUpdateMessagesAndScrollBottom(action: IUpdateMessagesAndScrollBottomAction) {
   yield put(updateMessagesActionCreator(action.messages));
   Scroll.animateScroll.scrollToBottom({duration: 300});
 }
 
-function* gCreateRoomAndGetMessages(action: ICombinedCreateRoomAndMessagesFetchRequestAction) {
+function* gCreateRoomAndFetchMessagesRequest(action: ICreateRoomAndFetchMessagesRequestAction) {
   const state: State = yield select();
 
   const selectContactUserKeys = Object.keys(state.user.selectContacts);
@@ -235,7 +235,7 @@ function* gCreateRoomAndGetMessages(action: ICombinedCreateRoomAndMessagesFetchR
   } else {
     action.room.type = RoomType.PRIVATE_ROOM;
   }
-  yield put(roomUpdateTypeActionCreator(action.room.type));
+  yield put(updateRoomTypeActionCreator(action.room.type));
   action.room.userIds = selectContactUserIds;
 
   let existRoomId = '';
@@ -262,18 +262,18 @@ function* gCreateRoomAndGetMessages(action: ICombinedCreateRoomAndMessagesFetchR
       }
     }
     action.room.name = roomName;
-    yield put(roomUpdateNameActionCreator(roomName));
-    yield put(roomUpdatePictureUrlActionCreator(randomAvatarUrl(state.setting.noAvatarImages)));
+    yield put(updateRoomNameActionCreator(roomName));
+    yield put(updateRoomPictureUrlActionCreator(randomAvatarUrl(state.setting.noAvatarImages)));
   }
 
   if (action.room.type !== RoomType.ONE_ON_ONE) {
-    yield put(updateStyleActionCreator({
-      modalStyle: {
-        roomCreate: {
-          isDisplay: true,
-        }
-      }
-    }));
+    // yield put(updateStyleActionCreator({
+    //   modalStyle: {
+    //     roomCreate: {
+    //       isDisplay: true,
+    //     }
+    //   }
+    // }));
     return;
   }
 
@@ -289,8 +289,8 @@ function* gCreateRoomAndGetMessages(action: ICombinedCreateRoomAndMessagesFetchR
   }
 
   if (fetchRoomRes.room) {
-    yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
-    yield put(beforeMessagesFetchActionActionCreator(fetchRoomRes.room.messageCount!, 20));
+    yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
+    yield put(beforeFetchMessagesRequestActionCreator(fetchRoomRes.room.messageCount!, 20));
     const fetchMessageRes: IFetchMessagesResponse = yield call(() => {
       return getMessages(fetchRoomRes.room!.roomId!, {
         limit: 20,
@@ -298,23 +298,23 @@ function* gCreateRoomAndGetMessages(action: ICombinedCreateRoomAndMessagesFetchR
       });
     });
     if (fetchMessageRes.messages) {
-      yield put(messagesFetchRequestSuccessActionCreator(fetchMessageRes.messages!));
+      yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(fetchRoomRes.room!.roomId!));
       Scroll.animateScroll.scrollToBottom({duration: 0});
       store.dispatch(replace('/messages/' + fetchRoomRes.room.roomId));
       subscribeMessage(fetchRoomRes.room!.roomId!, (message: IMessage) => {
         console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);
-        store.dispatch(combinedUpdateMessagesActionCreator([message]));
+        store.dispatch(updateMessagesAndScrollBottomActionCreator([message]));
       });
     } else {
-      yield put(messagesFetchRequestFailureActionCreator(fetchMessageRes.error!));
+      yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
     }
   } else {
-    yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+    yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
   }
 }
 
-function* gAssetPostAndRoomUpdate() {
+function* gUploadAssetAndUpdateRoomRequest() {
   const state: State = yield select();
 
   let room: IRoom = {
@@ -327,26 +327,26 @@ function* gAssetPostAndRoomUpdate() {
       return fileUpload(file);
     }, state.room.updatePicture);
     if (postAssetRes.asset) {
-      yield put(assetPostRequestSuccessActionCreator(postAssetRes.asset));
+      yield put(uploadAssetRequestSuccessActionCreator(postAssetRes.asset));
       if (postAssetRes.asset.sourceUrl) {
         room.pictureUrl = postAssetRes.asset.sourceUrl;
       }
     } else {
-      yield put(assetPostRequestFailureActionCreator(postAssetRes.error!));
+      yield put(uploadAssetRequestFailureActionCreator(postAssetRes.error!));
     }
   }
   const fetchRoomRes: IFetchRoomResponse = yield call(() => {
     return updateRoom(room);
   });
   if (fetchRoomRes.room) {
-    yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
+    yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
   } else {
-    yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+    yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
   }
-  yield put(roomUpdateClearActionCreator());
+  yield put(clearRoomActionCreator());
 }
 
-function* gAssetPostAndRoomCreateAndGetMessages() {
+function* gUploadAssetAndCreateRoomAndFetchMessagesRequest() {
   const state: State = yield select();
 
   let createRoom: IRoom = {
@@ -364,12 +364,12 @@ function* gAssetPostAndRoomCreateAndGetMessages() {
       return fileUpload(file);
     }, state.room.updatePicture);
     if (postAssetRes.asset) {
-      yield put(assetPostRequestSuccessActionCreator(postAssetRes.asset));
+      yield put(uploadAssetRequestSuccessActionCreator(postAssetRes.asset));
       if (postAssetRes.asset.sourceUrl) {
         createRoom.pictureUrl = postAssetRes.asset.sourceUrl;
       }
     } else {
-      yield put(assetPostRequestFailureActionCreator(postAssetRes.error!));
+      yield put(uploadAssetRequestFailureActionCreator(postAssetRes.error!));
     }
   } else if (state.room.updatePictureUrl) {
     createRoom.pictureUrl = state.room.updatePictureUrl;
@@ -379,8 +379,8 @@ function* gAssetPostAndRoomCreateAndGetMessages() {
     return state.client.client!.createRoom(createRoom);
   });
   if (fetchRoomRes.room) {
-    yield put(roomFetchRequestSuccessActionCreator(fetchRoomRes.room));
-    yield put(beforeMessagesFetchActionActionCreator(fetchRoomRes.room!.messageCount!, 20));
+    yield put(fetchRoomRequestSuccessActionCreator(fetchRoomRes.room));
+    yield put(beforeFetchMessagesRequestActionCreator(fetchRoomRes.room!.messageCount!, 20));
     const fetchMessageRes: IFetchMessagesResponse = yield call(() => {
       return getMessages(fetchRoomRes.room!.roomId!, {
         limit: 20,
@@ -388,30 +388,30 @@ function* gAssetPostAndRoomCreateAndGetMessages() {
       });
     });
     if (fetchMessageRes.messages) {
-      yield put(messagesFetchRequestSuccessActionCreator(fetchMessageRes.messages!));
+      yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(fetchRoomRes.room!.roomId!));
       Scroll.animateScroll.scrollToBottom({duration: 0});
       store.dispatch(replace('/messages/' + fetchRoomRes.room.roomId));
       subscribeMessage(fetchRoomRes.room!.roomId!, (message: IMessage) => {
         console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);
-        store.dispatch(combinedUpdateMessagesActionCreator([message]));
+        store.dispatch(updateMessagesAndScrollBottomActionCreator([message]));
       });
     } else {
-      yield put(messagesFetchRequestFailureActionCreator(fetchMessageRes.error!));
+      yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
     }
   } else {
-    yield put(roomFetchRequestFailureActionCreator(fetchRoomRes.error!));
+    yield put(fetchRoomRequestFailureActionCreator(fetchRoomRes.error!));
   }
-  yield put(roomUpdateClearActionCreator());
+  yield put(clearRoomActionCreator());
 }
 
 export function* combinedSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST, gGetRoomAndMessages);
-  yield takeLatest(COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST, gGetUserAndRoomAndMessages);
-  yield takeLatest(COMBINED_USER_AND_ROOM_FETCH_REQUEST, gGetUserAndRoom);
-  yield takeLatest(COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST, gAssetPostAndSendMessage);
-  yield takeLatest(COMBINED_UPDATE_MESSAGES, gUpdateMessages);
-  yield takeLatest(COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST, gCreateRoomAndGetMessages);
-  yield takeLatest(COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST, gAssetPostAndRoomUpdate);
-  yield takeLatest(COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST, gAssetPostAndRoomCreateAndGetMessages);
+  yield takeLatest(FETCH_ROOM_AND_MESSAGES_REQUEST, gFetchRoomAndMessagesRequest);
+  yield takeLatest(FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST, gFetchUserAndRoomAndMessagesRequest);
+  yield takeLatest(FETCH_USER_AND_ROOM_REQUEST, gFetchUserAndRoomRequest);
+  yield takeLatest(UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST, gUploadAssetAndSendMessageRequest);
+  yield takeLatest(UPDATE_MESSAGES_AND_SCROLL_BOTTOM, gUpdateMessagesAndScrollBottom);
+  yield takeLatest(CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST, gCreateRoomAndFetchMessagesRequest);
+  yield takeLatest(UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST, gUploadAssetAndUpdateRoomRequest);
+  yield takeLatest(UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST, gUploadAssetAndCreateRoomAndFetchMessagesRequest);
 }

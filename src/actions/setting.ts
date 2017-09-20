@@ -1,3 +1,4 @@
+import { store } from '../stores';
 import { Action } from 'redux';
 
 export const SET_SETTING = 'SET_SETTING';
@@ -207,3 +208,5 @@ export type SettingActions = ISettingBaseAction
   | ISetRoomSettingRoutePathAction
   | ISetSelectContactRoutePathAction
   ;
+
+export const setRoomListTitleActionDispatch = (roomListTitle: string) => store.dispatch(setRoomListTitleActionCreator(roomListTitle));

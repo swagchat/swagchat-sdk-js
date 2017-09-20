@@ -2,54 +2,35 @@ import { Action } from 'redux';
 import { store } from '../stores';
 import { IMessage, IRoom } from '../';
 
-export const COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST = 'COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST';
-export const COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST = 'COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST';
-export const COMBINED_USER_AND_ROOM_FETCH_REQUEST = 'COMBINED_USER_AND_ROOM_FETCH_REQUEST';
-export const COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST = 'COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST';
-export const COMBINED_UPDATE_MESSAGES = 'COMBINED_UPDATE_MESSAGES';
-export const COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST = 'COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST';
-export const COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST = 'COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST';
-export const COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST = 'COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST';
+export const FETCH_ROOM_AND_MESSAGES_REQUEST = 'FETCH_ROOM_AND_MESSAGES_REQUEST';
+export const FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST = 'FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST';
+export const FETCH_USER_AND_ROOM_REQUEST = 'FETCH_USER_AND_ROOM_REQUEST';
+export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
+export const UPDATE_MESSAGES_AND_SCROLL_BOTTOM = 'UPDATE_MESSAGES_AND_SCROLL_BOTTOM';
+export const CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST = 'CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST';
+export const UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST = 'UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST';
+export const UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST = 'UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST';
 
-export type CombinedActionTypes = typeof COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST
-  | typeof COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST
-  | typeof COMBINED_USER_AND_ROOM_FETCH_REQUEST
-  | typeof COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST
-  | typeof COMBINED_UPDATE_MESSAGES
-  | typeof COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST
-  | typeof COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST
-  | typeof COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST
+export type CombinedActionTypes = typeof FETCH_ROOM_AND_MESSAGES_REQUEST
+  | typeof FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST
+  | typeof FETCH_USER_AND_ROOM_REQUEST
+  | typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST
+  | typeof UPDATE_MESSAGES_AND_SCROLL_BOTTOM
+  | typeof CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST
+  | typeof UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST
+  | typeof UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST
 ;
 
-export interface ICombinedRoomAndMessagesFetchRequestAction extends Action {
+export interface IFetchRoomAndMessagesRequestAction extends Action {
   type: CombinedActionTypes;
   roomId: string;
 }
-export const combinedRoomAndMessagesFetchRequestActionCreator = (roomId: string): ICombinedRoomAndMessagesFetchRequestAction => ({
-  type: COMBINED_ROOM_AND_MESSAGES_FETCH_REQUEST,
+export const fetchRoomAndMessagesRequestActionCreator = (roomId: string): IFetchRoomAndMessagesRequestAction => ({
+  type: FETCH_ROOM_AND_MESSAGES_REQUEST,
   roomId: roomId,
 });
 
-export interface ICombinedUserAndRoomAndMessagesFetchRequestAction extends Action {
-  type: CombinedActionTypes;
-  apiKey: string;
-  apiEndpoint: string;
-  realtimeEndpoint: string;
-  userId: string;
-  accessToken: string;
-  roomId: string;
-}
-export const combinedUserAndRoomAndMessagesFetchRequestActionCreator = (apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string, roomId: string): ICombinedUserAndRoomAndMessagesFetchRequestAction => ({
-  type: COMBINED_USER_AND_ROOM_AND_MESSAGES_FETCH_REQUEST,
-  apiKey: apiKey,
-  apiEndpoint: apiEndpoint,
-  realtimeEndpoint: realtimeEndpoint,
-  userId: userId,
-  accessToken: accessToken,
-  roomId: roomId,
-});
-
-export interface ICombinedUserAndRoomFetchRequestAction extends Action {
+export interface IFetchUserAndRoomAndMessagesRequestAction extends Action {
   type: CombinedActionTypes;
   apiKey: string;
   apiEndpoint: string;
@@ -58,8 +39,8 @@ export interface ICombinedUserAndRoomFetchRequestAction extends Action {
   accessToken: string;
   roomId: string;
 }
-export const combinedUserAndRoomFetchRequestActionCreator = (apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string, roomId: string): ICombinedUserAndRoomFetchRequestAction => ({
-  type: COMBINED_USER_AND_ROOM_FETCH_REQUEST,
+export const fetchUserAndRoomAndMessagesRequestActionCreator = (apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string, roomId: string): IFetchUserAndRoomAndMessagesRequestAction => ({
+  type: FETCH_USER_AND_ROOM_AND_MESSAGES_REQUEST,
   apiKey: apiKey,
   apiEndpoint: apiEndpoint,
   realtimeEndpoint: realtimeEndpoint,
@@ -68,58 +49,77 @@ export const combinedUserAndRoomFetchRequestActionCreator = (apiKey: string, api
   roomId: roomId,
 });
 
-export interface ICombinedAssetPostAndSendMessageRequestAction extends Action {
+export interface IFetchUserAndRoomRequestAction extends Action {
+  type: CombinedActionTypes;
+  apiKey: string;
+  apiEndpoint: string;
+  realtimeEndpoint: string;
+  userId: string;
+  accessToken: string;
+  roomId: string;
+}
+export const fetchUserAndRoomRequestActionCreator = (apiKey: string, apiEndpoint: string, realtimeEndpoint: string, userId: string, accessToken: string, roomId: string): IFetchUserAndRoomRequestAction => ({
+  type: FETCH_USER_AND_ROOM_REQUEST,
+  apiKey: apiKey,
+  apiEndpoint: apiEndpoint,
+  realtimeEndpoint: realtimeEndpoint,
+  userId: userId,
+  accessToken: accessToken,
+  roomId: roomId,
+});
+
+export interface IUploadAssetAndSendMessageRequestAction extends Action {
   type: CombinedActionTypes;
   file: Blob;
 }
-export const combinedAssetPostAndSendMessageRequestActionCreator = (file: Blob): ICombinedAssetPostAndSendMessageRequestAction => ({
-  type: COMBINED_ASSET_POST_AND_SEND_MESSAGE_REQUEST,
+export const uploadAssetAndSendMessageRequestActionCreator = (file: Blob): IUploadAssetAndSendMessageRequestAction => ({
+  type: UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
   file: file,
 });
 
-export interface ICombinedUpdateMessagesAction extends Action {
+export interface IUpdateMessagesAndScrollBottomAction extends Action {
   type: CombinedActionTypes;
   messages: IMessage[];
 }
-export const combinedUpdateMessagesActionCreator = (messages: IMessage[]): ICombinedUpdateMessagesAction => ({
-  type: COMBINED_UPDATE_MESSAGES,
+export const updateMessagesAndScrollBottomActionCreator = (messages: IMessage[]): IUpdateMessagesAndScrollBottomAction => ({
+  type: UPDATE_MESSAGES_AND_SCROLL_BOTTOM,
   messages: messages,
 });
 
-export interface ICombinedCreateRoomAndMessagesFetchRequestAction extends Action {
+export interface ICreateRoomAndFetchMessagesRequestAction extends Action {
   type: CombinedActionTypes;
   room: IRoom;
 }
-export const combinedCreateRoomAndMessagesFetchRequestActionCreator = (room: IRoom): ICombinedCreateRoomAndMessagesFetchRequestAction => ({
-  type: COMBINED_CREATE_ROOM_AND_MESSAGES_FETCH_REQUEST,
+export const createRoomAndFetchMessagesRequestActionCreator = (room: IRoom): ICreateRoomAndFetchMessagesRequestAction => ({
+  type: CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
   room: room,
 });
 
-export interface ICombinedAssetPostAndRoomUpdateRequestAction extends Action {
+export interface IUploadAssetAndUpdateRoomRequestAction extends Action {
   type: CombinedActionTypes;
 }
-export const combinedAssetPostAndRoomUpdateRequestActionCreator = (): ICombinedAssetPostAndRoomUpdateRequestAction => ({
-  type: COMBINED_ASSET_POST_AND_ROOM_UPDATE_REQUEST,
+export const uploadAssetAndUpdateRoomRequestActionCreator = (): IUploadAssetAndUpdateRoomRequestAction => ({
+  type: UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST,
 });
 
-export interface ICombinedAssetPostAndRoomCreatAndMessageFetchRequestAction extends Action {
+export interface IUploadAssetAndCreateRoomAndFetchMessagesRequestAction extends Action {
   type: CombinedActionTypes;
 }
-export const combinedAssetPostAndRoomCreateAndMessageFetchRequestActionCreator = (): ICombinedAssetPostAndRoomCreatAndMessageFetchRequestAction => ({
-  type: COMBINED_ASSET_POST_AND_ROOM_CREATE_AND_MESSAGES_FETCH_REQUEST,
+export const uploadAssetAndCreateRoomAndFetchMessagesRequestActionCreator = (): IUploadAssetAndCreateRoomAndFetchMessagesRequestAction => ({
+  type: UPLOAD_ASSET_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
 });
 
-export type CombinedActions = ICombinedRoomAndMessagesFetchRequestAction
-  | ICombinedUserAndRoomAndMessagesFetchRequestAction
-  | ICombinedUserAndRoomFetchRequestAction
-  | ICombinedAssetPostAndSendMessageRequestAction
-  | ICombinedUpdateMessagesAction
-  | ICombinedCreateRoomAndMessagesFetchRequestAction
-  | ICombinedAssetPostAndRoomUpdateRequestAction
-  | ICombinedAssetPostAndRoomCreatAndMessageFetchRequestAction
+export type CombinedActions = IFetchRoomAndMessagesRequestAction
+  | IFetchUserAndRoomAndMessagesRequestAction
+  | IFetchUserAndRoomRequestAction
+  | IUploadAssetAndSendMessageRequestAction
+  | IUpdateMessagesAndScrollBottomAction
+  | ICreateRoomAndFetchMessagesRequestAction
+  | IUploadAssetAndUpdateRoomRequestAction
+  | IUploadAssetAndCreateRoomAndFetchMessagesRequestAction
 ;
 
-export const combinedAssetPostAndRoomUpdateRequestActionDispatch = () => store.dispatch(combinedAssetPostAndRoomUpdateRequestActionCreator());
-export const combinedCreateRoomAndMessagesFetchRequestActionDispatch = (room: IRoom) => store.dispatch(combinedCreateRoomAndMessagesFetchRequestActionCreator(room));
-export const combinedAssetPostAndRoomCreateAndMessageFetchRequestActionDispatch = () => store.dispatch(combinedAssetPostAndRoomCreateAndMessageFetchRequestActionCreator());
-export const combinedAssetPostAndSendMessageRequestActionDispatch = (file: Blob) => store.dispatch(combinedAssetPostAndSendMessageRequestActionCreator(file));
+export const uploadAssetAndUpdateRoomRequestActionDispatch = () => store.dispatch(uploadAssetAndUpdateRoomRequestActionCreator());
+export const createRoomAndFetchMessagesRequestActionDispatch = (room: IRoom) => store.dispatch(createRoomAndFetchMessagesRequestActionCreator(room));
+export const uploadAssetAndCreateRoomAndFetchMessagesRequestActionDispatch = () => store.dispatch(uploadAssetAndCreateRoomAndFetchMessagesRequestActionCreator());
+export const uploadAssetAndSendMessageRequestActionDispatch = (file: Blob) => store.dispatch(uploadAssetAndSendMessageRequestActionCreator(file));

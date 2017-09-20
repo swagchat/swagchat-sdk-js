@@ -1,19 +1,19 @@
 import { IMessage, createMessage } from '../';
 import { IMessageState } from '../stores/message';
 import {
-  IBeforeMessagesFetchAction,
-  IMessagesFetchRequestSuccessAction,
-  IMessagesFetchRequestFailureAction,
+  IBeforeFetchMessagesRequestAction,
+  IFetchMessagesRequestSuccessAction,
+  IFetchMessagesRequestFailureAction,
   ICreateMessageAction,
-  IMessagesSendRequestSuccessAction,
-  IMessagesSendRequestFailureAction,
+  ISendMessagesRequestSuccessAction,
+  ISendMessagesRequestFailureAction,
   IUpdateMessagesAction,
-  BEFORE_MESSAGES_FETCH,
-  MESSAGES_FETCH_REQUEST_SUCCESS,
-  MESSAGES_FETCH_REQUEST_FAILURE,
+  BEFORE_FETCH_MESSAGES_REQUEST,
+  FETCH_MESSAGES_REQUEST_SUCCESS,
+  FETCH_MESSAGES_REQUEST_FAILURE,
   CREATE_MESSAGE,
-  MESSAGES_SEND_REQUEST_SUCCESS,
-  MESSAGES_SEND_REQUEST_FAILURE,
+  SEND_MESSAGES_REQUEST_SUCCESS,
+  SEND_MESSAGES_REQUEST_FAILURE,
   UPDATE_MESSAGES,
   CLEAR_MESSAGES,
   MessageActions,
@@ -31,8 +31,8 @@ const getInitialState = (): IMessageState => ({
 
 export function message(state: IMessageState = getInitialState(), action: MessageActions): IMessageState {
   switch (action.type) {
-    case BEFORE_MESSAGES_FETCH:
-      const beforeMessagesFetchAction = <IBeforeMessagesFetchAction>action;
+    case BEFORE_FETCH_MESSAGES_REQUEST:
+      const beforeMessagesFetchAction = <IBeforeFetchMessagesRequestAction>action;
       let beforeLimit = beforeMessagesFetchAction.messagesLimit;
       let beforeOffset = beforeMessagesFetchAction.messagesAllCount - beforeMessagesFetchAction.messagesLimit;
       if (beforeOffset < 0) {
@@ -48,7 +48,7 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           messagesOffset: beforeOffset,
         }
       );
-    case MESSAGES_FETCH_REQUEST_SUCCESS:
+    case FETCH_MESSAGES_REQUEST_SUCCESS:
       if (state.messagesAllCount === 0) {
         return state;
       }
@@ -58,7 +58,7 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         newLimit = state.messagesOffset;
         newOffset = 0;
       }
-      const messagesFetchAction = <IMessagesFetchRequestSuccessAction>action;
+      const messagesFetchAction = <IFetchMessagesRequestSuccessAction>action;
       let tmpMessages: {[key: string]: IMessage} = {};
       messagesFetchAction.messages.messages.map((message: IMessage) => {
         tmpMessages[message.messageId!] = message;
@@ -73,13 +73,13 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           messagesOffset: newOffset,
         }
       );
-    case MESSAGES_FETCH_REQUEST_FAILURE:
+    case FETCH_MESSAGES_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           user: null,
-          problemDetail: (<IMessagesFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IFetchMessagesRequestFailureAction>action).problemDetail,
         }
       );
     case CREATE_MESSAGE:
@@ -104,8 +104,8 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           createMessages: createMessages,
         }
       );
-    case MESSAGES_SEND_REQUEST_SUCCESS:
-      const messagesSendAction = <IMessagesSendRequestSuccessAction>action;
+    case SEND_MESSAGES_REQUEST_SUCCESS:
+      const messagesSendAction = <ISendMessagesRequestSuccessAction>action;
       let tmpAddMessages: {[key: string]: IMessage} = {};
       messagesSendAction.messages.map((message: IMessage) => {
         tmpAddMessages[message.messageId!] = message;
@@ -125,13 +125,13 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           messages: addMessages,
         }
       );
-    case MESSAGES_SEND_REQUEST_FAILURE:
+    case SEND_MESSAGES_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           user: null,
-          problemDetail: (<IMessagesSendRequestFailureAction>action).problemDetail,
+          problemDetail: (<ISendMessagesRequestFailureAction>action).problemDetail,
         }
       );
     case UPDATE_MESSAGES:

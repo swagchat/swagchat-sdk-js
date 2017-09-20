@@ -1,27 +1,27 @@
 import { IUserForRoom, IRoomUser } from '../';
 import { IRoomState } from '../stores/room';
 import {
-  IRoomFetchRequestSuccessAction,
-  IRoomFetchRequestFailureAction,
-  IRoomUserAddFetchRequestSuccessAction,
-  IRoomUserAddFetchRequestFailureAction,
-  IRoomUserRemoveFetchRequestSuccessAction,
-  IRoomUserRemoveFetchRequestFailureAction,
-  IRoomUpdateNameAction,
-  IRoomUpdatePictureAction,
-  IRoomUpdatePictureUrlAction,
-  IRoomUpdateTypeAction,
-  ROOM_FETCH_REQUEST_SUCCESS,
-  ROOM_FETCH_REQUEST_FAILURE,
-  ROOM_USER_ADD_FETCH_REQUEST_SUCCESS,
-  ROOM_USER_ADD_FETCH_REQUEST_FAILURE,
-  ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS,
-  ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE,
-  ROOM_UPDATE_NAME,
-  ROOM_UPDATE_PICTURE,
-  ROOM_UPDATE_PICTURE_URL,
-  ROOM_UPDATE_TYPE,
-  ROOM_UPDATE_CLEAR,
+  IFetchRoomRequestSuccessAction,
+  IFetchRoomRequestFailureAction,
+  IAddRoomUserRequestSuccessAction,
+  IAddRoomUserRequestFailureAction,
+  IRemoveRoomUserRequestSuccessAction,
+  IRemoveRoomUserRequestFailureAction,
+  IUpdateRoomNameAction,
+  IUpdateRoomPictureAction,
+  IUpdateRoomPictureUrlAction,
+  IUpdateRoomTypeAction,
+  FETCH_ROOM_REQUEST_SUCCESS,
+  FETCH_ROOM_REQUEST_FAILURE,
+  ADD_ROOM_USER_REQUEST_SUCCESS,
+  ADD_ROOM_USER_REQUEST_FAILURE,
+  REMOVE_ROOM_USER_REQUEST_SUCCESS,
+  REMOVE_ROOM_USER_REQUEST_FAILURE,
+  UPDATE_ROOM_NAME,
+  UPDATE_ROOM_PICTURE,
+  UPDATE_ROOM_PICTURE_URL,
+  UPDATE_ROOM_TYPE,
+  CLEAR_ROOM,
   RoomActions,
 } from '../actions/room';
 
@@ -38,8 +38,8 @@ const getInitialState = (): IRoomState => ({
 
 export function room(state: IRoomState = getInitialState(), action: RoomActions): IRoomState {
   switch (action.type) {
-    case ROOM_FETCH_REQUEST_SUCCESS:
-      const roomFetchRequestSuccessAction = <IRoomFetchRequestSuccessAction>action;
+    case FETCH_ROOM_REQUEST_SUCCESS:
+      const roomFetchRequestSuccessAction = <IFetchRoomRequestSuccessAction>action;
       let roomUsers: {[key: string]: IUserForRoom} = {};
       if (roomFetchRequestSuccessAction.room.users) {
         roomFetchRequestSuccessAction.room.users!.map((user: IUserForRoom) => {
@@ -56,18 +56,18 @@ export function room(state: IRoomState = getInitialState(), action: RoomActions)
           roomUsers: roomUsers,
         }
       );
-    case ROOM_FETCH_REQUEST_FAILURE:
+    case FETCH_ROOM_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
           room: null,
-          problemDetail: (<IRoomFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IFetchRoomRequestFailureAction>action).problemDetail,
         }
       );
-    case ROOM_USER_ADD_FETCH_REQUEST_SUCCESS:
+    case ADD_ROOM_USER_REQUEST_SUCCESS:
       let addRoomUsers: {[key: string]: IRoomUser} = {};
-      (<IRoomUserAddFetchRequestSuccessAction>action).roomUsers!.map((user: IRoomUser) => {
+      (<IAddRoomUserRequestSuccessAction>action).roomUsers!.map((user: IRoomUser) => {
         addRoomUsers[user.userId] = user;
       });
       return Object.assign(
@@ -77,17 +77,17 @@ export function room(state: IRoomState = getInitialState(), action: RoomActions)
           roomUsers: addRoomUsers,
         }
       );
-    case ROOM_USER_ADD_FETCH_REQUEST_FAILURE:
+    case ADD_ROOM_USER_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
-          problemDetail: (<IRoomUserAddFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IAddRoomUserRequestFailureAction>action).problemDetail,
         }
       );
-    case ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS:
+    case REMOVE_ROOM_USER_REQUEST_SUCCESS:
       let removeRoomUsers: {[key: string]: IRoomUser} = {};
-      for (let roomUser of (<IRoomUserRemoveFetchRequestSuccessAction>action).roomUsers) {
+      for (let roomUser of (<IRemoveRoomUserRequestSuccessAction>action).roomUsers) {
         removeRoomUsers[roomUser.userId] = roomUser;
       }
       return Object.assign(
@@ -97,47 +97,47 @@ export function room(state: IRoomState = getInitialState(), action: RoomActions)
           roomUsers: removeRoomUsers,
         }
       );
-    case ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE:
+    case REMOVE_ROOM_USER_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
-          problemDetail: (<IRoomUserRemoveFetchRequestFailureAction>action).problemDetail,
+          problemDetail: (<IRemoveRoomUserRequestFailureAction>action).problemDetail,
         }
       );
-    case ROOM_UPDATE_NAME:
+    case UPDATE_ROOM_NAME:
       return Object.assign(
         {},
         state,
         {
-          updateName: (<IRoomUpdateNameAction>action).updateName,
+          updateName: (<IUpdateRoomNameAction>action).updateName,
         }
       );
-    case ROOM_UPDATE_PICTURE:
+    case UPDATE_ROOM_PICTURE:
       return Object.assign(
         {},
         state,
         {
-          updatePicture: (<IRoomUpdatePictureAction>action).updatePicture,
+          updatePicture: (<IUpdateRoomPictureAction>action).updatePicture,
         }
       );
-    case ROOM_UPDATE_PICTURE_URL:
+    case UPDATE_ROOM_PICTURE_URL:
       return Object.assign(
         {},
         state,
         {
-          updatePictureUrl: (<IRoomUpdatePictureUrlAction>action).updatePictureUrl,
+          updatePictureUrl: (<IUpdateRoomPictureUrlAction>action).updatePictureUrl,
         }
       );
-    case ROOM_UPDATE_TYPE:
+    case UPDATE_ROOM_TYPE:
       return Object.assign(
         {},
         state,
         {
-          updateType: (<IRoomUpdateTypeAction>action).updateType,
+          updateType: (<IUpdateRoomTypeAction>action).updateType,
         }
       );
-    case ROOM_UPDATE_CLEAR:
+    case CLEAR_ROOM:
       return Object.assign(
         {},
         state,

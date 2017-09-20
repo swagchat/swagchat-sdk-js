@@ -10,31 +10,31 @@ import {
   markAsRead,
 } from '../';
 import {
-  USER_AUTH_REQUEST,
-  CONTACTS_FETCH_REQUEST,
-  USER_FETCH_REQUEST,
+  AUTH_REQUEST,
+  FETCH_CONTACTS_REQUEST,
+  FETCH_USER_REQUEST,
   MARK_AS_READ_REQUEST,
-  USER_BLOCK_FETCH_REQUEST,
-  USER_UNBLOCK_FETCH_REQUEST,
-  IUserFetchRequestAction,
+  USER_BLOCK_REQUEST,
+  USER_UNBLOCK_REQUEST,
+  IFetchUserRequestAction,
   IMarkAsReadRequestAction,
-  IUserBlockFetchRequestAction,
-  IUserUnBlockFetchRequestAction,
-  contactsFetchRequestSuccessActionCreator,
-  contactsFetchRequestFailureActionCreator,
-  userFetchRequestSuccessActionCreator,
-  userFetchRequestFailureActionCreator,
+  IUserBlockRequestAction,
+  IUserUnBlockRequestAction,
+  fetchContactsRequestSuccessActionCreator,
+  fetchContactsRequestFailureActionCreator,
+  fetchUserRequestSuccessActionCreator,
+  fetchUserRequestFailureActionCreator,
   markAsReadRequestSuccessActionCreator,
   markAsReadRequestFailureActionCreator,
-  userBlockFetchRequestSuccessActionCreator,
-  userBlockFetchRequestFailureActionCreator,
-  userUnBlockFetchRequestSuccessActionCreator,
-  userUnBlockFetchRequestFailureActionCreator,
+  userBlockRequestSuccessActionCreator,
+  userBlockRequestFailureActionCreator,
+  userUnBlockRequestSuccessActionCreator,
+  userUnBlockRequestFailureActionCreator,
 } from '../actions/user';
 import { setClientActionCreator } from '../actions/client';
 import { State } from '../stores';
 
-function* gAuthUser() {
+function* gAuthRequest() {
   const state: State = yield select();
   const res: IFetchUserResponse = yield call(() => {
     return Client.auth({
@@ -56,36 +56,36 @@ function* gAuthUser() {
       userAccessToken: state.user.accessToken,
     });
     yield put(setClientActionCreator(client));
-    yield put(userFetchRequestSuccessActionCreator(res.user));
+    yield put(fetchUserRequestSuccessActionCreator(res.user));
   } else {
-    yield put(userFetchRequestFailureActionCreator(res.error!));
+    yield put(fetchUserRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gGetContacts() {
+function* gFetchContactsRequest() {
   const res: IFetchUsersResponse = yield call(() => {
     return getContacts();
   });
   if (res.users) {
-    yield put(contactsFetchRequestSuccessActionCreator(res.users));
+    yield put(fetchContactsRequestSuccessActionCreator(res.users));
   } else {
-    yield put(contactsFetchRequestFailureActionCreator(res.error!));
+    yield put(fetchContactsRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gGetUser(action: IUserFetchRequestAction) {
+function* gFetchUserRequest(action: IFetchUserRequestAction) {
   const state: State = yield select();
   const res: IFetchUserResponse = yield call((userId: string, accessToken: string) => {
     return state.client.client!.getUser(userId, accessToken);
   }, action.userId, action.accessToken);
   if (res.user) {
-    yield put(userFetchRequestSuccessActionCreator(res.user));
+    yield put(fetchUserRequestSuccessActionCreator(res.user));
   } else {
-    yield put(userFetchRequestFailureActionCreator(res.error!));
+    yield put(fetchUserRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gMarkAsRead(action: IMarkAsReadRequestAction) {
+function* gMarkAsReadRequest(action: IMarkAsReadRequestAction) {
   const res: IFetchUserResponse = yield call((roomId: string) => {
     return markAsRead(roomId);
   }, action.roomId);
@@ -96,33 +96,33 @@ function* gMarkAsRead(action: IMarkAsReadRequestAction) {
   }
 }
 
-function* gGetUserBlock(action: IUserBlockFetchRequestAction) {
+function* gUserBlockRequest(action: IUserBlockRequestAction) {
   const res: IFetchBlockUsersResponse = yield call((blockUserIds: string[]) => {
     return addBlockUsers(blockUserIds);
   }, action.blockUserIds);
   if (res.blockUsers) {
-    yield put(userBlockFetchRequestSuccessActionCreator(res.blockUsers));
+    yield put(userBlockRequestSuccessActionCreator(res.blockUsers));
   } else {
-    yield put(userBlockFetchRequestFailureActionCreator(res.error!));
+    yield put(userBlockRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gGetUserUnBlock(action: IUserUnBlockFetchRequestAction) {
+function* gUserUnBlockRequest(action: IUserUnBlockRequestAction) {
   const res: IFetchBlockUsersResponse = yield call((blockUserIds: string[]) => {
     return removeBlockUsers(blockUserIds);
   }, action.blockUserIds);
   if (res.blockUsers) {
-    yield put(userUnBlockFetchRequestSuccessActionCreator(res.blockUsers));
+    yield put(userUnBlockRequestSuccessActionCreator(res.blockUsers));
   } else {
-    yield put(userUnBlockFetchRequestFailureActionCreator(res.error!));
+    yield put(userUnBlockRequestFailureActionCreator(res.error!));
   }
 }
 
 export function* userSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(USER_AUTH_REQUEST, gAuthUser);
-  yield takeLatest(CONTACTS_FETCH_REQUEST, gGetContacts);
-  yield takeLatest(USER_FETCH_REQUEST, gGetUser);
-  yield takeLatest(MARK_AS_READ_REQUEST, gMarkAsRead);
-  yield takeLatest(USER_BLOCK_FETCH_REQUEST, gGetUserBlock);
-  yield takeLatest(USER_UNBLOCK_FETCH_REQUEST, gGetUserUnBlock);
+  yield takeLatest(AUTH_REQUEST, gAuthRequest);
+  yield takeLatest(FETCH_CONTACTS_REQUEST, gFetchContactsRequest);
+  yield takeLatest(FETCH_USER_REQUEST, gFetchUserRequest);
+  yield takeLatest(MARK_AS_READ_REQUEST, gMarkAsReadRequest);
+  yield takeLatest(USER_BLOCK_REQUEST, gUserBlockRequest);
+  yield takeLatest(USER_UNBLOCK_REQUEST, gUserUnBlockRequest);
 }

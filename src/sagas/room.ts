@@ -11,48 +11,48 @@ import {
 } from '../room';
 
 import {
-  ROOM_FETCH_REQUEST,
-  ROOM_UPDATE_REQUEST,
-  ROOM_USER_ADD_FETCH_REQUEST,
-  ROOM_USER_REMOVE_FETCH_REQUEST,
-  IRoomFetchRequestAction,
-  IRoomUpdateRequestAction,
-  IRoomUserAddFetchRequestAction,
-  IRoomUserRemoveFetchRequestAction,
-  roomFetchRequestSuccessActionCreator,
-  roomFetchRequestFailureActionCreator,
-  roomUserAddFetchRequestSuccessActionCreator,
-  roomUserAddFetchRequestFailureActionCreator,
-  roomUserRemoveFetchRequestSuccessActionCreator,
-  roomUserRemoveFetchRequestFailureActionCreator,
+  FETCH_ROOM_REQUEST,
+  UPDATE_ROOM_REQUEST,
+  ADD_ROOM_USER_REQUEST,
+  REMOVE_ROOM_USER_REQUEST,
+  IFetchRoomRequestAction,
+  IUpdateRoomRequestAction,
+  IAddRoomUserRequestAction,
+  IRemoveRoomUserRequestAction,
+  fetchRoomRequestSuccessActionCreator,
+  fetchRoomRequestFailureActionCreator,
+  addRoomUserRequestSuccessActionCreator,
+  addRoomUserRequestFailureActionCreator,
+  removeRoomUserRequestSuccessActionCreator,
+  removeRoomUserRequestFailureActionCreator,
 } from '../actions/room';
-import { userFetchRequestActionCreator } from '../actions/user';
+import { fetchUserRequestActionCreator } from '../actions/user';
 import { State } from '../stores';
 
-function* gGetRoom(action: IRoomFetchRequestAction) {
+function* gFetchRoomRequest(action: IFetchRoomRequestAction) {
   const state: State = yield select();
   const res: IFetchRoomResponse = yield call((roomId: string) => {
     return state.client.client!.getRoom(roomId);
   }, action.roomId);
   if (res.room) {
-    yield put(roomFetchRequestSuccessActionCreator(res.room));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room));
   } else {
-    yield put(roomFetchRequestFailureActionCreator(res.error!));
+    yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gUpdateRoom(action: IRoomUpdateRequestAction) {
+function* gUpdateRoomRequest(action: IUpdateRoomRequestAction) {
   const res: IFetchRoomResponse = yield call((putRoom: IRoom) => {
     return updateRoom(putRoom);
   }, action.putRoom);
   if (res.room) {
-    yield put(roomFetchRequestSuccessActionCreator(res.room));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room));
   } else {
-    yield put(roomFetchRequestFailureActionCreator(res.error!));
+    yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gRoomUserAdd(action: IRoomUserAddFetchRequestAction) {
+function* gAddRoomUserRequest(action: IAddRoomUserRequestAction) {
   const state: State  = yield select();
   if (state.room.room === null) {
     return;
@@ -67,14 +67,14 @@ function* gRoomUserAdd(action: IRoomUserAddFetchRequestAction) {
     return addRoomUsers(roomId, userIds);
   }, action.userIds);
   if (res.roomUsers) {
-    yield put(roomUserAddFetchRequestSuccessActionCreator(res.roomUsers));
-    yield put(userFetchRequestActionCreator(state.user.user!.userId, state.user.user!.accessToken));
+    yield put(addRoomUserRequestSuccessActionCreator(res.roomUsers));
+    yield put(fetchUserRequestActionCreator(state.user.user!.userId, state.user.user!.accessToken));
   } else {
-    yield put(roomUserAddFetchRequestFailureActionCreator(res.error!));
+    yield put(addRoomUserRequestFailureActionCreator(res.error!));
   }
 }
 
-function* gRoomUserRemove(action: IRoomUserRemoveFetchRequestAction) {
+function* gRemoveRoomUserRequest(action: IRemoveRoomUserRequestAction) {
   const state: State  = yield select();
   if (state.room.room === null) {
     return;
@@ -89,17 +89,17 @@ function* gRoomUserRemove(action: IRoomUserRemoveFetchRequestAction) {
     return removeRoomUsers(roomId, userIds);
   }, action.userIds);
   if (res.roomUsers) {
-    yield put(roomUserRemoveFetchRequestSuccessActionCreator(res.roomUsers));
-    yield put(userFetchRequestActionCreator(state.user.user!.userId, state.user.user!.accessToken));
+    yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));
+    yield put(fetchUserRequestActionCreator(state.user.user!.userId, state.user.user!.accessToken));
     location.href = '#';
   } else {
-    yield put(roomUserRemoveFetchRequestFailureActionCreator(res.error!));
+    yield put(removeRoomUserRequestFailureActionCreator(res.error!));
   }
 }
 
 export function* roomSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(ROOM_FETCH_REQUEST, gGetRoom);
-  yield takeLatest(ROOM_UPDATE_REQUEST, gUpdateRoom);
-  yield takeLatest(ROOM_USER_ADD_FETCH_REQUEST, gRoomUserAdd);
-  yield takeLatest(ROOM_USER_REMOVE_FETCH_REQUEST, gRoomUserRemove);
+  yield takeLatest(FETCH_ROOM_REQUEST, gFetchRoomRequest);
+  yield takeLatest(UPDATE_ROOM_REQUEST, gUpdateRoomRequest);
+  yield takeLatest(ADD_ROOM_USER_REQUEST, gAddRoomUserRequest);
+  yield takeLatest(REMOVE_ROOM_USER_REQUEST, gRemoveRoomUserRequest);
 }

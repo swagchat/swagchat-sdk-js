@@ -2,189 +2,178 @@ import { Action } from 'redux';
 import { store } from '../stores';
 import { IRoom, IProblemDetail, IRoomUser } from '../';
 
-export const ROOM_FETCH_REQUEST = 'ROOM_FETCH_REQUEST';
-export const ROOM_FETCH_REQUEST_SUCCESS = 'ROOM_FETCH_REQUEST_SUCCESS';
-export const ROOM_FETCH_REQUEST_FAILURE = 'ROOM_FETCH_REQUEST_FAILURE';
-export const ROOM_UPDATE_REQUEST = 'ROOM_UPDATE_REQUEST';
-export const ROOM_USER_ADD_FETCH_REQUEST = 'ROOM_USER_ADD_FETCH_REQUEST';
-export const ROOM_USER_ADD_FETCH_REQUEST_SUCCESS = 'ROOM_USER_ADD_FETCH_REQUEST_SUCCESS';
-export const ROOM_USER_ADD_FETCH_REQUEST_FAILURE = 'ROOM_USER_ADD_FETCH_REQUEST_FAILURE';
-export const ROOM_USER_REMOVE_FETCH_REQUEST = 'ROOM_USER_REMOVE_FETCH_REQUEST';
-export const ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS = 'ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS';
-export const ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE = 'ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE';
-export const ROOM_UPDATE_NAME = 'ROOM_UPDATE_NAME';
-export const ROOM_UPDATE_PICTURE = 'ROOM_UPDATE_PICTURE';
-export const ROOM_UPDATE_PICTURE_URL = 'ROOM_UPDATE_PICTURE_URL';
-export const ROOM_UPDATE_TYPE = 'ROOM_UPDATE_TYPE';
-export const ROOM_UPDATE_CLEAR = 'ROOM_UPDATE_CLEAR';
+export const FETCH_ROOM_REQUEST = 'FETCH_ROOM_REQUEST';
+export const FETCH_ROOM_REQUEST_SUCCESS = 'FETCH_ROOM_REQUEST_SUCCESS';
+export const FETCH_ROOM_REQUEST_FAILURE = 'FETCH_ROOM_REQUEST_FAILURE';
+export const UPDATE_ROOM_REQUEST = 'UPDATE_ROOM_REQUEST';
+export const ADD_ROOM_USER_REQUEST = 'ADD_ROOM_USER_REQUEST';
+export const ADD_ROOM_USER_REQUEST_SUCCESS = 'ADD_ROOM_USER_REQUEST_SUCCESS';
+export const ADD_ROOM_USER_REQUEST_FAILURE = 'ADD_ROOM_USER_REQUEST_FAILURE';
+export const REMOVE_ROOM_USER_REQUEST = 'REMOVE_ROOM_USER_REQUEST';
+export const REMOVE_ROOM_USER_REQUEST_SUCCESS = 'REMOVE_ROOM_USER_REQUEST_SUCCESS';
+export const REMOVE_ROOM_USER_REQUEST_FAILURE = 'REMOVE_ROOM_USER_REQUEST_FAILURE';
+export const UPDATE_ROOM_NAME = 'UPDATE_ROOM_NAME';
+export const UPDATE_ROOM_PICTURE = 'UPDATE_ROOM_PICTURE';
+export const UPDATE_ROOM_PICTURE_URL = 'UPDATE_ROOM_PICTURE_URL';
+export const UPDATE_ROOM_TYPE = 'UPDATE_ROOM_TYPE';
+export const CLEAR_ROOM = 'CLEAR_ROOM';
 
-export type RoomActionTypes = typeof ROOM_FETCH_REQUEST
-  | typeof ROOM_FETCH_REQUEST_SUCCESS
-  | typeof ROOM_FETCH_REQUEST_FAILURE
-  | typeof ROOM_UPDATE_REQUEST
-  | typeof ROOM_USER_ADD_FETCH_REQUEST
-  | typeof ROOM_USER_ADD_FETCH_REQUEST_SUCCESS
-  | typeof ROOM_USER_ADD_FETCH_REQUEST_FAILURE
-  | typeof ROOM_USER_REMOVE_FETCH_REQUEST
-  | typeof ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS
-  | typeof ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE
-  | typeof ROOM_UPDATE_NAME
-  | typeof ROOM_UPDATE_PICTURE
-  | typeof ROOM_UPDATE_PICTURE_URL
-  | typeof ROOM_UPDATE_CLEAR
-  | typeof ROOM_UPDATE_TYPE
+export type RoomActionTypes = typeof FETCH_ROOM_REQUEST
+  | typeof FETCH_ROOM_REQUEST_SUCCESS
+  | typeof FETCH_ROOM_REQUEST_FAILURE
+  | typeof UPDATE_ROOM_REQUEST
+  | typeof ADD_ROOM_USER_REQUEST
+  | typeof ADD_ROOM_USER_REQUEST_SUCCESS
+  | typeof ADD_ROOM_USER_REQUEST_FAILURE
+  | typeof REMOVE_ROOM_USER_REQUEST
+  | typeof REMOVE_ROOM_USER_REQUEST_SUCCESS
+  | typeof REMOVE_ROOM_USER_REQUEST_FAILURE
+  | typeof UPDATE_ROOM_NAME
+  | typeof UPDATE_ROOM_PICTURE
+  | typeof UPDATE_ROOM_PICTURE_URL
+  | typeof UPDATE_ROOM_TYPE
+  | typeof CLEAR_ROOM
 ;
 
-export interface IRoomFetchRequestAction extends Action {
+export interface IRoomBaseAction extends Action {
   type: RoomActionTypes;
+}
+
+export interface IFetchRoomRequestAction extends IRoomBaseAction {
   roomId: string;
 }
-export const roomFetchRequestActionCreator = (roomId: string): IRoomFetchRequestAction => ({
-  type: ROOM_FETCH_REQUEST,
+export const fetchRoomRequestActionCreator = (roomId: string): IFetchRoomRequestAction => ({
+  type: FETCH_ROOM_REQUEST,
   roomId: roomId,
 });
 
-export interface IRoomFetchRequestSuccessAction extends Action {
-  type: RoomActionTypes;
+export interface IFetchRoomRequestSuccessAction extends IRoomBaseAction {
   room: IRoom;
 }
-export const roomFetchRequestSuccessActionCreator = (room: IRoom): IRoomFetchRequestSuccessAction => ({
-  type: ROOM_FETCH_REQUEST_SUCCESS,
+export const fetchRoomRequestSuccessActionCreator = (room: IRoom): IFetchRoomRequestSuccessAction => ({
+  type: FETCH_ROOM_REQUEST_SUCCESS,
   room: room,
 });
 
-export interface IRoomFetchRequestFailureAction extends Action {
-  type: RoomActionTypes;
+export interface IFetchRoomRequestFailureAction extends IRoomBaseAction {
   problemDetail: IProblemDetail;
 }
-export const roomFetchRequestFailureActionCreator = (problemDetail: IProblemDetail): IRoomFetchRequestFailureAction => ({
-  type: ROOM_FETCH_REQUEST_FAILURE,
+export const fetchRoomRequestFailureActionCreator = (problemDetail: IProblemDetail): IFetchRoomRequestFailureAction => ({
+  type: FETCH_ROOM_REQUEST_FAILURE,
   problemDetail: problemDetail,
 });
 
-export interface IRoomUpdateRequestAction extends Action {
-  type: RoomActionTypes;
+export interface IUpdateRoomRequestAction extends IRoomBaseAction {
   putRoom: IRoom;
 }
-export const roomUpdateRequestActionCreator = (putRoom: IRoom): IRoomUpdateRequestAction => ({
-  type: ROOM_UPDATE_REQUEST,
+export const updateRoomRequestActionCreator = (putRoom: IRoom): IUpdateRoomRequestAction => ({
+  type: UPDATE_ROOM_REQUEST,
   putRoom: putRoom,
 });
 
-export interface IRoomUserAddFetchRequestAction extends Action {
-  type: RoomActionTypes;
+export interface IAddRoomUserRequestAction extends IRoomBaseAction {
   userIds: string[];
 }
-export const roomUserAddFetchRequestActionCreator = (userIds: string[]): IRoomUserAddFetchRequestAction => ({
-  type: ROOM_USER_ADD_FETCH_REQUEST,
+export const addRoomUserRequestActionCreator = (userIds: string[]): IAddRoomUserRequestAction => ({
+  type: ADD_ROOM_USER_REQUEST,
   userIds: userIds,
 });
 
-export interface IRoomUserAddFetchRequestSuccessAction extends Action {
-  type: RoomActionTypes;
+export interface IAddRoomUserRequestSuccessAction extends IRoomBaseAction {
   roomUsers: IRoomUser[];
 }
-export const roomUserAddFetchRequestSuccessActionCreator = (roomUsers: IRoomUser[]): IRoomUserAddFetchRequestSuccessAction => ({
-  type: ROOM_USER_ADD_FETCH_REQUEST_SUCCESS,
+export const addRoomUserRequestSuccessActionCreator = (roomUsers: IRoomUser[]): IAddRoomUserRequestSuccessAction => ({
+  type: ADD_ROOM_USER_REQUEST_SUCCESS,
   roomUsers: roomUsers,
 });
 
-export interface IRoomUserAddFetchRequestFailureAction extends Action {
-  type: RoomActionTypes;
+export interface IAddRoomUserRequestFailureAction extends IRoomBaseAction {
   problemDetail: IProblemDetail;
 }
-export const roomUserAddFetchRequestFailureActionCreator = (problemDetail: IProblemDetail): IRoomUserAddFetchRequestFailureAction => ({
-  type: ROOM_USER_ADD_FETCH_REQUEST_FAILURE,
+export const addRoomUserRequestFailureActionCreator = (problemDetail: IProblemDetail): IAddRoomUserRequestFailureAction => ({
+  type: ADD_ROOM_USER_REQUEST_FAILURE,
   problemDetail: problemDetail,
 });
 
-export interface IRoomUserRemoveFetchRequestAction extends Action {
-  type: RoomActionTypes;
+export interface IRemoveRoomUserRequestAction extends IRoomBaseAction {
   userIds: string[];
 }
-export const roomUserRemoveFetchRequestActionCreator = (userIds: string[]): IRoomUserRemoveFetchRequestAction => ({
-  type: ROOM_USER_REMOVE_FETCH_REQUEST,
+export const removeRoomUserRequestActionCreator = (userIds: string[]): IRemoveRoomUserRequestAction => ({
+  type: REMOVE_ROOM_USER_REQUEST,
   userIds: userIds,
 });
 
-export interface IRoomUserRemoveFetchRequestSuccessAction extends Action {
-  type: RoomActionTypes;
+export interface IRemoveRoomUserRequestSuccessAction extends IRoomBaseAction {
   roomUsers: IRoomUser[];
 }
-export const roomUserRemoveFetchRequestSuccessActionCreator = (roomUsers: IRoomUser[]): IRoomUserRemoveFetchRequestSuccessAction => ({
-  type: ROOM_USER_REMOVE_FETCH_REQUEST_SUCCESS,
+export const removeRoomUserRequestSuccessActionCreator = (roomUsers: IRoomUser[]): IRemoveRoomUserRequestSuccessAction => ({
+  type: REMOVE_ROOM_USER_REQUEST_SUCCESS,
   roomUsers: roomUsers,
 });
 
-export interface IRoomUserRemoveFetchRequestFailureAction extends Action {
-  type: RoomActionTypes;
+export interface IRemoveRoomUserRequestFailureAction extends IRoomBaseAction {
   problemDetail: IProblemDetail;
 }
-export const roomUserRemoveFetchRequestFailureActionCreator = (problemDetail: IProblemDetail): IRoomUserRemoveFetchRequestFailureAction => ({
-  type: ROOM_USER_REMOVE_FETCH_REQUEST_FAILURE,
+export const removeRoomUserRequestFailureActionCreator = (problemDetail: IProblemDetail): IRemoveRoomUserRequestFailureAction => ({
+  type: REMOVE_ROOM_USER_REQUEST_FAILURE,
   problemDetail: problemDetail,
 });
 
-export interface IRoomUpdateNameAction extends Action {
-  type: RoomActionTypes;
+export interface IUpdateRoomNameAction extends IRoomBaseAction {
   updateName: string;
 }
-export const roomUpdateNameActionCreator = (updateName: string): IRoomUpdateNameAction => ({
-  type: ROOM_UPDATE_NAME,
+export const updateRoomNameActionCreator = (updateName: string): IUpdateRoomNameAction => ({
+  type: UPDATE_ROOM_NAME,
   updateName: updateName,
 });
 
-export interface IRoomUpdatePictureAction extends Action {
-  type: RoomActionTypes;
+export interface IUpdateRoomPictureAction extends IRoomBaseAction {
   updatePicture: Blob;
 }
-export const roomUpdatePictureActionCreator = (updatePicture: Blob): IRoomUpdatePictureAction => ({
-  type: ROOM_UPDATE_PICTURE,
+export const updateRoomPictureActionCreator = (updatePicture: Blob): IUpdateRoomPictureAction => ({
+  type: UPDATE_ROOM_PICTURE,
   updatePicture: updatePicture,
 });
 
-export interface IRoomUpdatePictureUrlAction extends Action {
-  type: RoomActionTypes;
+export interface IUpdateRoomPictureUrlAction extends IRoomBaseAction {
   updatePictureUrl: string;
 }
-export const roomUpdatePictureUrlActionCreator = (updatePictureUrl: string): IRoomUpdatePictureUrlAction => ({
-  type: ROOM_UPDATE_PICTURE_URL,
+export const updateRoomPictureUrlActionCreator = (updatePictureUrl: string): IUpdateRoomPictureUrlAction => ({
+  type: UPDATE_ROOM_PICTURE_URL,
   updatePictureUrl: updatePictureUrl,
 });
 
-export interface IRoomUpdateTypeAction extends Action {
-  type: RoomActionTypes;
+export interface IUpdateRoomTypeAction extends IRoomBaseAction {
   updateType: number;
 }
-export const roomUpdateTypeActionCreator = (updateType: number): IRoomUpdateTypeAction => ({
-  type: ROOM_UPDATE_TYPE,
+export const updateRoomTypeActionCreator = (updateType: number): IUpdateRoomTypeAction => ({
+  type: UPDATE_ROOM_TYPE,
   updateType: updateType,
 });
 
-export interface IRoomUpdateClearAction extends Action {
-  type: RoomActionTypes;
+export interface IClearRoomAction extends IRoomBaseAction {
 }
-export const roomUpdateClearActionCreator = (): IRoomUpdateClearAction => ({
-  type: ROOM_UPDATE_CLEAR,
+export const clearRoomActionCreator = (): IClearRoomAction => ({
+  type: CLEAR_ROOM,
 });
 
-export type RoomActions = IRoomFetchRequestAction
-  | IRoomFetchRequestSuccessAction
-  | IRoomFetchRequestFailureAction
-  | IRoomUserAddFetchRequestAction
-  | IRoomUserAddFetchRequestSuccessAction
-  | IRoomUserAddFetchRequestFailureAction
-  | IRoomUserRemoveFetchRequestAction
-  | IRoomUserRemoveFetchRequestSuccessAction
-  | IRoomUserRemoveFetchRequestFailureAction
-  | IRoomUpdateNameAction
-  | IRoomUpdatePictureAction
-  | IRoomUpdatePictureUrlAction
-  | IRoomUpdateClearAction
-  | IRoomUpdateTypeAction
-;
+export type RoomActions = IFetchRoomRequestAction
+  | IFetchRoomRequestSuccessAction
+  | IFetchRoomRequestFailureAction
+  | IAddRoomUserRequestAction
+  | IAddRoomUserRequestSuccessAction
+  | IAddRoomUserRequestFailureAction
+  | IRemoveRoomUserRequestAction
+  | IRemoveRoomUserRequestSuccessAction
+  | IRemoveRoomUserRequestFailureAction
+  | IUpdateRoomNameAction
+  | IUpdateRoomPictureAction
+  | IUpdateRoomPictureUrlAction
+  | IUpdateRoomTypeAction
+  | IClearRoomAction
+  ;
 
-export const roomUserRemoveFetchRequestActionDispatch = (userIds: string[]) => store.dispatch(roomUserRemoveFetchRequestActionCreator(userIds));
-export const roomUpdateNameActionDispatch = (updateName: string) =>  store.dispatch(roomUpdateNameActionCreator(updateName));
-export const roomUpdatePictureActionDispatch = (updatePicture: Blob) => store.dispatch(roomUpdatePictureActionCreator(updatePicture));
-export const roomUpdateRequestActionDispatch = (putRoom: IRoom) => store.dispatch(roomUpdateRequestActionCreator(putRoom));
+export const removeRoomUserRequestActionDispatch = (userIds: string[]) => store.dispatch(removeRoomUserRequestActionCreator(userIds));
+export const updateRoomNameActionDispatch = (updateName: string) =>  store.dispatch(updateRoomNameActionCreator(updateName));
+export const updateRoomPictureActionDispatch = (updatePicture: Blob) => store.dispatch(updateRoomPictureActionCreator(updatePicture));
+export const updateRoomRequestActionDispatch = (putRoom: IRoom) => store.dispatch(updateRoomRequestActionCreator(putRoom));

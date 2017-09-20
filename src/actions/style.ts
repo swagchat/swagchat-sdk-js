@@ -2,7 +2,7 @@ import { Action } from 'redux';
 import { store } from '../stores';
 import {
   IMessageBodyMenuStyle,
-  IPluginMessageTextInteractionStyle,
+  // IPluginMessageTextInteractionStyle,
 } from '../stores/style';
 
 export const UPDATE_STYLE = 'UPDATE_STYLE';
@@ -18,14 +18,14 @@ export interface IStyleBaseAction extends Action {
   type: StyleActionTypes;
 }
 
-export interface IUpdateStyleAction extends IStyleBaseAction {
-  type: StyleActionTypes;
-  style: Object;
-}
-export const updateStyleActionCreator = (style: Object): IUpdateStyleAction => ({
-  type: UPDATE_STYLE,
-  style: style,
-});
+// export interface IUpdateStyleAction extends IStyleBaseAction {
+//   type: StyleActionTypes;
+//   style: Object;
+// }
+// export const updateStyleActionCreator = (style: Object): IUpdateStyleAction => ({
+//   type: UPDATE_STYLE,
+//   style: style,
+// });
 
 export interface IUpdateMessageBodyMenuStyleAction extends IStyleBaseAction {
   type: StyleActionTypes;
@@ -36,22 +36,19 @@ export const updateMessageBodyMenuStyleActionCreator = (messageBodyMenuStyle: IM
   messageBodyMenuStyle: messageBodyMenuStyle,
 });
 
-export interface IUpdatePluginMessageTextInteractionStyleAction extends IStyleBaseAction {
-  type: StyleActionTypes;
-  pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle;
-}
-export const updatePluginMessageTextInteractionStyleActionCreator = (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle): IUpdatePluginMessageTextInteractionStyleAction => ({
-  type: UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
-  pluginMessageTextInteractionStyle: pluginMessageTextInteractionStyle,
-});
+// export interface IUpdatePluginMessageTextInteractionStyleAction extends IStyleBaseAction {
+//   type: StyleActionTypes;
+//   pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle;
+// }
+// export const updatePluginMessageTextInteractionStyleActionCreator = (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle): IUpdatePluginMessageTextInteractionStyleAction => ({
+//   type: UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
+//   pluginMessageTextInteractionStyle: pluginMessageTextInteractionStyle,
+// });
 
 export type StyleActions = IStyleBaseAction
-  | IUpdateStyleAction
+  // | IUpdateStyleAction
   | IUpdateMessageBodyMenuStyleAction
-  | IUpdatePluginMessageTextInteractionStyleAction
+  // | IUpdatePluginMessageTextInteractionStyleAction
 ;
 
-export const dispatchUpdateStyle = (style: Object) => store.dispatch(updateStyleActionCreator(style));
-export const updateStyleActionDispatch = (style: Object) => store.dispatch(updateStyleActionCreator(style));
 export const updateMessageBodyMenuStyleActionDispatch = (messageBodyMenuStyle: IMessageBodyMenuStyle) => store.dispatch(updateMessageBodyMenuStyleActionCreator(messageBodyMenuStyle));
-export const updatePluginMessageTextInteractionStyle = (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle) => store.dispatch(updatePluginMessageTextInteractionStyleActionCreator(pluginMessageTextInteractionStyle));

@@ -1,11 +1,11 @@
 import { IStyleState } from '../stores/';
 import {
-  IUpdateStyleAction,
+  // IUpdateStyleAction,
   IUpdateMessageBodyMenuStyleAction,
-  IUpdatePluginMessageTextInteractionStyleAction,
-  UPDATE_STYLE,
+  // IUpdatePluginMessageTextInteractionStyleAction,
+  // UPDATE_STYLE,
   UPDATE_MESSAGE_BODY_MENU_STYLE,
-  UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
+  // UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
   StyleActions,
 } from '../actions/style';
 
@@ -25,12 +25,12 @@ const getInitialState = (): IStyleState => ({
 
 export function style(state: IStyleState = getInitialState(), action: StyleActions): IStyleState {
   switch (action.type) {
-    case UPDATE_STYLE:
-      return Object.assign(
-        {},
-        state,
-        (<IUpdateStyleAction>action).style,
-      );
+    // case UPDATE_STYLE:
+    //   return Object.assign(
+    //     {},
+    //     state,
+    //     (<IUpdateStyleAction>action).style,
+    //   );
     case UPDATE_MESSAGE_BODY_MENU_STYLE:
       return Object.assign(
         {},
@@ -39,14 +39,14 @@ export function style(state: IStyleState = getInitialState(), action: StyleActio
           messageBodyMenuStyle: (<IUpdateMessageBodyMenuStyleAction>action).messageBodyMenuStyle,
         }
       );
-    case UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE:
-      return Object.assign(
-        {},
-        state,
-        {
-          pluginMessageTextInteractionStyle: (<IUpdatePluginMessageTextInteractionStyleAction>action).pluginMessageTextInteractionStyle,
-        }
-      );
+    // case UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE:
+    //   return Object.assign(
+    //     {},
+    //     state,
+    //     {
+    //       pluginMessageTextInteractionStyle: (<IUpdatePluginMessageTextInteractionStyleAction>action).pluginMessageTextInteractionStyle,
+    //     }
+    //   );
     default:
       return state;
   }
