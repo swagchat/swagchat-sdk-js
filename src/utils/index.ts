@@ -6,7 +6,6 @@ export function dateHumanize(ISO3339: string): string {
   const itemDate = new Date(ISO3339);
   const nowYYYYMMDD = nowDate.getFullYear() + (nowDate.getMonth() + 1) + nowDate.getDate();
   const itemYYYYMMDD = itemDate.getFullYear() + (itemDate.getMonth() + 1) + itemDate.getDate();
-  console.log(itemYYYYMMDD);
   if (nowYYYYMMDD === itemYYYYMMDD) {
     // Today
     return itemDate.getHours() + ':' + ('00' + itemDate.getMinutes()).slice(-2);
