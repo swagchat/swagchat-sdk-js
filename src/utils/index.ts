@@ -4,13 +4,28 @@ import * as I from '../interface';
 export function dateHumanize(ISO3339: string): string {
   const nowDate = new Date();
   const itemDate = new Date(ISO3339);
-  const nowYYYYMMDD = nowDate.getFullYear() + '-' + nowDate.getMonth()  + '-' +  nowDate.getDate();
-  const itemYYYYMMDD = itemDate.getFullYear()  + '-' +  itemDate.getMonth()  + '-' +  itemDate.getDate();
+  const nowYYYYMMDD = nowDate.getFullYear() + (nowDate.getMonth() + 1) + nowDate.getDate();
+  const itemYYYYMMDD = itemDate.getFullYear() + (itemDate.getMonth() + 1) + itemDate.getDate();
+  console.log(itemYYYYMMDD);
   if (nowYYYYMMDD === itemYYYYMMDD) {
+    // Today
     return itemDate.getHours() + ':' + ('00' + itemDate.getMinutes()).slice(-2);
   } else {
-    const dayList = ['日', '月', '火', '水', '木', '金', '土'];
-    return dayList[itemDate.getDay()];
+    let beforeOneWeekDate = new Date();
+    beforeOneWeekDate.setDate(nowDate.getDate() - 7 );
+    if (beforeOneWeekDate <= itemDate) {
+      // Within one week
+      const dayList = ['日', '月', '火', '水', '木', '金', '土'];
+      return dayList[itemDate.getDay()] + '曜日';
+    } else {
+      if (nowDate.getFullYear() === itemDate.getFullYear()) {
+        // Within one year
+        return itemDate.getMonth() + 1 + '/' + itemDate.getDate();
+      } else {
+        // Over one year ago
+        return String(itemDate.getFullYear());
+      }
+    }
   }
 }
 
