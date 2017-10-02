@@ -143,7 +143,7 @@ export class User {
         }
       }
     }
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId + '/devices/' + String(platform), {
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId + '/devices/' + String(platform), {
       method: method,
       headers: Client.JsonHeaders(),
       body: JSON.stringify({
@@ -191,7 +191,7 @@ export class User {
    * Delete device token.
    */
   public removeDevice(platform: Platform): Promise<I.IErrorResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId + '/devices/' + String(platform), {
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId + '/devices/' + String(platform), {
       method: 'DELETE',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -256,7 +256,7 @@ export class User {
    * Please set the data of this object beforehand.
    */
   public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId, {
       method: 'PUT',
       headers: Client.JsonHeaders(),
       body: JSON.stringify(putUser)
@@ -296,7 +296,7 @@ export class User {
    * A different client might update an existing user's information while you use the application continuously.
    */
   public reflesh(): Promise<I.IFetchUserResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId, {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -343,7 +343,7 @@ export class User {
    * @param messages An array for message objects to send.
    */
   public sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
-    return fetch(Client._API_ENDPOINT + '/messages', {
+    return fetch(Client.API_ENDPOINT + '/messages', {
       method: 'POST',
       headers: Client.JsonHeaders(),
       body: JSON.stringify({messages: messages})
@@ -382,7 +382,7 @@ export class User {
    * @param roomId Room ID
    */
   public markAsRead(roomId: string): Promise<I.IErrorResponse> {
-    return fetch(Client._API_ENDPOINT + '/rooms/' + roomId + '/users/' + this.userId, {
+    return fetch(Client.API_ENDPOINT + '/rooms/' + roomId + '/users/' + this.userId, {
       method: 'PUT',
       headers: Client.JsonHeaders(),
       body: JSON.stringify({unreadCount: 0})
@@ -417,7 +417,7 @@ export class User {
    * Reset the number of unread for each room for the user.
    */
   public markAllAsRead(): Promise<I.IErrorResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId, {
       method: 'PUT',
       headers: Client.JsonHeaders(),
       body: JSON.stringify({unreadCount: 0})
@@ -455,7 +455,7 @@ export class User {
   public fileUpload(file: Blob): Promise<I.IPostAssetResponse> {
     let formData = new FormData();
     formData.append('asset', file);
-    return fetch(Client._API_ENDPOINT + '/assets', {
+    return fetch(Client.API_ENDPOINT + '/assets', {
       method: 'POST',
       headers: Client.BaseHeaders(),
       body: formData,
@@ -490,7 +490,7 @@ export class User {
   }
 
   public getContacts(): Promise<I.IFetchUsersResponse> {
-    return fetch(Client._API_ENDPOINT + '/contacts/' + this.userId, {
+    return fetch(Client.API_ENDPOINT + '/contacts/' + this.userId, {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -534,7 +534,7 @@ export class User {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId + '/blocks',
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId + '/blocks',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {
@@ -584,7 +584,7 @@ export class User {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(Client._API_ENDPOINT + '/users/' + this.userId + '/blocks',
+    return fetch(Client.API_ENDPOINT + '/users/' + this.userId + '/blocks',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {

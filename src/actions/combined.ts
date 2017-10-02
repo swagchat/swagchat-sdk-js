@@ -123,3 +123,4 @@ export const uploadAssetAndUpdateRoomRequestActionDispatch = () => store.dispatc
 export const createRoomAndFetchMessagesRequestActionDispatch = (room: IRoom) => store.dispatch(createRoomAndFetchMessagesRequestActionCreator(room));
 export const uploadAssetAndCreateRoomAndFetchMessagesRequestActionDispatch = () => store.dispatch(uploadAssetAndCreateRoomAndFetchMessagesRequestActionCreator());
 export const uploadAssetAndSendMessageRequestActionDispatch = (file: Blob) => store.dispatch(uploadAssetAndSendMessageRequestActionCreator(file));
+export const fetchRoomAndMessagesRequestActionDispatch = (roomId: string) => store.dispatch(fetchRoomAndMessagesRequestActionCreator(roomId));

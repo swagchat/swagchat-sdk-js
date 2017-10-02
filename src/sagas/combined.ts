@@ -6,6 +6,7 @@ import {
   IPostAssetResponse,
   IFetchMessagesResponse,
   RoomType,
+  Client,
 } from '../';
 import * as Scroll from 'react-scroll';
 import { replace } from 'react-router-redux';
@@ -78,8 +79,8 @@ function* gFetchRoomAndMessagesRequest(action: IFetchRoomRequestAction) {
       Scroll.animateScroll.scrollToBottom({duration: 300});
     };
 
-    if (state.client.client!.connection && state.client.client!.connection.conn) {
-      if (state.client.client!.connection.conn.readyState === state.client.client!.connection.conn.OPEN) {
+    if (Client.CONNECTION && Client.CONNECTION.conn) {
+      if (Client.CONNECTION.conn.readyState === Client.CONNECTION.conn.OPEN) {
         roomRes.room!.subscribeMessage(subMsgFunc);
       } else {
         state.client.client!.onConnected = () => {

@@ -1,8 +1,8 @@
 import { takeLatest, ForkEffect, select, put, call } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { IFetchUserResponse } from '../';
+import { IFetchUserResponse, Client } from '../';
 import { State } from '../stores';
-import { fetchRoomAndMessagesRequestActionCreator } from '../actions/combined';
+import { fetchRoomAndMessagesRequestActionCreator, fetchRoomAndMessagesRequestActionDispatch } from '../actions/combined';
 import { fetchUserRequestFailureActionCreator } from '../actions/user';
 import { fetchRoomRequestActionCreator } from '../actions/room';
 import { clearModalActionCreator } from '../actions/style';
@@ -42,19 +42,23 @@ function* gLocationChange() {
     yield put(clearMessagesActionCreator());
     yield put(fetchUserRequestActionCreator(state.client.client!.user.userId));
   } else if (messagePathRegExp || roomSettingPathRegExp) {
-    let roomId;
+    let roomIds: RegExpMatchArray | null;
     if (messagePathRegExp) {
       // MessagePage
       yield put(clearMessagesActionCreator());
-      roomId = pathname.match(new RegExp(state.setting.messageRoutePath + '/([a-zA-z0-9-]+)'));
-      if (roomId) {
-        yield put(fetchRoomAndMessagesRequestActionCreator(roomId[1]));
+      roomIds = pathname.match(new RegExp(state.setting.messageRoutePath + '/([a-zA-z0-9-]+)'));
+      if (roomIds) {
+        if (Client.CONNECTION) {
+          state.client.client!.onConnected = () => fetchRoomAndMessagesRequestActionDispatch(roomIds![1]);
+        } else {
+          yield put(fetchRoomAndMessagesRequestActionCreator(roomIds[1]));
+        }
       }
     } else if (roomSettingPathRegExp) {
       // RoomSettingPage
-      roomId = pathname.match(new RegExp(state.setting.roomSettingRoutePath + '/([a-zA-z0-9-]+)'));
-      if (roomId) {
-        yield put(fetchRoomRequestActionCreator(roomId[1]));
+      roomIds = pathname.match(new RegExp(state.setting.roomSettingRoutePath + '/([a-zA-z0-9-]+)'));
+      if (roomIds) {
+        yield put(fetchRoomRequestActionCreator(roomIds[1]));
       }
     }
   } else if (selectContactPathRegExp) {

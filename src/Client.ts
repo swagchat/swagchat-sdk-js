@@ -8,9 +8,9 @@ export class Client {
   private static _API_SECRET: string;
   private static _REALTIME_CONFIG: I.IRealtimeConfig;
   private static _ACCESS_TOKEN: string | '';
-  public static _API_ENDPOINT: string;
+  public static API_ENDPOINT: string;
+  public static CONNECTION: Realtime;
   public user: User;
-  public connection: Realtime;
 
   static get API_KEY(): string {
     return this._API_KEY;
@@ -21,15 +21,15 @@ export class Client {
   }
 
   set onConnected(callback: Function) {
-    this.connection.onConnected = callback;
+    Client.CONNECTION.onConnected = callback;
   }
 
   set onError(callback: Function) {
-    this.connection.onError = callback;
+    Client.CONNECTION.onError = callback;
   }
 
   set onClosed(callback: Function) {
-    this.connection.onClosed = callback;
+    Client.CONNECTION.onClosed = callback;
   }
 
   static BaseHeaders(): Object {
@@ -51,7 +51,7 @@ export class Client {
     logger('api', 'info', 'Initializing API Client...');
     Client._API_KEY = params.apiKey;
     Client._API_SECRET = params.apiSecret;
-    Client._API_ENDPOINT = params.apiEndpoint;
+    Client.API_ENDPOINT = params.apiEndpoint;
     if (params.hasOwnProperty('realtime') && params.realtime!.hasOwnProperty('endpoint') && params.realtime!.endpoint !== '') {
       Client._REALTIME_CONFIG = <I.IRealtimeConfig>params.realtime;
     }
@@ -60,11 +60,11 @@ export class Client {
   }
 
   public socketClose() {
-    this.connection.close();
+    Client.CONNECTION.close();
   }
 
   public auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + params.userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + params.userId, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + params.accessToken,
@@ -72,7 +72,7 @@ export class Client {
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((user) => {
-          this.connection = new Realtime(Client._REALTIME_CONFIG.endpoint, user.userId);
+          Client.CONNECTION = new Realtime(Client._REALTIME_CONFIG.endpoint, user.userId);
 
           Client._ACCESS_TOKEN = params.accessToken || '';
           this.user = new User(user);
@@ -111,7 +111,7 @@ export class Client {
   }
 
   public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
-    return fetch(Client._API_ENDPOINT + '/users', {
+    return fetch(Client.API_ENDPOINT + '/users', {
       method: 'POST',
       headers: Client.JsonHeaders(),
       body: JSON.stringify(createUserObject)
@@ -146,7 +146,7 @@ export class Client {
   }
 
   public getUsers(): Promise<I.IFetchUsersResponse> {
-    return fetch(Client._API_ENDPOINT + '/users', {
+    return fetch(Client.API_ENDPOINT + '/users', {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -180,7 +180,7 @@ export class Client {
   }
 
   public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + userId, {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -222,7 +222,7 @@ export class Client {
   }
 
   public removeUser(userId: string): Promise<I.IErrorResponse> {
-    return fetch(Client._API_ENDPOINT + '/users/' + userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + userId, {
       method: 'DELETE',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -255,7 +255,7 @@ export class Client {
   }
 
   public createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse> {
-    return fetch(Client._API_ENDPOINT + '/rooms', {
+    return fetch(Client.API_ENDPOINT + '/rooms', {
       method: 'POST',
       headers: Client.JsonHeaders(),
       body: JSON.stringify(createRoomObject)
@@ -264,7 +264,7 @@ export class Client {
         return response.json().then((room) => {
           return (
             {
-              room: new Room(this.connection, room),
+              room: new Room(room),
               error: null,
             } as I.IFetchRoomResponse
           );
@@ -290,7 +290,7 @@ export class Client {
   }
 
   public getRooms(): Promise<I.IFetchRoomsResponse> {
-    return fetch(Client._API_ENDPOINT + '/rooms', {
+    return fetch(Client.API_ENDPOINT + '/rooms', {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -324,7 +324,7 @@ export class Client {
   }
 
   public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-    return fetch(Client._API_ENDPOINT + '/rooms/' + roomId, {
+    return fetch(Client.API_ENDPOINT + '/rooms/' + roomId, {
       method: 'GET',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
@@ -332,7 +332,7 @@ export class Client {
       return response.json().then((room) => {
         return (
           {
-            room: new Room(this.connection, room),
+            room: new Room(room),
             error: null,
           } as I.IFetchRoomResponse
         );
@@ -365,7 +365,7 @@ export class Client {
   }
 
   public removeRoom(roomId: string): Promise<I.IErrorResponse> {
-    return fetch(Client._API_ENDPOINT + '/rooms/' + roomId, {
+    return fetch(Client.API_ENDPOINT + '/rooms/' + roomId, {
       method: 'DELETE',
       headers: Client.JsonHeaders(),
     }).then((response: Response) => {
