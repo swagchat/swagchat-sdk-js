@@ -36,6 +36,7 @@ export class Client {
     return {
       'X-SwagChat-Api-Key': Client._API_KEY,
       'X-SwagChat-Api-Secret': Client._API_SECRET,
+      'Authorization': 'Bearer ' + Client._ACCESS_TOKEN,
     };
   }
 
@@ -45,21 +46,6 @@ export class Client {
       {'Content-Type': 'application/json'},
     );
   }
-
-  // private _baseHeaders(): Object {
-  //   return {
-  //     'X-SwagChat-Api-Key': this._apiKey,
-  //     'X-SwagChat-Api-Secret': this._apiSecret,
-  //     'Authorization': 'Bearer ' + Client._ACCESS_TOKEN,
-  //   };
-  // }
-
-  // private _jsonHeaders(): Object {
-  //   return Object.assign(
-  //     this._baseHeaders(),
-  //     {'Content-Type': 'application/json'},
-  //   );
-  // }
 
   constructor(params: I.IClientParams) {
     logger('api', 'info', 'Initializing API Client...');
