@@ -1,4 +1,4 @@
-import { IMessage, createMessage } from '../';
+import { IMessage, createMessage, mergeList, messageList2map } from '../';
 import { IMessageState } from '../stores/message';
 import {
   IBeforeFetchMessagesRequestAction,
@@ -24,11 +24,13 @@ const getInitialState = (): IMessageState => ({
   messagesAllCount: 0,
   messagesLimit: 0,
   messagesOffset: 0,
-  messages: {},
+  messageMap: {},
+  messageList: [],
   createMessages: [],
 });
 
 export function message(state: IMessageState = getInitialState(), action: MessageActions): IMessageState {
+  let mergedList: IMessage[];
   switch (action.type) {
     case BEFORE_FETCH_MESSAGES_REQUEST:
       const beforeMessagesFetchAction = <IBeforeFetchMessagesRequestAction>action;
@@ -58,16 +60,13 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         newOffset = 0;
       }
       const messagesFetchAction = <IFetchMessagesRequestSuccessAction>action;
-      let tmpMessages: {[key: string]: IMessage} = {};
-      messagesFetchAction.messages.messages.map((message: IMessage) => {
-        tmpMessages[message.messageId!] = message;
-      });
-      const newMessages = Object.assign(tmpMessages, state.messages);
+      mergedList = mergeList(state.messageList, messagesFetchAction.messages.messages);
       return Object.assign(
         {},
         state,
         {
-          messages: newMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
           messagesLimit: newLimit,
           messagesOffset: newOffset,
         }
@@ -105,23 +104,18 @@ export function message(state: IMessageState = getInitialState(), action: Messag
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
       const messagesSendAction = <ISendMessagesRequestSuccessAction>action;
-      let tmpAddMessages: {[key: string]: IMessage} = {};
-      messagesSendAction.messages.map((message: IMessage) => {
-        tmpAddMessages[message.messageId!] = message;
-      });
-      let addMessages;
-      if (state.messages) {
-        addMessages = Object.assign(state.messages, tmpAddMessages);
+      if (state.messageMap) {
+        mergedList = mergeList(state.messageList, messagesSendAction.messageList);
       } else {
-        addMessages = tmpAddMessages;
+        mergedList = messagesSendAction.messageList;
       }
-
       return Object.assign(
         {},
         state,
         {
           createMessages: [],
-          messages: addMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
         }
       );
     case SEND_MESSAGES_REQUEST_FAILURE:
@@ -135,22 +129,17 @@ export function message(state: IMessageState = getInitialState(), action: Messag
       );
     case UPDATE_MESSAGES:
       const updateMessageAction = <IUpdateMessagesAction>action;
-      let tmpUpdateMessages: {[key: string]: IMessage} = {};
-      updateMessageAction.messages.forEach(message => {
-        tmpUpdateMessages[message.messageId!] = message;
-      });
-      let updateMessages: {[key: string]: IMessage} = {};
-      if (state.messages) {
-        updateMessages = Object.assign(state.messages, tmpUpdateMessages);
+      if (state.messageMap) {
+        mergedList = mergeList(state.messageList, updateMessageAction.messageList);
       } else {
-        updateMessages = tmpUpdateMessages;
+        mergedList = updateMessageAction.messageList;
       }
-
       return Object.assign(
         {},
         state,
         {
-          messages: updateMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
         }
       );
     case CLEAR_MESSAGES:
@@ -158,7 +147,8 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         {},
         state,
         {
-          messages: null,
+          messageMap: {},
+          messageList: [],
           messagesAllCount: 0,
           messagesLimit: 0,
           messagesOffset: 0,

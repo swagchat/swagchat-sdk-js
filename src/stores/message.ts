@@ -4,6 +4,7 @@ export interface IMessageState {
   messagesAllCount: number;
   messagesLimit: number;
   messagesOffset: number;
-  messages: {[key: string]: IMessage};
+  messageMap: {[key: string]: IMessage};
+  messageList: IMessage[];
   createMessages: IMessage[];
 }

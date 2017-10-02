@@ -78,11 +78,11 @@ export const sendMessagesRequestActionCreator = (): ISendMessagesRequestAction =
 });
 
 export interface ISendMessagesRequestSuccessAction extends IMessageBaseAction {
-  messages: IMessage[];
+  messageList: IMessage[];
 }
-export const sendMessagesRequestSuccessActionCreator = (messages: IMessage[]): ISendMessagesRequestSuccessAction => ({
+export const sendMessagesRequestSuccessActionCreator = (messageList: IMessage[]): ISendMessagesRequestSuccessAction => ({
   type: SEND_MESSAGES_REQUEST_SUCCESS,
-  messages: messages,
+  messageList: messageList,
 });
 
 export interface ISendMessagesRequestFailureAction extends IMessageBaseAction {
@@ -94,11 +94,11 @@ export const sendMessagesRequestFailureActionCreator = (problemDetail: IProblemD
 });
 
 export interface IUpdateMessagesAction extends IMessageBaseAction {
-  messages: IMessage[];
+  messageList: IMessage[];
 }
-export const updateMessagesActionCreator = (messages: IMessage[]): IUpdateMessagesAction => ({
+export const updateMessagesActionCreator = (messageList: IMessage[]): IUpdateMessagesAction => ({
   type: UPDATE_MESSAGES,
-  messages: messages,
+  messageList: messageList,
 });
 
 export interface IClearMessagesAction extends IMessageBaseAction {

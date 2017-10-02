@@ -1,4 +1,4 @@
-import { IUserForRoom, IUserMini } from './';
+import { IUserForRoom, IUserMini, IMessage } from './';
 import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -166,4 +166,34 @@ export function logger(label: string, level: string, message: string) {
         default:
             break;
     }
+}
+
+export function mergeList(sortedList: IMessage[], unsortedList: IMessage[]): IMessage[] {
+  unsortedList.sort(function(a: IMessage, b: IMessage) {
+    if (new Date(a.created!) < new Date(b.created!)) return -1;
+    if (new Date(a.created!) > new Date(b.created!)) return 1;
+    return 0;
+  });
+
+  let mergedList: IMessage[] = [];
+  while (sortedList.length || unsortedList.length) {
+    if (sortedList.length === 0) {
+      mergedList.push(unsortedList.shift()!);
+    } else if (unsortedList.length === 0) {
+      mergedList.push(sortedList.shift()!);
+    } else if (new Date(sortedList[0].created!) > new Date(unsortedList[0].created!)) {
+      mergedList.push(unsortedList.shift()!);
+    } else {
+      mergedList.push(sortedList.shift()!);
+    }
+  }
+  return mergedList;
+}
+
+export function messageList2map(messageList: IMessage[]): {[key: string]: IMessage} {
+  let messages: {[key: string]: IMessage} = {};
+  messageList.forEach(message => {
+    messages[message.messageId!] = message;
+  });
+  return messages;
 }

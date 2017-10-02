@@ -24,10 +24,10 @@ function* gFetchMessagesRequest() {
     roomId = state.room.room.roomId;
   }
   const {messages, error}: IFetchMessagesResponse = yield call(() => {
-      return state.client.currentRoom!.getMessages({
-        limit: state.message.messagesLimit,
-        offset: state.message.messagesOffset,
-      });
+    return state.client.currentRoom!.getMessages({
+      limit: state.message.messagesLimit,
+      offset: state.message.messagesOffset,
+    });
   });
   if (error) {
     yield put(fetchMessagesRequestFailureActionCreator(error!));
