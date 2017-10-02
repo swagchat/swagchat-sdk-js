@@ -1,5 +1,5 @@
-import { IUserForRoom, IUserMini } from '../';
-import * as I from '../interface';
+import { IUserForRoom, IUserMini } from './';
+import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
   const nowDate = new Date();

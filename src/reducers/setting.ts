@@ -208,8 +208,7 @@ export const setting = (state: ISettingState = init(), action: SettingActions) =
           selectContactRoutePath: (<ISetSelectContactRoutePathAction>action).selectContactRoutePath,
         }
       );
-
-      default:
-          return state;
+    default:
+      return state;
   }
 };

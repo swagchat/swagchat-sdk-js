@@ -1,6 +1,5 @@
 import { IUserState } from '../stores/user';
 import {
-  ISetAuthParamsAction,
   IFetchContactsRequestSuccessAction,
   IFetchContactsRequestFailureAction,
   IFetchUserRequestSuccessAction,
@@ -11,7 +10,6 @@ import {
   IUserUnBlockRequestSuccessAction,
   IUserUnBlockRequestFailureAction,
   IUpdateSelectContactsAction,
-  SET_AUTH_PARAMS,
   FETCH_CONTACTS_REQUEST_SUCCESS,
   FETCH_CONTACTS_REQUEST_FAILURE,
   FETCH_USER_REQUEST_SUCCESS,
@@ -28,35 +26,16 @@ import {
 } from '../actions/user';
 
 const getInitialState = (): IUserState => ({
-  apiKey: '',
-  apiEndpoint: '',
-  realtimeEndpoint: '',
-  userId: '',
-  accessToken: '',
   user: null,
   userRooms: [],
   users: [],
   contacts: [],
   selectContacts: {},
   blocks: [],
-  problemDetail: null,
 });
 
 export function user(state: IUserState = getInitialState(), action: UserActions): IUserState {
   switch (action.type) {
-    case SET_AUTH_PARAMS:
-      const setUserAuthParamsAction = <ISetAuthParamsAction>action;
-      return Object.assign(
-        {},
-        state,
-        {
-          apiKey: setUserAuthParamsAction.apiKey,
-          apiEndpoint: setUserAuthParamsAction.apiEndpoint,
-          realtimeEndpoint: setUserAuthParamsAction.realtimeEndpoint,
-          userId: setUserAuthParamsAction.userId,
-          accessToken: setUserAuthParamsAction.accessToken,
-        }
-      );
     case FETCH_CONTACTS_REQUEST_SUCCESS:
       return Object.assign(
         {},
@@ -75,14 +54,14 @@ export function user(state: IUserState = getInitialState(), action: UserActions)
         }
       );
     case FETCH_USER_REQUEST_SUCCESS:
-      const userFetchRequestSuccessAction = <IFetchUserRequestSuccessAction>action;
+      const fursAction = <IFetchUserRequestSuccessAction>action;
       return Object.assign(
         {},
         state,
         {
-          user: userFetchRequestSuccessAction.user,
-          userRooms: userFetchRequestSuccessAction.user.rooms,
-          blocks: userFetchRequestSuccessAction.user.blocks,
+          user: fursAction.user,
+          userRooms: fursAction.user.rooms,
+          blocks: fursAction.user.blocks,
         }
       );
     case FETCH_USER_REQUEST_FAILURE:

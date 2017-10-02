@@ -1,14 +1,12 @@
-import { Client } from '.';
+import { User, Room } from '.';
 import {
   ISettingState,
 } from './stores/';
 
 export interface IClientParams {
   apiKey: string;
-  apiSecret?: string;
+  apiSecret: string;
   apiEndpoint: string;
-  userId: string;
-  userAccessToken?: string;
   realtime?: IRealtimeConfig;
 }
 
@@ -16,15 +14,12 @@ export interface IRealtimeConfig {
   endpoint: string;
 }
 
-export interface IUserParams {
-  client: Client;
-  data: IUser;
-}
+// export interface IUserParams {
+//   client: Client;
+//   data: IUser;
+// }
 
 export interface IAuthParams {
-  apiKey: string;
-  apiEndpoint: string;
-  realtimeEndpoint?: string;
   userId: string;
   accessToken: string;
 }
@@ -82,10 +77,10 @@ export interface IRoomForUser {
   ruModified: string;
 }
 
-export interface IRoomParams {
-  client: Client;
-  data: IRoom;
-}
+// export interface IRoomParams {
+//   client: Client;
+//   data: IRoom;
+// }
 
 export interface IRoom {
   roomId?: string;
@@ -201,7 +196,7 @@ export interface IFetchUsersResponse {
 }
 
 export interface IFetchUserResponse {
-  user: IUser | null;
+  user: User | null;
   error: IProblemDetail | null;
 }
 
@@ -216,7 +211,7 @@ export interface IFetchRoomsResponse {
 }
 
 export interface IFetchRoomResponse {
-  room: IRoom | null;
+  room: Room | null;
   error: IProblemDetail | null;
 }
 

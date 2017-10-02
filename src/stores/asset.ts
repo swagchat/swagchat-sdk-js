@@ -1,7 +1,6 @@
-import { IAsset, IProblemDetail } from '../';
+import { IAsset } from '../';
 
 export interface IAssetState {
   file: Blob | null;
   asset: IAsset | null;
-  problemDetail: IProblemDetail | null;
 }

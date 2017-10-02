@@ -2,14 +2,15 @@ import { Action } from 'redux';
 import { store } from '../stores';
 import {
   IMessageBodyMenuStyle,
-  // IPluginMessageTextInteractionStyle,
 } from '../stores/style';
 
-export const UPDATE_STYLE = 'UPDATE_STYLE';
+export const UPDATE_MODAL = 'UPDATE_MODAL';
+export const CLEAR_MODAL = 'CLEAR_MODAL';
 export const UPDATE_MESSAGE_BODY_MENU_STYLE = 'UPDATE_MESSAGE_BODY_MENU_STYLE';
 export const UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE = 'UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE';
 
-export type StyleActionTypes = typeof UPDATE_STYLE
+export type StyleActionTypes = typeof UPDATE_MODAL
+  | typeof CLEAR_MODAL
   | typeof UPDATE_MESSAGE_BODY_MENU_STYLE
   | typeof UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE
 ;
@@ -18,14 +19,21 @@ export interface IStyleBaseAction extends Action {
   type: StyleActionTypes;
 }
 
-// export interface IUpdateStyleAction extends IStyleBaseAction {
-//   type: StyleActionTypes;
-//   style: Object;
-// }
-// export const updateStyleActionCreator = (style: Object): IUpdateStyleAction => ({
-//   type: UPDATE_STYLE,
-//   style: style,
-// });
+export interface IUpdateModalAction extends IStyleBaseAction {
+  type: StyleActionTypes;
+  modalKey: string;
+}
+export const updateModalActionCreator = (modalKey: string): IUpdateModalAction => ({
+  type: UPDATE_MODAL,
+  modalKey: modalKey,
+});
+
+export interface IClearModalAction extends IStyleBaseAction {
+  type: StyleActionTypes;
+}
+export const clearModalActionCreator = (): IClearModalAction => ({
+  type: CLEAR_MODAL
+});
 
 export interface IUpdateMessageBodyMenuStyleAction extends IStyleBaseAction {
   type: StyleActionTypes;
@@ -36,19 +44,12 @@ export const updateMessageBodyMenuStyleActionCreator = (messageBodyMenuStyle: IM
   messageBodyMenuStyle: messageBodyMenuStyle,
 });
 
-// export interface IUpdatePluginMessageTextInteractionStyleAction extends IStyleBaseAction {
-//   type: StyleActionTypes;
-//   pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle;
-// }
-// export const updatePluginMessageTextInteractionStyleActionCreator = (pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle): IUpdatePluginMessageTextInteractionStyleAction => ({
-//   type: UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
-//   pluginMessageTextInteractionStyle: pluginMessageTextInteractionStyle,
-// });
-
 export type StyleActions = IStyleBaseAction
-  // | IUpdateStyleAction
+  | IUpdateModalAction
+  | IClearModalAction
   | IUpdateMessageBodyMenuStyleAction
-  // | IUpdatePluginMessageTextInteractionStyleAction
 ;
 
+export const updateModalActionDispatch = (modalKey: string) => store.dispatch(updateModalActionCreator(modalKey));
+export const clearModalActionDispatch = () => store.dispatch(clearModalActionCreator());
 export const updateMessageBodyMenuStyleActionDispatch = (messageBodyMenuStyle: IMessageBodyMenuStyle) => store.dispatch(updateMessageBodyMenuStyleActionCreator(messageBodyMenuStyle));

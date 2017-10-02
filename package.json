@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/swagchat/swagchat-sdk-js"
+    "url": "git://github.com/swagchat/sdk-js"
   },
   "license": "MIT",
   "dependencies": {

@@ -3,11 +3,11 @@
  */
 export * from './Client';
 export * from './Realtime';
-export * from './interface';
-export * from './user';
-export * from './room';
+export * from './User';
+export * from './Room';
 export * from './const';
-export * from './utils';
+export * from './util';
+export * from './interface';
 
 export * from './actions/asset';
 export * from './actions/client';

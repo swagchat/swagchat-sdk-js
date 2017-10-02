@@ -25,7 +25,6 @@ const getInitialState = (): IMessageState => ({
   messagesLimit: 0,
   messagesOffset: 0,
   messages: {},
-  problemDetail: null,
   createMessages: [],
 });
 
@@ -169,31 +168,3 @@ export function message(state: IMessageState = getInitialState(), action: Messag
       return state;
   }
 }
-
-
-    // case MESSAGES_FETCH:
-    //   if (state.messagesAllCount === 0) {
-    //     return state;
-    //   }
-    //   let newLimit = state.messagesLimit;
-    //   let newOffset = state.messagesOffset - state.messagesLimit;
-    //   if (newOffset < 0) {
-    //     newLimit = state.messagesOffset;
-    //     newOffset = 0;
-    //   }
-    //   const messagesFetchAction = <IMessagesFetchAction>action;
-    //   let tmpMessages: {[key: string]: IMessage} = {};
-    //   messagesFetchAction.messages.messages.map((message: IMessage) => {
-    //     tmpMessages[message.messageId!] = message;
-    //   });
-    //   const newMessages = Object.assign(tmpMessages, state.messages);
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     {
-    //       messagesAllCount: messagesFetchAction.messages.allCount,
-    //       messages: newMessages,
-    //       messagesLimit: newLimit,
-    //       messagesOffset: newOffset,
-    //     }
-    //   );
