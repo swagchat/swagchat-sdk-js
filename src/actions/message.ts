@@ -12,6 +12,7 @@ export const SEND_MESSAGES_REQUEST_SUCCESS = 'SEND_MESSAGES_REQUEST_SUCCESS';
 export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
+export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
 
 export type MessageActionTypes = typeof BEFORE_FETCH_MESSAGES_REQUEST
   | typeof FETCH_MESSAGES_REQUEST
@@ -23,6 +24,7 @@ export type MessageActionTypes = typeof BEFORE_FETCH_MESSAGES_REQUEST
   | typeof SEND_MESSAGES_REQUEST_FAILURE
   | typeof UPDATE_MESSAGES
   | typeof CLEAR_MESSAGES
+  | typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION
 ;
 
 export interface IMessageBaseAction extends Action {
@@ -105,6 +107,12 @@ export interface IClearMessagesAction extends IMessageBaseAction {
 }
 export const clearMessagesActionCreator = (): IClearMessagesAction => ({
   type: CLEAR_MESSAGES
+});
+
+export interface IResetScrollBottomAnimationDurationAction extends IMessageBaseAction {
+}
+export const resetScrollBottomAnimationDurationActionCreator = (): IResetScrollBottomAnimationDurationAction => ({
+  type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
 });
 
 export type MessageActions = IBeforeFetchMessagesRequestAction

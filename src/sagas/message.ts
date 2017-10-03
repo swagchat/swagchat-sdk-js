@@ -1,6 +1,5 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import { IFetchMessagesResponse, ISendMessagesResponse } from '../';
-import * as Scroll from 'react-scroll';
 import {
   FETCH_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST,
@@ -50,7 +49,6 @@ function* gSendMessagesRequest() {
       messages[i].created = date2ISO3339String(new Date());
     }
     yield put(sendMessagesRequestSuccessActionCreator(messages));
-    Scroll.animateScroll.scrollToBottom({duration: 300});
   }
 }
 

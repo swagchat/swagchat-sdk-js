@@ -253,6 +253,7 @@ export interface IAddonMessageItemProps {
   message: IMessage;
   user: IUserForRoom;
   myUserId: string;
+  onRenderComplete?: () => {};
 }
 
 export interface IAddonMessageInteractionProps {

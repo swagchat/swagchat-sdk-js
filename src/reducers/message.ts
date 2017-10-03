@@ -1,5 +1,5 @@
 import { IMessage, createMessage, mergeList, messageList2map } from '../';
-import { IMessageState } from '../stores/message';
+import { IMessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   IBeforeFetchMessagesRequestAction,
   IFetchMessagesRequestSuccessAction,
@@ -16,6 +16,7 @@ import {
   SEND_MESSAGES_REQUEST_FAILURE,
   UPDATE_MESSAGES,
   CLEAR_MESSAGES,
+  RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
   MessageActions,
 } from '../actions/message';
 import { store, State } from '../stores';
@@ -27,6 +28,7 @@ const getInitialState = (): IMessageState => ({
   messageMap: {},
   messageList: [],
   createMessages: [],
+  scrollBottomAnimationDuration: 0,
 });
 
 export function message(state: IMessageState = getInitialState(), action: MessageActions): IMessageState {
@@ -116,6 +118,7 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           createMessages: [],
           messageMap: messageList2map(mergedList),
           messageList: mergedList,
+          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
     case SEND_MESSAGES_REQUEST_FAILURE:
@@ -140,6 +143,7 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         {
           messageMap: messageList2map(mergedList),
           messageList: mergedList,
+          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
     case CLEAR_MESSAGES:
@@ -152,6 +156,14 @@ export function message(state: IMessageState = getInitialState(), action: Messag
           messagesAllCount: 0,
           messagesLimit: 0,
           messagesOffset: 0,
+        }
+      );
+    case RESET_SCROLL_BOTTOM_ANIMATION_DURATION:
+      return Object.assign(
+        {},
+        state,
+        {
+          scrollBottomAnimationDuration: 0,
         }
       );
     default:

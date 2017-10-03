@@ -8,7 +8,6 @@ import {
   RoomType,
   Client,
 } from '../';
-import * as Scroll from 'react-scroll';
 import { replace } from 'react-router-redux';
 
 import { setCurrentRoomActionCreator } from '../actions/client';
@@ -68,7 +67,6 @@ function* gFetchRoomAndMessagesRequest(action: IFetchRoomRequestAction) {
     if (fetchMessageRes.messages) {
       yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(action.roomId));
-      Scroll.animateScroll.scrollToBottom({duration: 0});
     } else {
       yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
     }
@@ -76,7 +74,6 @@ function* gFetchRoomAndMessagesRequest(action: IFetchRoomRequestAction) {
     const subMsgFunc = (message: IMessage) => {
       console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);
       store.dispatch(updateMessagesActionCreator([message]));
-      Scroll.animateScroll.scrollToBottom({duration: 300});
     };
 
     if (Client.CONNECTION && Client.CONNECTION.conn) {
@@ -184,7 +181,6 @@ function* gCreateRoomAndFetchMessagesRequest(action: ICreateRoomAndFetchMessages
     if (fetchMessageRes.messages) {
       yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(roomRes.room!.roomId!));
-      Scroll.animateScroll.scrollToBottom({duration: 0});
       store.dispatch(replace('/messages/' + roomRes.room.roomId));
       roomRes.room!.subscribeMessage((message: IMessage) => {
         console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);
@@ -278,7 +274,6 @@ function* gUploadAssetAndCreateRoomAndFetchMessagesRequest() {
     if (fetchMessageRes.messages) {
       yield put(fetchMessagesRequestSuccessActionCreator(fetchMessageRes.messages!));
       yield put(markAsReadRequestActionCreator(roomRes.room!.roomId!));
-      Scroll.animateScroll.scrollToBottom({duration: 0});
       store.dispatch(replace('/messages/' + roomRes.room.roomId));
       roomRes.room!.subscribeMessage((message: IMessage) => {
         console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);

@@ -6,7 +6,7 @@ import { fetchRoomAndMessagesRequestActionCreator, fetchRoomAndMessagesRequestAc
 import { fetchUserRequestFailureActionCreator } from '../actions/user';
 import { fetchRoomRequestActionCreator } from '../actions/room';
 import { clearModalActionCreator } from '../actions/style';
-import { clearMessagesActionCreator } from '../actions/message';
+import { clearMessagesActionCreator, resetScrollBottomAnimationDurationActionCreator } from '../actions/message';
 import { fetchUserRequestSuccessActionCreator, fetchContactsRequestActionCreator, fetchUserRequestActionCreator } from '../actions/user';
 
 function* gLocationChange() {
@@ -46,9 +46,11 @@ function* gLocationChange() {
     if (messagePathRegExp) {
       // MessagePage
       yield put(clearMessagesActionCreator());
+      yield put(resetScrollBottomAnimationDurationActionCreator());
       roomIds = pathname.match(new RegExp(state.setting.messageRoutePath + '/([a-zA-z0-9-]+)'));
       if (roomIds) {
         if (Client.CONNECTION) {
+          yield put(fetchRoomAndMessagesRequestActionCreator(roomIds[1]));
           state.client.client!.onConnected = () => fetchRoomAndMessagesRequestActionDispatch(roomIds![1]);
         } else {
           yield put(fetchRoomAndMessagesRequestActionCreator(roomIds[1]));
