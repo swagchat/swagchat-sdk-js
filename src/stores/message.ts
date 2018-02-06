@@ -10,4 +10,6 @@ export interface IMessageState {
   messageList: IMessage[];
   createMessages: IMessage[];
   scrollBottomAnimationDuration: number;
+  isSpeechMode: boolean;
+  speechSynthesisUtterance: SpeechSynthesisUtterance | null;
 }

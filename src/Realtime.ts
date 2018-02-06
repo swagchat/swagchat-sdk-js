@@ -15,17 +15,22 @@ export class Realtime {
   public onMessageReceived: Function | null;
   public onUserJoined: Function | null;
   public onUserLeft: Function | null;
+  public onSpeech2Text: Function | null;
 
-  constructor(endpoint: string, userId: string) {
+  constructor(endpoint: string, userId: string | null) {
     logger('realtime', 'info', 'Connecting Realtime Server...');
 
     this.endpoint = endpoint;
-    this.userId = userId;
+    userId ? this.userId = userId : null;
     this.connect();
   }
 
   public connect() {
-    this.conn = new this.websocket(this.endpoint + '?userId=' + this.userId);
+    if (this.userId) {
+      this.conn = new this.websocket(this.endpoint + '?userId=' + this.userId);
+    } else {
+      this.conn = new this.websocket(this.endpoint);
+    }
     this.conn.addEventListener('open', (e: Event) => {
       logger('realtime', 'info', 'Connecting Realtime Server OK');
 

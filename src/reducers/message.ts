@@ -18,6 +18,10 @@ import {
   CLEAR_MESSAGES,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
   MessageActions,
+  SET_SPEECH_MODE,
+  ISetSpeechModeAction,
+  SET_SPEECH_SYNTHESIS_UTTERANCE,
+  ISetSpeechSynthesisUtteranceAction,
 } from '../actions/message';
 import { store, State } from '../stores';
 
@@ -29,6 +33,8 @@ const getInitialState = (): IMessageState => ({
   messageList: [],
   createMessages: [],
   scrollBottomAnimationDuration: 0,
+  isSpeechMode: false,
+  speechSynthesisUtterance: null,
 });
 
 export function message(state: IMessageState = getInitialState(), action: MessageActions): IMessageState {
@@ -164,6 +170,22 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         state,
         {
           scrollBottomAnimationDuration: 0,
+        }
+      );
+    case SET_SPEECH_MODE:
+      return Object.assign(
+        {},
+        state,
+        {
+          isSpeechMode: (<ISetSpeechModeAction>action).isSpeechMode,
+        }
+      );
+    case SET_SPEECH_SYNTHESIS_UTTERANCE:
+      return Object.assign(
+        {},
+        state,
+        {
+          speechSynthesisUtterance: (<ISetSpeechSynthesisUtteranceAction>action).speechSynthesisUtterance,
         }
       );
     default:

@@ -41,6 +41,7 @@ export interface IUser {
   isPublic?: boolean;
   isCanBlock?: boolean;
   isShowUsers?: boolean;
+  lang?: string;
   accessToken?: string;
   created?: string;
   modified?: string;
@@ -96,6 +97,7 @@ export interface IRoom {
   messageCount?: number;
   isCanLeft?: boolean;
   isShowUsers?: boolean;
+  speechMode?: number;
   created?: string;
   modified?: string;
   users?: IUserForRoom[];
@@ -151,6 +153,10 @@ export interface IMessage {
 export interface ISendMessagesResponse {
   messageIds: string[] | null;
   error: IProblemDetail | null;
+}
+
+export interface ITextPayload {
+  text: string;
 }
 
 export interface IAsset {
@@ -254,6 +260,7 @@ export interface IAddonMessageItemProps {
   user: IUserForRoom;
   myUserId: string;
   onRenderComplete?: () => {};
+  isLast: boolean;
 }
 
 export interface IAddonMessageInteractionProps {
@@ -281,4 +288,38 @@ export interface IAddonRoomListItemProps {
   userRoom: IRoomForUser;
   noAvatarImages: string[];
   onClick?: Function;
+}
+
+export interface ISetting {
+  values: {
+    roomListTitle: string;
+    noRoomListText: string;
+    noRoomListImage: string;
+    noMessageText: string;
+    noMessageImage: string;
+    inputMessagePlaceholderText: string;
+    roomSettingTitle: string;
+    roomMembersTitle: string;
+    selectContactTitle: string;
+    noContactListText: string;
+    noContactListImage: string;
+    noAvatarImages: string[];
+    blockUser: string;
+    doYouWantToBlockUser: string;
+    unblockUser: string;
+    doYouWantToUnblockUser: string;
+    editGroup: string;
+    leftRoom: string;
+    doYouWantToLeftRoom: string;
+    speechMode: number;
+    speechToText: number;
+  };
+  created: string;
+  modified: string;
+  expired: string;
+}
+
+export interface IFetchSettingResponse {
+  setting: ISetting | null;
+  error: IProblemDetail | null;
 }

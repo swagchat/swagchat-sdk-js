@@ -7,6 +7,8 @@ import {
   IFetchMessagesResponse,
   RoomType,
   Client,
+  ITextPayload,
+  setSpeechSynthesisUtteranceActionCreator,
 } from '../';
 import { replace } from 'react-router-redux';
 
@@ -71,9 +73,22 @@ function* gFetchRoomAndMessagesRequest(action: IFetchRoomRequestAction) {
       yield put(fetchMessagesRequestFailureActionCreator(fetchMessageRes.error!));
     }
 
+    let speechSynthesisUtterance: SpeechSynthesisUtterance;
+    if (window.speechSynthesis) {
+      speechSynthesisUtterance = new SpeechSynthesisUtterance();
+      yield put(setSpeechSynthesisUtteranceActionCreator(speechSynthesisUtterance));
+    }
     const subMsgFunc = (message: IMessage) => {
       console.info('%c[ReactSwagChat]Receive message(push)', 'color:' + logColor);
+      const state: State = store.getState();
+      if (window.speechSynthesis && state.message.isSpeechMode && message.userId !== state.user.user!.userId) {
+        const payload = message.payload as ITextPayload;
+        speechSynthesisUtterance.text = payload.text;
+        speechSynthesisUtterance.lang = state.client.client!.user.lang;
+        window.speechSynthesis.speak(speechSynthesisUtterance!);
+      }
       store.dispatch(updateMessagesActionCreator([message]));
+      store.dispatch(markAsReadRequestActionCreator(roomRes.room!.roomId));
     };
 
     if (Client.CONNECTION && Client.CONNECTION.conn) {
@@ -151,7 +166,7 @@ function* gCreateRoomAndFetchMessagesRequest(action: ICreateRoomAndFetchMessages
     }
     action.room.name = roomName;
     yield put(updateRoomNameActionCreator(roomName));
-    yield put(updateRoomPictureUrlActionCreator(randomAvatarUrl(state.setting.noAvatarImages)));
+    yield put(updateRoomPictureUrlActionCreator(randomAvatarUrl(state.setting.server!.values.noAvatarImages)));
   }
 
   if (action.room.type !== RoomType.ONE_ON_ONE) {

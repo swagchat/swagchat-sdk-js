@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
-import { Client, createQueryParams, logger } from './';
+import { Client, createQueryParams, logger, SpeechMode } from './';
 
 /**
  * Room class has API client, own data and the behaivor for itself.
@@ -111,6 +111,14 @@ export class Room {
 
   set isShowUsers(isShowUsers: boolean) {
     this._data.isShowUsers = isShowUsers;
+  }
+
+  get speechMode(): number {
+    return this._data.speechMode ? this._data.speechMode : SpeechMode.MANUAL;
+  }
+
+  set speechMode(speechMode: number) {
+    this._data.speechMode = speechMode;
   }
 
   get created(): string {

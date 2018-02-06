@@ -89,14 +89,6 @@ export class User {
     this._data.isCanBlock = isCanBlock;
   }
 
-  get isShowUsers(): boolean | undefined {
-    return this._data.isShowUsers;
-  }
-
-  set isShowUsers(isShowUsers: boolean | undefined) {
-    this._data.isShowUsers = isShowUsers;
-  }
-
   get metaData(): {[key: string]: string | number | boolean | Object} | undefined {
     return this._data.metaData;
   }
@@ -106,6 +98,26 @@ export class User {
       logger('api', 'error', 'Set metaData failure. metaData is not setting.');
     } else {
       this._data.metaData = metaData;
+    }
+  }
+
+  get isShowUsers(): boolean | undefined {
+    return this._data.isShowUsers;
+  }
+
+  set isShowUsers(isShowUsers: boolean | undefined) {
+    this._data.isShowUsers = isShowUsers;
+  }
+
+  get lang(): string {
+    return this._data.lang ? this._data.lang : '';
+  }
+
+  set lang(lang: string) {
+    if (!lang || lang === '' || typeof(lang) !== 'string') {
+      logger('api', 'error', 'Set lang failure. lang is not setting.');
+    } else {
+      this._data.lang = lang;
     }
   }
 

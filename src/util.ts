@@ -147,7 +147,7 @@ export function logger(label: string, level: string, message: string) {
     let labelName = 'SwagChatSDK';
     let logColor = apiLogColor;
     if (label === 'realtime') {
-        labelName = 'SwagChatSDK-REAL';
+        labelName = 'SwagchatSDK-RTM';
         logColor = realtimeLogColor;
     }
     switch (level) {

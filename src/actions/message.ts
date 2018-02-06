@@ -13,6 +13,8 @@ export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
+export const SET_SPEECH_MODE = 'SET_SPEECH_MODE';
+export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
 
 export type MessageActionTypes = typeof BEFORE_FETCH_MESSAGES_REQUEST
   | typeof FETCH_MESSAGES_REQUEST
@@ -25,6 +27,8 @@ export type MessageActionTypes = typeof BEFORE_FETCH_MESSAGES_REQUEST
   | typeof UPDATE_MESSAGES
   | typeof CLEAR_MESSAGES
   | typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION
+  | typeof SET_SPEECH_MODE
+  | typeof SET_SPEECH_SYNTHESIS_UTTERANCE
 ;
 
 export interface IMessageBaseAction extends Action {
@@ -115,6 +119,22 @@ export const resetScrollBottomAnimationDurationActionCreator = (): IResetScrollB
   type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
 });
 
+export interface ISetSpeechModeAction extends IMessageBaseAction {
+  isSpeechMode: boolean;
+}
+export const setSpeechModeActionCreator = (isSpeechMode: boolean): ISetSpeechModeAction => ({
+  type: SET_SPEECH_MODE,
+  isSpeechMode: isSpeechMode,
+});
+
+export interface ISetSpeechSynthesisUtteranceAction extends IMessageBaseAction {
+  speechSynthesisUtterance: SpeechSynthesisUtterance;
+}
+export const setSpeechSynthesisUtteranceActionCreator = (speechSynthesisUtterance: SpeechSynthesisUtterance): ISetSpeechSynthesisUtteranceAction => ({
+  type: SET_SPEECH_SYNTHESIS_UTTERANCE,
+  speechSynthesisUtterance: speechSynthesisUtterance,
+});
+
 export type MessageActions = IBeforeFetchMessagesRequestAction
   | IFetchMessagesRequestAction
   | IFetchMessagesRequestSuccessAction
@@ -124,8 +144,11 @@ export type MessageActions = IBeforeFetchMessagesRequestAction
   | ISendMessagesRequestFailureAction
   | ICreateMessageAction
   | IClearMessagesAction
+  | ISetSpeechModeAction
+  | ISetSpeechSynthesisUtteranceAction
 ;
 
 export const fetchMessagesRequestActionDispatch = () => store.dispatch(fetchMessagesRequestActionCreator());
 export const createMessageActionDispatch = (messageType: string, payload: Object) => store.dispatch(createMessageActionCreator(messageType, payload));
 export const sendMessagesRequestActionDispatch = () => store.dispatch(sendMessagesRequestActionCreator());
+export const setSpeechModeActionDispatch = (isSpeechMode: boolean) => store.dispatch(setSpeechModeActionCreator(isSpeechMode));

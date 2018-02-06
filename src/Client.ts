@@ -10,6 +10,7 @@ export class Client {
   private static _ACCESS_TOKEN: string | '';
   public static API_ENDPOINT: string;
   public static CONNECTION: Realtime;
+  public speechRt: Realtime;
   public user: User;
 
   static get API_KEY(): string {
@@ -108,6 +109,12 @@ export class Client {
         } as I.IProblemDetail,
       } as I.IFetchUserResponse;
     });
+  }
+
+  public createSpeechRt() {
+    let speechRt = new Realtime(Client._REALTIME_CONFIG.endpoint + '/speech', null);
+    speechRt.conn.binaryType = 'arraybuffer';
+    this.speechRt = speechRt;
   }
 
   public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
@@ -394,6 +401,47 @@ export class Client {
           title: error.message,
         } as I.IProblemDetail,
       } as I.IErrorResponse;
+    });
+  }
+
+  public getSetting(): Promise<I.IFetchSettingResponse> {
+    return fetch(Client.API_ENDPOINT + '/setting', {
+      method: 'GET',
+      headers: Client.JsonHeaders(),
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((setting) => {
+          return (
+            {
+              setting: setting,
+              error: null,
+            } as I.IFetchSettingResponse
+          );
+        });
+      } else if (response.status === 404) {
+        return {
+            setting: null,
+            error: {
+            title: response.statusText,
+          } as I.IProblemDetail,
+        } as I.IFetchSettingResponse;
+      } else {
+        return response.json().then((json) => {
+          return (
+            {
+              setting: null,
+              error: <I.IProblemDetail>json,
+            } as I.IFetchSettingResponse
+          );
+        });
+      }
+    }).catch((error) => {
+      return {
+        setting: null,
+        error: {
+          title: error.message,
+        } as I.IProblemDetail,
+      } as I.IFetchSettingResponse;
     });
   }
 }

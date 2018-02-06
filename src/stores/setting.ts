@@ -1,20 +1,13 @@
 import * as React from 'react';
+import { ISetting } from '../';
 
 export interface ISettingState {
-  setting: Object;
-  roomListTitle: string;
+  server: ISetting | null;
+  client: IClientSetting | null;
+}
+
+export interface IClientSetting {
   roomListTabbar: React.ComponentClass<any> | null;
-  noRoomListText: string;
-  noRoomListImage: string;
-  noMessageText: string;
-  noMessageImage: string;
-  inputMessagePlaceholderText: string;
-  roomSettingTitle: string;
-  roomMembersTitle: string;
-  selectContactTitle: string;
-  noContactListText: string;
-  noContactListImage: string;
-  noAvatarImages: string[];
   roomListRoutePath: string;
   messageRoutePath: string;
   roomSettingRoutePath: string;
