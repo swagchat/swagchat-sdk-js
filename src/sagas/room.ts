@@ -4,12 +4,7 @@ import {
   IFetchRoomResponse,
   IFetchRoomUsersResponse,
 } from '../';
-import {
-  updateRoom,
-  addRoomUsers,
-  removeRoomUsers,
-} from '../room';
-
+import { setCurrentRoomActionCreator } from '../actions/client';
 import {
   FETCH_ROOM_REQUEST,
   UPDATE_ROOM_REQUEST,
@@ -35,18 +30,20 @@ function* gFetchRoomRequest(action: IFetchRoomRequestAction) {
     return state.client.client!.getRoom(roomId);
   }, action.roomId);
   if (res.room) {
-    yield put(fetchRoomRequestSuccessActionCreator(res.room));
+    yield put(setCurrentRoomActionCreator(res.room));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room.data));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }
 }
 
 function* gUpdateRoomRequest(action: IUpdateRoomRequestAction) {
+  const state: State  = yield select();
   const res: IFetchRoomResponse = yield call((putRoom: IRoom) => {
-    return updateRoom(putRoom);
+    return state.client.currentRoom!.update(putRoom);
   }, action.putRoom);
   if (res.room) {
-    yield put(fetchRoomRequestSuccessActionCreator(res.room));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room.data));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }
@@ -64,7 +61,7 @@ function* gAddRoomUserRequest(action: IAddRoomUserRequestAction) {
     roomId = state.room.room.roomId;
   }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return addRoomUsers(roomId, userIds);
+    return state.client.currentRoom!.addUsers(userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(addRoomUserRequestSuccessActionCreator(res.roomUsers));
@@ -86,7 +83,7 @@ function* gRemoveRoomUserRequest(action: IRemoveRoomUserRequestAction) {
     roomId = state.room.room.roomId;
   }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return removeRoomUsers(roomId, userIds);
+    return state.client.currentRoom!.removeUsers(userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));

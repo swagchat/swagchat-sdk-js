@@ -44,8 +44,8 @@ if (process.env.NODE_ENV !== 'production') {
     duration: true,
   });
   middleware.push(sagaMiddleware, logger);
-  middleware.push(routerMiddleware(routerHistory));
 }
+middleware.push(routerMiddleware(routerHistory));
 
 export const store: Store<any> = createStore(
   combineReducers({

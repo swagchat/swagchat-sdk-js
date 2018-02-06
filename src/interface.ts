@@ -1,14 +1,12 @@
-import { Client } from '.';
+import { User, Room } from '.';
 import {
   ISettingState,
 } from './stores/';
 
 export interface IClientParams {
   apiKey: string;
-  apiSecret?: string;
+  apiSecret: string;
   apiEndpoint: string;
-  userId: string;
-  userAccessToken?: string;
   realtime?: IRealtimeConfig;
 }
 
@@ -16,15 +14,12 @@ export interface IRealtimeConfig {
   endpoint: string;
 }
 
-export interface IUserParams {
-  client: Client;
-  data: IUser;
-}
+// export interface IUserParams {
+//   client: Client;
+//   data: IUser;
+// }
 
 export interface IAuthParams {
-  apiKey: string;
-  apiEndpoint: string;
-  realtimeEndpoint?: string;
   userId: string;
   accessToken: string;
 }
@@ -46,6 +41,7 @@ export interface IUser {
   isPublic?: boolean;
   isCanBlock?: boolean;
   isShowUsers?: boolean;
+  lang?: string;
   accessToken?: string;
   created?: string;
   modified?: string;
@@ -82,10 +78,10 @@ export interface IRoomForUser {
   ruModified: string;
 }
 
-export interface IRoomParams {
-  client: Client;
-  data: IRoom;
-}
+// export interface IRoomParams {
+//   client: Client;
+//   data: IRoom;
+// }
 
 export interface IRoom {
   roomId?: string;
@@ -101,6 +97,7 @@ export interface IRoom {
   messageCount?: number;
   isCanLeft?: boolean;
   isShowUsers?: boolean;
+  speechMode?: number;
   created?: string;
   modified?: string;
   users?: IUserForRoom[];
@@ -158,6 +155,10 @@ export interface ISendMessagesResponse {
   error: IProblemDetail | null;
 }
 
+export interface ITextPayload {
+  text: string;
+}
+
 export interface IAsset {
   assetId: string;
   sourceUrl: string;
@@ -201,7 +202,7 @@ export interface IFetchUsersResponse {
 }
 
 export interface IFetchUserResponse {
-  user: IUser | null;
+  user: User | null;
   error: IProblemDetail | null;
 }
 
@@ -216,7 +217,7 @@ export interface IFetchRoomsResponse {
 }
 
 export interface IFetchRoomResponse {
-  room: IRoom | null;
+  room: Room | null;
   error: IProblemDetail | null;
 }
 
@@ -258,6 +259,8 @@ export interface IAddonMessageItemProps {
   message: IMessage;
   user: IUserForRoom;
   myUserId: string;
+  onRenderComplete?: () => {};
+  isLast: boolean;
 }
 
 export interface IAddonMessageInteractionProps {
@@ -285,4 +288,38 @@ export interface IAddonRoomListItemProps {
   userRoom: IRoomForUser;
   noAvatarImages: string[];
   onClick?: Function;
+}
+
+export interface ISetting {
+  values: {
+    roomListTitle: string;
+    noRoomListText: string;
+    noRoomListImage: string;
+    noMessageText: string;
+    noMessageImage: string;
+    inputMessagePlaceholderText: string;
+    roomSettingTitle: string;
+    roomMembersTitle: string;
+    selectContactTitle: string;
+    noContactListText: string;
+    noContactListImage: string;
+    noAvatarImages: string[];
+    blockUser: string;
+    doYouWantToBlockUser: string;
+    unblockUser: string;
+    doYouWantToUnblockUser: string;
+    editGroup: string;
+    leftRoom: string;
+    doYouWantToLeftRoom: string;
+    speechMode: number;
+    speechToText: number;
+  };
+  created: string;
+  modified: string;
+  expired: string;
+}
+
+export interface IFetchSettingResponse {
+  setting: ISetting | null;
+  error: IProblemDetail | null;
 }

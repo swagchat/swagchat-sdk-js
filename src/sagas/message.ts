@@ -1,7 +1,5 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
-import { IFetchMessagesResponse, ISendMessagesResponse, sendMessages } from '../';
-import * as Scroll from 'react-scroll';
-import { getMessages } from '../room';
+import { IFetchMessagesResponse, ISendMessagesResponse } from '../';
 import {
   FETCH_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST,
@@ -11,7 +9,7 @@ import {
   sendMessagesRequestFailureActionCreator,
 } from '../actions/message';
 import { State } from '../stores';
-import { date2ISO3339String } from '../utils';
+import { date2ISO3339String } from '../util';
 
 function* gFetchMessagesRequest() {
   const state: State  = yield select();
@@ -25,10 +23,10 @@ function* gFetchMessagesRequest() {
     roomId = state.room.room.roomId;
   }
   const {messages, error}: IFetchMessagesResponse = yield call(() => {
-      return getMessages(roomId, {
-        limit: state.message.messagesLimit,
-        offset: state.message.messagesOffset,
-      });
+    return state.client.currentRoom!.getMessages({
+      limit: state.message.messagesLimit,
+      offset: state.message.messagesOffset,
+    });
   });
   if (error) {
     yield put(fetchMessagesRequestFailureActionCreator(error!));
@@ -40,7 +38,7 @@ function* gFetchMessagesRequest() {
 function* gSendMessagesRequest() {
   const state: State = yield select();
   const {messageIds, error}: ISendMessagesResponse = yield call(() => {
-    return sendMessages(...state.message.createMessages);
+    return state.client.client!.user.sendMessages(...state.message.createMessages);
   });
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
@@ -51,7 +49,6 @@ function* gSendMessagesRequest() {
       messages[i].created = date2ISO3339String(new Date());
     }
     yield put(sendMessagesRequestSuccessActionCreator(messages));
-    Scroll.animateScroll.scrollToBottom({duration: 300});
   }
 }
 

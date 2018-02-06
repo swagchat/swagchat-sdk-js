@@ -1,60 +1,71 @@
-import { Realtime, User, logger } from './';
+import { Realtime, User, Room, logger } from './';
 import * as I from './interface';
 
 import 'isomorphic-fetch';
 
 export class Client {
-  readonly apiKey: string;
-  readonly apiSecret: string;
-  readonly apiEndpoint: string;
-  readonly userId: string;
-  readonly userAccessToken: string;
-  public connection: Realtime;
+  private static _API_KEY: string;
+  private static _API_SECRET: string;
+  private static _REALTIME_CONFIG: I.IRealtimeConfig;
+  private static _ACCESS_TOKEN: string | '';
+  public static API_ENDPOINT: string;
+  public static CONNECTION: Realtime;
+  public speechRt: Realtime;
+  public user: User;
+
+  static get API_KEY(): string {
+    return this._API_KEY;
+  }
+
+  static set API_KEY(apiKey: string) {
+    this.API_KEY = apiKey;
+  }
 
   set onConnected(callback: Function) {
-    this.connection.onConnected = callback;
+    Client.CONNECTION.onConnected = callback;
   }
 
   set onError(callback: Function) {
-    this.connection.onError = callback;
+    Client.CONNECTION.onError = callback;
   }
 
   set onClosed(callback: Function) {
-    this.connection.onClosed = callback;
+    Client.CONNECTION.onClosed = callback;
   }
 
-  private getApiHeaders(): {
-      'X-SwagChat-Api-Key': string;
-      'X-SwagChat-Api-Secret': string;
-      'Content-Type'?: string;
-    } {
+  static BaseHeaders(): Object {
     return {
-      'X-SwagChat-Api-Key': this.apiKey,
-      'X-SwagChat-Api-Secret': this.apiSecret,
+      'X-SwagChat-Api-Key': Client._API_KEY,
+      'X-SwagChat-Api-Secret': Client._API_SECRET,
+      'Authorization': 'Bearer ' + Client._ACCESS_TOKEN,
     };
+  }
+
+  static JsonHeaders(): Object {
+    return Object.assign(
+      this.BaseHeaders(),
+      {'Content-Type': 'application/json'},
+    );
   }
 
   constructor(params: I.IClientParams) {
     logger('api', 'info', 'Initializing API Client...');
-    this.apiKey = params.apiKey;
-    this.apiSecret = params.apiSecret || '';
-    this.apiEndpoint = params.apiEndpoint;
-    this.userId = params.userId || '';
-    this.userAccessToken = params.userAccessToken || '';
+    Client._API_KEY = params.apiKey;
+    Client._API_SECRET = params.apiSecret;
+    Client.API_ENDPOINT = params.apiEndpoint;
     if (params.hasOwnProperty('realtime') && params.realtime!.hasOwnProperty('endpoint') && params.realtime!.endpoint !== '') {
-      const realtimeConfig = <I.IRealtimeConfig>params.realtime;
-      this.connection = new Realtime(realtimeConfig.endpoint, this.userId);
+      Client._REALTIME_CONFIG = <I.IRealtimeConfig>params.realtime;
     }
 
     logger('api', 'info', 'Initialized API Client OK');
   }
 
   public socketClose() {
-    this.connection.close();
+    Client.CONNECTION.close();
   }
 
-  static auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
-    return fetch(params.apiEndpoint + '/users/' + params.userId, {
+  public auth(params: I.IAuthParams): Promise<I.IFetchUserResponse> {
+    return fetch(Client.API_ENDPOINT + '/users/' + params.userId, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + params.accessToken,
@@ -62,18 +73,21 @@ export class Client {
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((user) => {
-          user.accessToken = params.accessToken || '';
+          Client.CONNECTION = new Realtime(Client._REALTIME_CONFIG.endpoint, user.userId);
+
+          Client._ACCESS_TOKEN = params.accessToken || '';
+          this.user = new User(user);
           return (
             {
-              user: user,
+              user: this.user,
               error: null,
             } as I.IFetchUserResponse
           );
         });
       } else if (response.status === 404) {
         return {
-          user: null,
-          error: {
+            user: null,
+            error: {
             title: response.statusText,
           } as I.IProblemDetail,
         } as I.IFetchUserResponse;
@@ -97,22 +111,23 @@ export class Client {
     });
   }
 
+  public createSpeechRt() {
+    let speechRt = new Realtime(Client._REALTIME_CONFIG.endpoint + '/speech', null);
+    speechRt.conn.binaryType = 'arraybuffer';
+    this.speechRt = speechRt;
+  }
+
   public createUser(createUserObject: I.IUser): Promise<I.IFetchUserResponse> {
-    let headers = this.getApiHeaders();
-    headers['Content-Type'] = 'application/json';
-    return fetch(this.apiEndpoint + '/users', {
+    return fetch(Client.API_ENDPOINT + '/users', {
       method: 'POST',
-      headers: headers,
+      headers: Client.JsonHeaders(),
       body: JSON.stringify(createUserObject)
     }).then((response: Response) => {
       if (response.status === 201) {
         return response.json().then((user) => {
           return (
             {
-              user: new User({
-                client: this,
-                data: <I.IUser>user,
-              }),
+              user: new User(user),
               error: null,
             } as I.IFetchUserResponse
           );
@@ -138,9 +153,9 @@ export class Client {
   }
 
   public getUsers(): Promise<I.IFetchUsersResponse> {
-    return fetch(this.apiEndpoint + '/users', {
+    return fetch(Client.API_ENDPOINT + '/users', {
       method: 'GET',
-      headers: this.getApiHeaders(),
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((users) => {
@@ -172,27 +187,24 @@ export class Client {
   }
 
   public getUser(userId: string, accessToken?: string): Promise<I.IFetchUserResponse> {
-    return fetch(this.apiEndpoint + '/users/' + userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + userId, {
       method: 'GET',
-      headers: this.getApiHeaders(),
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((user) => {
           user.accessToken = accessToken || '';
           return (
             {
-              user: new User({
-                client: this,
-                data: <I.IUser>user,
-              }),
+              user: new User(user),
               error: null,
             } as I.IFetchUserResponse
           );
         });
       } else if (response.status === 404) {
         return {
-          user: null,
-          error: {
+            user: null,
+            error: {
             title: response.statusText,
           } as I.IProblemDetail,
         } as I.IFetchUserResponse;
@@ -217,11 +229,9 @@ export class Client {
   }
 
   public removeUser(userId: string): Promise<I.IErrorResponse> {
-    let headers = this.getApiHeaders();
-    headers['Content-Type'] = 'application/json';
-    return fetch(this.apiEndpoint + '/users/' + userId, {
+    return fetch(Client.API_ENDPOINT + '/users/' + userId, {
       method: 'DELETE',
-      headers: headers,
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 204) {
         return {
@@ -252,31 +262,29 @@ export class Client {
   }
 
   public createRoom(createRoomObject: I.IRoom): Promise<I.IFetchRoomResponse> {
-    let headers = this.getApiHeaders();
-    headers['Content-Type'] = 'application/json';
-    return fetch(this.apiEndpoint + '/rooms', {
+    return fetch(Client.API_ENDPOINT + '/rooms', {
       method: 'POST',
-      headers: headers,
+      headers: Client.JsonHeaders(),
       body: JSON.stringify(createRoomObject)
     }).then((response: Response) => {
       if (response.status === 201) {
         return response.json().then((room) => {
           return (
             {
-              room: room,
+              room: new Room(room),
               error: null,
             } as I.IFetchRoomResponse
           );
         });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              room: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomResponse
-          );
-        });
+      return response.json().then((json) => {
+        return (
+          {
+            room: null,
+            error: <I.IProblemDetail>json,
+          } as I.IFetchRoomResponse
+        );
+      });
       }
     }).catch((error) => {
       return {
@@ -289,67 +297,67 @@ export class Client {
   }
 
   public getRooms(): Promise<I.IFetchRoomsResponse> {
-    return fetch(this.apiEndpoint + '/rooms', {
+    return fetch(Client.API_ENDPOINT + '/rooms', {
       method: 'GET',
-      headers: this.getApiHeaders(),
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
-        return response.json().then((rooms) => {
-          return (
-            {
-              rooms: <I.IRoom[]>rooms,
-              error: null,
-            } as I.IFetchRoomsResponse
-          );
-        });
+      return response.json().then((rooms) => {
+        return (
+        {
+          rooms: <I.IRoom[]>rooms,
+          error: null,
+        } as I.IFetchRoomsResponse
+        );
+      });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              rooms: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomsResponse
-          );
-        });
+      return response.json().then((json) => {
+        return (
+        {
+          rooms: null,
+          error: <I.IProblemDetail>json,
+        } as I.IFetchRoomsResponse
+        );
+      });
       }
     }).catch((error) => {
       return {
-        rooms: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
+      rooms: null,
+      error: {
+        title: error.message,
+      } as I.IProblemDetail,
       } as I.IFetchRoomsResponse;
     });
   }
 
   public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-    return fetch(this.apiEndpoint + '/rooms/' + roomId, {
+    return fetch(Client.API_ENDPOINT + '/rooms/' + roomId, {
       method: 'GET',
-      headers: this.getApiHeaders(),
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
-        return response.json().then((room) => {
-          return (
-            {
-              room: room,
-              error: null,
-            } as I.IFetchRoomResponse
-          );
-        });
+      return response.json().then((room) => {
+        return (
+          {
+            room: new Room(room),
+            error: null,
+          } as I.IFetchRoomResponse
+        );
+      });
       } else if (response.status === 404) {
         return {
           room: null,
           error: {
-            title: response.statusText,
+          title: response.statusText,
           } as I.IProblemDetail,
         } as I.IFetchRoomResponse;
       } else {
         return response.json().then((json) => {
           return (
-            {
-              room: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomResponse
+          {
+            room: null,
+            error: <I.IProblemDetail>json,
+          } as I.IFetchRoomResponse
           );
         });
       }
@@ -364,11 +372,9 @@ export class Client {
   }
 
   public removeRoom(roomId: string): Promise<I.IErrorResponse> {
-    let headers = this.getApiHeaders();
-    headers['Content-Type'] = 'application/json';
-    return fetch(this.apiEndpoint + '/rooms/' + roomId, {
+    return fetch(Client.API_ENDPOINT + '/rooms/' + roomId, {
       method: 'DELETE',
-      headers: headers,
+      headers: Client.JsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 204) {
         return {
@@ -395,6 +401,47 @@ export class Client {
           title: error.message,
         } as I.IProblemDetail,
       } as I.IErrorResponse;
+    });
+  }
+
+  public getSetting(): Promise<I.IFetchSettingResponse> {
+    return fetch(Client.API_ENDPOINT + '/setting', {
+      method: 'GET',
+      headers: Client.JsonHeaders(),
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((setting) => {
+          return (
+            {
+              setting: setting,
+              error: null,
+            } as I.IFetchSettingResponse
+          );
+        });
+      } else if (response.status === 404) {
+        return {
+            setting: null,
+            error: {
+            title: response.statusText,
+          } as I.IProblemDetail,
+        } as I.IFetchSettingResponse;
+      } else {
+        return response.json().then((json) => {
+          return (
+            {
+              setting: null,
+              error: <I.IProblemDetail>json,
+            } as I.IFetchSettingResponse
+          );
+        });
+      }
+    }).catch((error) => {
+      return {
+        setting: null,
+        error: {
+          title: error.message,
+        } as I.IProblemDetail,
+      } as I.IFetchSettingResponse;
     });
   }
 }

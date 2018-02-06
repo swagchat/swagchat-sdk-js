@@ -1,5 +1,5 @@
-import { IMessage, createMessage } from '../';
-import { IMessageState } from '../stores/message';
+import { IMessage, createMessage, mergeList, messageList2map } from '../';
+import { IMessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   IBeforeFetchMessagesRequestAction,
   IFetchMessagesRequestSuccessAction,
@@ -16,7 +16,12 @@ import {
   SEND_MESSAGES_REQUEST_FAILURE,
   UPDATE_MESSAGES,
   CLEAR_MESSAGES,
+  RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
   MessageActions,
+  SET_SPEECH_MODE,
+  ISetSpeechModeAction,
+  SET_SPEECH_SYNTHESIS_UTTERANCE,
+  ISetSpeechSynthesisUtteranceAction,
 } from '../actions/message';
 import { store, State } from '../stores';
 
@@ -24,12 +29,16 @@ const getInitialState = (): IMessageState => ({
   messagesAllCount: 0,
   messagesLimit: 0,
   messagesOffset: 0,
-  messages: {},
-  problemDetail: null,
+  messageMap: {},
+  messageList: [],
   createMessages: [],
+  scrollBottomAnimationDuration: 0,
+  isSpeechMode: false,
+  speechSynthesisUtterance: null,
 });
 
 export function message(state: IMessageState = getInitialState(), action: MessageActions): IMessageState {
+  let mergedList: IMessage[];
   switch (action.type) {
     case BEFORE_FETCH_MESSAGES_REQUEST:
       const beforeMessagesFetchAction = <IBeforeFetchMessagesRequestAction>action;
@@ -59,16 +68,13 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         newOffset = 0;
       }
       const messagesFetchAction = <IFetchMessagesRequestSuccessAction>action;
-      let tmpMessages: {[key: string]: IMessage} = {};
-      messagesFetchAction.messages.messages.map((message: IMessage) => {
-        tmpMessages[message.messageId!] = message;
-      });
-      const newMessages = Object.assign(tmpMessages, state.messages);
+      mergedList = mergeList(state.messageList, messagesFetchAction.messages.messages);
       return Object.assign(
         {},
         state,
         {
-          messages: newMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
           messagesLimit: newLimit,
           messagesOffset: newOffset,
         }
@@ -106,23 +112,19 @@ export function message(state: IMessageState = getInitialState(), action: Messag
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
       const messagesSendAction = <ISendMessagesRequestSuccessAction>action;
-      let tmpAddMessages: {[key: string]: IMessage} = {};
-      messagesSendAction.messages.map((message: IMessage) => {
-        tmpAddMessages[message.messageId!] = message;
-      });
-      let addMessages;
-      if (state.messages) {
-        addMessages = Object.assign(state.messages, tmpAddMessages);
+      if (state.messageMap) {
+        mergedList = mergeList(state.messageList, messagesSendAction.messageList);
       } else {
-        addMessages = tmpAddMessages;
+        mergedList = messagesSendAction.messageList;
       }
-
       return Object.assign(
         {},
         state,
         {
           createMessages: [],
-          messages: addMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
+          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
     case SEND_MESSAGES_REQUEST_FAILURE:
@@ -136,22 +138,18 @@ export function message(state: IMessageState = getInitialState(), action: Messag
       );
     case UPDATE_MESSAGES:
       const updateMessageAction = <IUpdateMessagesAction>action;
-      let tmpUpdateMessages: {[key: string]: IMessage} = {};
-      updateMessageAction.messages.forEach(message => {
-        tmpUpdateMessages[message.messageId!] = message;
-      });
-      let updateMessages: {[key: string]: IMessage} = {};
-      if (state.messages) {
-        updateMessages = Object.assign(state.messages, tmpUpdateMessages);
+      if (state.messageMap) {
+        mergedList = mergeList(state.messageList, updateMessageAction.messageList);
       } else {
-        updateMessages = tmpUpdateMessages;
+        mergedList = updateMessageAction.messageList;
       }
-
       return Object.assign(
         {},
         state,
         {
-          messages: updateMessages,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
+          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
     case CLEAR_MESSAGES:
@@ -159,41 +157,38 @@ export function message(state: IMessageState = getInitialState(), action: Messag
         {},
         state,
         {
-          messages: null,
+          messageMap: {},
+          messageList: [],
           messagesAllCount: 0,
           messagesLimit: 0,
           messagesOffset: 0,
+        }
+      );
+    case RESET_SCROLL_BOTTOM_ANIMATION_DURATION:
+      return Object.assign(
+        {},
+        state,
+        {
+          scrollBottomAnimationDuration: 0,
+        }
+      );
+    case SET_SPEECH_MODE:
+      return Object.assign(
+        {},
+        state,
+        {
+          isSpeechMode: (<ISetSpeechModeAction>action).isSpeechMode,
+        }
+      );
+    case SET_SPEECH_SYNTHESIS_UTTERANCE:
+      return Object.assign(
+        {},
+        state,
+        {
+          speechSynthesisUtterance: (<ISetSpeechSynthesisUtteranceAction>action).speechSynthesisUtterance,
         }
       );
     default:
       return state;
   }
 }
-
-
-    // case MESSAGES_FETCH:
-    //   if (state.messagesAllCount === 0) {
-    //     return state;
-    //   }
-    //   let newLimit = state.messagesLimit;
-    //   let newOffset = state.messagesOffset - state.messagesLimit;
-    //   if (newOffset < 0) {
-    //     newLimit = state.messagesOffset;
-    //     newOffset = 0;
-    //   }
-    //   const messagesFetchAction = <IMessagesFetchAction>action;
-    //   let tmpMessages: {[key: string]: IMessage} = {};
-    //   messagesFetchAction.messages.messages.map((message: IMessage) => {
-    //     tmpMessages[message.messageId!] = message;
-    //   });
-    //   const newMessages = Object.assign(tmpMessages, state.messages);
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     {
-    //       messagesAllCount: messagesFetchAction.messages.allCount,
-    //       messages: newMessages,
-    //       messagesLimit: newLimit,
-    //       messagesOffset: newOffset,
-    //     }
-    //   );

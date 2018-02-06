@@ -10,7 +10,6 @@ import {
 const getInitialState = (): IAssetState => ({
   file: null,
   asset: null,
-  problemDetail: null,
 });
 
 export function asset(state: IAssetState = getInitialState(), action: AssetActions): IAssetState {

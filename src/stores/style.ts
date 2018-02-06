@@ -1,4 +1,5 @@
 export interface IStyleState {
+  modal: Object;
   messageBodyMenuStyle: IMessageBodyMenuStyle;
   pluginMessageTextInteractionStyle: IPluginMessageTextInteractionStyle;
 }

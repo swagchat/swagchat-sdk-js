@@ -1,16 +1,30 @@
-import { IUserForRoom, IUserMini } from '../';
-import * as I from '../interface';
+import { IUserForRoom, IUserMini, IMessage } from './';
+import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
   const nowDate = new Date();
   const itemDate = new Date(ISO3339);
-  const nowYYYYMMDD = nowDate.getFullYear() + '-' + nowDate.getMonth()  + '-' +  nowDate.getDate();
-  const itemYYYYMMDD = itemDate.getFullYear()  + '-' +  itemDate.getMonth()  + '-' +  itemDate.getDate();
+  const nowYYYYMMDD = nowDate.getFullYear() + (nowDate.getMonth() + 1) + nowDate.getDate();
+  const itemYYYYMMDD = itemDate.getFullYear() + (itemDate.getMonth() + 1) + itemDate.getDate();
   if (nowYYYYMMDD === itemYYYYMMDD) {
+    // Today
     return itemDate.getHours() + ':' + ('00' + itemDate.getMinutes()).slice(-2);
   } else {
-    const dayList = ['日', '月', '火', '水', '木', '金', '土'];
-    return dayList[itemDate.getDay()];
+    let beforeOneWeekDate = new Date();
+    beforeOneWeekDate.setDate(nowDate.getDate() - 7 );
+    if (beforeOneWeekDate <= itemDate) {
+      // Within one week
+      const dayList = ['日', '月', '火', '水', '木', '金', '土'];
+      return dayList[itemDate.getDay()] + '曜日';
+    } else {
+      if (nowDate.getFullYear() === itemDate.getFullYear()) {
+        // Within one year
+        return itemDate.getMonth() + 1 + '/' + itemDate.getDate();
+      } else {
+        // Over one year ago
+        return String(itemDate.getFullYear());
+      }
+    }
   }
 }
 
@@ -133,7 +147,7 @@ export function logger(label: string, level: string, message: string) {
     let labelName = 'SwagChatSDK';
     let logColor = apiLogColor;
     if (label === 'realtime') {
-        labelName = 'SwagChatSDK-REAL';
+        labelName = 'SwagchatSDK-RTM';
         logColor = realtimeLogColor;
     }
     switch (level) {
@@ -152,4 +166,34 @@ export function logger(label: string, level: string, message: string) {
         default:
             break;
     }
+}
+
+export function mergeList(sortedList: IMessage[], unsortedList: IMessage[]): IMessage[] {
+  unsortedList.sort(function(a: IMessage, b: IMessage) {
+    if (new Date(a.created!) < new Date(b.created!)) return -1;
+    if (new Date(a.created!) > new Date(b.created!)) return 1;
+    return 0;
+  });
+
+  let mergedList: IMessage[] = [];
+  while (sortedList.length || unsortedList.length) {
+    if (sortedList.length === 0) {
+      mergedList.push(unsortedList.shift()!);
+    } else if (unsortedList.length === 0) {
+      mergedList.push(sortedList.shift()!);
+    } else if (new Date(sortedList[0].created!) > new Date(unsortedList[0].created!)) {
+      mergedList.push(unsortedList.shift()!);
+    } else {
+      mergedList.push(sortedList.shift()!);
+    }
+  }
+  return mergedList;
+}
+
+export function messageList2map(messageList: IMessage[]): {[key: string]: IMessage} {
+  let messages: {[key: string]: IMessage} = {};
+  messageList.forEach(message => {
+    messages[message.messageId!] = message;
+  });
+  return messages;
 }

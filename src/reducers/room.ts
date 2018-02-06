@@ -28,7 +28,6 @@ import {
 const getInitialState = (): IRoomState => ({
   roomId: '',
   room: null,
-  problemDetail: null,
   roomUsers: null,
   updateName: '',
   updatePicture: null,
@@ -39,10 +38,10 @@ const getInitialState = (): IRoomState => ({
 export function room(state: IRoomState = getInitialState(), action: RoomActions): IRoomState {
   switch (action.type) {
     case FETCH_ROOM_REQUEST_SUCCESS:
-      const roomFetchRequestSuccessAction = <IFetchRoomRequestSuccessAction>action;
+      const rfrsAction = <IFetchRoomRequestSuccessAction>action;
       let roomUsers: {[key: string]: IUserForRoom} = {};
-      if (roomFetchRequestSuccessAction.room.users) {
-        roomFetchRequestSuccessAction.room.users!.map((user: IUserForRoom) => {
+      if (rfrsAction.room.users) {
+        rfrsAction.room.users!.map((user: IUserForRoom) => {
           roomUsers[user.userId] = user;
         });
       } else {
@@ -52,7 +51,7 @@ export function room(state: IRoomState = getInitialState(), action: RoomActions)
         {},
         state,
         {
-          room: roomFetchRequestSuccessAction.room,
+          room: rfrsAction.room,
           roomUsers: roomUsers,
         }
       );

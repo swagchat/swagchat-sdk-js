@@ -1,5 +1,9 @@
-import { store } from '../stores';
+import { ISetting, IProblemDetail } from '../';
 import { Action } from 'redux';
+
+export const FETCH_SETTING_REQUEST = 'FETCH_SETTING_REQUEST';
+export const FETCH_SETTING_REQUEST_SUCCESS = 'FETCH_SETTING_REQUEST_SUCCESS';
+export const FETCH_SETTING_REQUEST_FAILURE = 'FETCH_SETTING_REQUEST_FAILURE';
 
 export const SET_SETTING = 'SET_SETTING';
 export const SET_ROOM_LIST_TITLE = 'SET_ROOM_LIST_TITLE';
@@ -20,7 +24,10 @@ export const SET_MESSAGE_ROUTE_PATH = 'SET_MESSAGE_ROUTE_PATH';
 export const SET_ROOM_SETTING_ROUTE_PATH = 'SET_ROOM_SETTING_ROUTE_PATH';
 export const SET_SELECT_CONTACT_ROUTE_PATH = 'SET_SELECT_CONTACT_ROUTE_PATH';
 
-export type SettingActionTypes = typeof SET_SETTING
+export type SettingActionTypes = typeof FETCH_SETTING_REQUEST
+  | typeof FETCH_SETTING_REQUEST_SUCCESS
+  | typeof FETCH_SETTING_REQUEST_FAILURE
+  | typeof SET_SETTING
   | typeof SET_ROOM_LIST_TITLE
   | typeof SET_ROOM_LIST_TABBAR
   | typeof SET_NO_ROOM_LIST_TEXT
@@ -43,6 +50,29 @@ export type SettingActionTypes = typeof SET_SETTING
 export interface ISettingBaseAction extends Action {
   type: SettingActionTypes;
 }
+
+export interface IFetchSettingRequestAction extends ISettingBaseAction {
+}
+export const fetchSettingRequestActionCreator = (): IFetchSettingRequestAction => ({
+  type: FETCH_SETTING_REQUEST,
+});
+
+export interface IFetchSettingRequestSuccessAction extends ISettingBaseAction {
+  setting: ISetting;
+}
+export const fetchSettingRequestSuccessActionCreator = (setting: ISetting): IFetchSettingRequestSuccessAction => ({
+  type: FETCH_SETTING_REQUEST_SUCCESS,
+  setting: setting,
+});
+
+export interface IFetchSettingRequestFailureAction extends ISettingBaseAction {
+  problemDetail: IProblemDetail;
+}
+export const fetchSettingRequestFailureActionCreator
+ = (problemDetail: IProblemDetail): IFetchSettingRequestFailureAction => ({
+  type: FETCH_SETTING_REQUEST_FAILURE,
+  problemDetail: problemDetail,
+});
 
 export interface ISetSettingAction extends ISettingBaseAction {
   setting: Object;
@@ -208,5 +238,3 @@ export type SettingActions = ISettingBaseAction
   | ISetRoomSettingRoutePathAction
   | ISetSelectContactRoutePathAction
   ;
-
-export const setRoomListTitleActionDispatch = (roomListTitle: string) => store.dispatch(setRoomListTitleActionCreator(roomListTitle));

@@ -2,8 +2,6 @@ import { Action } from 'redux';
 import { IUser, IProblemDetail } from '../';
 import { store } from '../stores';
 
-export const SET_AUTH_PARAMS = 'SET_AUTH_PARAMS';
-export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const FETCH_CONTACTS_REQUEST = 'FETCH_CONTACTS_REQUEST';
 export const FETCH_CONTACTS_REQUEST_SUCCESS = 'FETCH_CONTACTS_REQUEST_SUCCESS';
 export const FETCH_CONTACTS_REQUEST_FAILURE = 'FETCH_CONTACTS_REQUEST_FAILURE';
@@ -22,9 +20,7 @@ export const USER_UNBLOCK_REQUEST_FAILURE = 'USER_UNBLOCK_REQUEST_FAILURE';
 export const UPDATE_SELECT_CONTACTS = 'UPDATE_SELECT_CONTACTS';
 export const CLEAR_SELECT_CONTACTS = 'CLEAR_SELECT_CONTACTS';
 
-export type UserActionTypes = typeof SET_AUTH_PARAMS
-  | typeof AUTH_REQUEST
-  | typeof FETCH_CONTACTS_REQUEST
+export type UserActionTypes = typeof FETCH_CONTACTS_REQUEST
   | typeof FETCH_CONTACTS_REQUEST_SUCCESS
   | typeof FETCH_CONTACTS_REQUEST_FAILURE
   | typeof FETCH_USER_REQUEST
@@ -46,34 +42,6 @@ export type UserActionTypes = typeof SET_AUTH_PARAMS
 export interface IUserBaseAction extends Action {
   type: UserActionTypes;
 }
-
-export interface ISetAuthParamsAction extends IUserBaseAction {
-  apiKey: string;
-  apiEndpoint: string;
-  realtimeEndpoint: string;
-  userId: string;
-  accessToken: string;
-}
-export const setAuthParamsActionCreator = (
-  apiKey: string,
-  apiEndpoint: string,
-  realtimeEndpoint: string,
-  userId: string,
-  accessToken: string,
-  ): ISetAuthParamsAction => ({
-  type: SET_AUTH_PARAMS,
-  apiKey: apiKey,
-  apiEndpoint: apiEndpoint,
-  realtimeEndpoint: realtimeEndpoint,
-  userId: userId,
-  accessToken: accessToken,
-});
-
-export interface IAuthRequestAction extends IUserBaseAction {
-}
-export const authRequestActionCreator = (): IAuthRequestAction => ({
-  type: AUTH_REQUEST,
-});
 
 export interface IFetchContactsRequestAction extends IUserBaseAction {
 }
@@ -209,9 +177,7 @@ export const clearSelectContactsActionCreator = (): IClearSelectContactsAction =
   type: CLEAR_SELECT_CONTACTS,
 });
 
-export type UserActions = ISetAuthParamsAction
-  | IAuthRequestAction
-  | IFetchContactsRequestAction
+export type UserActions = IFetchContactsRequestAction
   | IFetchContactsRequestSuccessAction
   | IFetchContactsRequestFailureAction
   | IFetchUserRequestAction

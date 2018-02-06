@@ -1,15 +1,15 @@
 import { IStyleState } from '../stores/';
 import {
-  // IUpdateStyleAction,
   IUpdateMessageBodyMenuStyleAction,
-  // IUpdatePluginMessageTextInteractionStyleAction,
-  // UPDATE_STYLE,
+  IUpdateModalAction,
+  UPDATE_MODAL,
+  CLEAR_MODAL,
   UPDATE_MESSAGE_BODY_MENU_STYLE,
-  // UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE,
   StyleActions,
 } from '../actions/style';
 
 const getInitialState = (): IStyleState => ({
+  modal: {},
   messageBodyMenuStyle: {
     paddingBottom: '5px',
   },
@@ -25,12 +25,26 @@ const getInitialState = (): IStyleState => ({
 
 export function style(state: IStyleState = getInitialState(), action: StyleActions): IStyleState {
   switch (action.type) {
-    // case UPDATE_STYLE:
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     (<IUpdateStyleAction>action).style,
-    //   );
+    case UPDATE_MODAL:
+      const modal = state.modal as any;
+      const modalKey = (<IUpdateModalAction>action).modalKey;
+      return Object.assign(
+        {},
+        state,
+        {
+          modal: {
+            [modalKey]: !modal[modalKey],
+          }
+        },
+      );
+    case CLEAR_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          modal: {}
+        },
+      );
     case UPDATE_MESSAGE_BODY_MENU_STYLE:
       return Object.assign(
         {},
@@ -39,14 +53,6 @@ export function style(state: IStyleState = getInitialState(), action: StyleActio
           messageBodyMenuStyle: (<IUpdateMessageBodyMenuStyleAction>action).messageBodyMenuStyle,
         }
       );
-    // case UPDATE_PLUGIN_MESSAGE_TEXT_INTERACTION_STYLE:
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     {
-    //       pluginMessageTextInteractionStyle: (<IUpdatePluginMessageTextInteractionStyleAction>action).pluginMessageTextInteractionStyle,
-    //     }
-    //   );
     default:
       return state;
   }

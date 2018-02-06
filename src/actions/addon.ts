@@ -68,3 +68,6 @@ export type AddonMessageActions = IAddonBaseAction
 ;
 
 export const updateAddonMessageMenuIndexActionDispatch = (currentMenuIndex: number) => store.dispatch(updateAddonMessageMenuIndexActionCreator(currentMenuIndex));
+export const setAddonMessageActionDispatch = (messages: IAddonMessage[]) => store.dispatch(setAddonMessageActionCreator(messages));
+export const setCustomAddonMessageActionDispatch = (messages: IAddonMessage[]) => store.dispatch(setCustomAddonMessageActionCreator(messages));
+export const setAddonRoomListItemActionDispatch = (roomListItems: IAddonRoomListItem[]) => store.dispatch(setAddonRoomListItemActionCreator(roomListItems));

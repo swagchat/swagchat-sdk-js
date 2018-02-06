@@ -1,10 +1,15 @@
-import { IMessage, IProblemDetail } from '../';
+import { IMessage } from '../';
+
+export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
 export interface IMessageState {
   messagesAllCount: number;
   messagesLimit: number;
   messagesOffset: number;
-  messages: {[key: string]: IMessage};
-  problemDetail: IProblemDetail | null;
+  messageMap: {[key: string]: IMessage};
+  messageList: IMessage[];
   createMessages: IMessage[];
+  scrollBottomAnimationDuration: number;
+  isSpeechMode: boolean;
+  speechSynthesisUtterance: SpeechSynthesisUtterance | null;
 }
