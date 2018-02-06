@@ -96,6 +96,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onconnected" class="tsd-kind-icon">on<wbr>Connected</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onerror" class="tsd-kind-icon">on<wbr>Error</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onmessagereceived" class="tsd-kind-icon">on<wbr>Message<wbr>Received</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onspeech2text" class="tsd-kind-icon">on<wbr>Speech2<wbr>Text</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onuserjoined" class="tsd-kind-icon">on<wbr>User<wbr>Joined</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#onuserleft" class="tsd-kind-icon">on<wbr>User<wbr>Left</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_realtime_.realtime.html#submsgroomids" class="tsd-kind-icon">sub<wbr>Msg<wbr>Room<wbr>Ids</a></li>
@@ -128,13 +129,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Realtime<span class="tsd-signature-symbol">(</span>endpoint<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_realtime_.realtime.html" class="tsd-signature-type">Realtime</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Realtime<span class="tsd-signature-symbol">(</span>endpoint<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_realtime_.realtime.html" class="tsd-signature-type">Realtime</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L17">Realtime.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L18">Realtime.ts:18</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -143,7 +144,7 @@
 									<h5>endpoint: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>userId: <span class="tsd-signature-type">string</span></h5>
+									<h5>userId: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_realtime_.realtime.html" class="tsd-signature-type">Realtime</a></h4>
@@ -159,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">conn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebSocket</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L5">Realtime.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L5">Realtime.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">endpoint<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L6">Realtime.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L6">Realtime.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -179,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Closed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L14">Realtime.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L14">Realtime.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Connected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L12">Realtime.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L12">Realtime.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -199,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L13">Realtime.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L13">Realtime.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -209,7 +210,17 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Message<wbr>Received<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L15">Realtime.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L15">Realtime.ts:15</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="onspeech2text" class="tsd-anchor"></a>
+					<h3>on<wbr>Speech2<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Speech2<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L18">Realtime.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +230,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>User<wbr>Joined<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L16">Realtime.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L16">Realtime.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +240,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>User<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L17">Realtime.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L17">Realtime.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -239,7 +250,7 @@
 					<div class="tsd-signature tsd-kind-icon">sub<wbr>Msg<wbr>Room<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L9">Realtime.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L9">Realtime.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -249,7 +260,7 @@
 					<div class="tsd-signature tsd-kind-icon">sub<wbr>User<wbr>Joined<wbr>Room<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L10">Realtime.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L10">Realtime.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -259,7 +270,7 @@
 					<div class="tsd-signature tsd-kind-icon">sub<wbr>User<wbr>Left<wbr>Room<wbr>Ids<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L11">Realtime.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L11">Realtime.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -269,7 +280,7 @@
 					<div class="tsd-signature tsd-kind-icon">user<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L7">Realtime.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L7">Realtime.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -279,7 +290,7 @@
 					<div class="tsd-signature tsd-kind-icon">websocket<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;isBrowser ? WebSocket : require(&#x27;ws&#x27;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L8">Realtime.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L8">Realtime.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -296,7 +307,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L102">Realtime.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L107">Realtime.ts:107</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -313,7 +324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L27">Realtime.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L28">Realtime.ts:28</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -330,7 +341,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L106">Realtime.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L111">Realtime.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -359,7 +370,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L123">Realtime.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L128">Realtime.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -385,7 +396,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L165">Realtime.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L170">Realtime.ts:170</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -411,7 +422,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L207">Realtime.ts:207</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L212">Realtime.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -437,7 +448,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L153">Realtime.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L158">Realtime.ts:158</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -460,7 +471,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L195">Realtime.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L200">Realtime.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -483,7 +494,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/Realtime.ts#L237">Realtime.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/Realtime.ts#L242">Realtime.ts:242</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -536,6 +547,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_realtime_.realtime.html#onmessagereceived" class="tsd-kind-icon">on<wbr>Message<wbr>Received</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_realtime_.realtime.html#onspeech2text" class="tsd-kind-icon">on<wbr>Speech2<wbr>Text</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_realtime_.realtime.html#onuserjoined" class="tsd-kind-icon">on<wbr>User<wbr>Joined</a>

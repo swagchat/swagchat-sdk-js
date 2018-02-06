@@ -85,11 +85,14 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#createmessages" class="tsd-kind-icon">create<wbr>Messages</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messages" class="tsd-kind-icon">messages</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#isspeechmode" class="tsd-kind-icon">is<wbr>Speech<wbr>Mode</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messagelist" class="tsd-kind-icon">message<wbr>List</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messagemap" class="tsd-kind-icon">message<wbr>Map</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messagesallcount" class="tsd-kind-icon">messages<wbr>All<wbr>Count</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messageslimit" class="tsd-kind-icon">messages<wbr>Limit</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#messagesoffset" class="tsd-kind-icon">messages<wbr>Offset</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#problemdetail" class="tsd-kind-icon">problem<wbr>Detail</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#scrollbottomanimationduration" class="tsd-kind-icon">scroll<wbr>Bottom<wbr>Animation<wbr>Duration</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_stores_message_.imessagestate.html#speechsynthesisutterance" class="tsd-kind-icon">speech<wbr>Synthesis<wbr>Utterance</a></li>
 							</ul>
 						</section>
 					</div>
@@ -103,17 +106,37 @@
 					<div class="tsd-signature tsd-kind-icon">create<wbr>Messages<span class="tsd-signature-symbol">:</span> <a href="_interface_.imessage.html" class="tsd-signature-type">IMessage</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L9">stores/message.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L11">stores/message.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="messages" class="tsd-anchor"></a>
-					<h3>messages</h3>
-					<div class="tsd-signature tsd-kind-icon">messages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<a name="isspeechmode" class="tsd-anchor"></a>
+					<h3>is<wbr>Speech<wbr>Mode</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Speech<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L7">stores/message.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L13">stores/message.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="messagelist" class="tsd-anchor"></a>
+					<h3>message<wbr>List</h3>
+					<div class="tsd-signature tsd-kind-icon">message<wbr>List<span class="tsd-signature-symbol">:</span> <a href="_interface_.imessage.html" class="tsd-signature-type">IMessage</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L10">stores/message.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="messagemap" class="tsd-anchor"></a>
+					<h3>message<wbr>Map</h3>
+					<div class="tsd-signature tsd-kind-icon">message<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L9">stores/message.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -131,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">messages<wbr>All<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L4">stores/message.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L6">stores/message.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -141,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">messages<wbr>Limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L5">stores/message.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L7">stores/message.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,17 +174,27 @@
 					<div class="tsd-signature tsd-kind-icon">messages<wbr>Offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L6">stores/message.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L8">stores/message.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="problemdetail" class="tsd-anchor"></a>
-					<h3>problem<wbr>Detail</h3>
-					<div class="tsd-signature tsd-kind-icon">problem<wbr>Detail<span class="tsd-signature-symbol">:</span> <a href="_interface_.iproblemdetail.html" class="tsd-signature-type">IProblemDetail</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<a name="scrollbottomanimationduration" class="tsd-anchor"></a>
+					<h3>scroll<wbr>Bottom<wbr>Animation<wbr>Duration</h3>
+					<div class="tsd-signature tsd-kind-icon">scroll<wbr>Bottom<wbr>Animation<wbr>Duration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/stores/message.ts#L8">stores/message.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L12">stores/message.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="speechsynthesisutterance" class="tsd-anchor"></a>
+					<h3>speech<wbr>Synthesis<wbr>Utterance</h3>
+					<div class="tsd-signature tsd-kind-icon">speech<wbr>Synthesis<wbr>Utterance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SpeechSynthesisUtterance</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/stores/message.ts#L14">stores/message.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -189,7 +222,13 @@
 								<a href="_stores_message_.imessagestate.html#createmessages" class="tsd-kind-icon">create<wbr>Messages</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_stores_message_.imessagestate.html#messages" class="tsd-kind-icon">messages</a>
+								<a href="_stores_message_.imessagestate.html#isspeechmode" class="tsd-kind-icon">is<wbr>Speech<wbr>Mode</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_stores_message_.imessagestate.html#messagelist" class="tsd-kind-icon">message<wbr>List</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_stores_message_.imessagestate.html#messagemap" class="tsd-kind-icon">message<wbr>Map</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_stores_message_.imessagestate.html#messagesallcount" class="tsd-kind-icon">messages<wbr>All<wbr>Count</a>
@@ -201,12 +240,18 @@
 								<a href="_stores_message_.imessagestate.html#messagesoffset" class="tsd-kind-icon">messages<wbr>Offset</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_stores_message_.imessagestate.html#problemdetail" class="tsd-kind-icon">problem<wbr>Detail</a>
+								<a href="_stores_message_.imessagestate.html#scrollbottomanimationduration" class="tsd-kind-icon">scroll<wbr>Bottom<wbr>Animation<wbr>Duration</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_stores_message_.imessagestate.html#speechsynthesisutterance" class="tsd-kind-icon">speech<wbr>Synthesis<wbr>Utterance</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
+						<a href="../modules/_stores_message_.html#scroll_bottom_animation_duration" class="tsd-kind-icon">SCROLL_<wbr>BOTTOM_<wbr>ANIMATION_<wbr>DURATION</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IRoomParams | swagchat-sdk</title>
+	<title>IFetchSettingResponse | swagchat-sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/_interface_.html">&quot;interface&quot;</a>
 				</li>
 				<li>
-					<a href="_interface_.iroomparams.html">IRoomParams</a>
+					<a href="_interface_.ifetchsettingresponse.html">IFetchSettingResponse</a>
 				</li>
 			</ul>
-			<h1>Interface IRoomParams</h1>
+			<h1>Interface IFetchSettingResponse</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IRoomParams</span>
+						<span class="target">IFetchSettingResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +84,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroomparams.html#client" class="tsd-kind-icon">client</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.iroomparams.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchsettingresponse.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interface_.ifetchsettingresponse.html#setting" class="tsd-kind-icon">setting</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,22 +94,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="client" class="tsd-anchor"></a>
-					<h3>client</h3>
-					<div class="tsd-signature tsd-kind-icon">client<span class="tsd-signature-symbol">:</span> <a href="../classes/_client_.client.html" class="tsd-signature-type">Client</a></div>
+					<a name="error" class="tsd-anchor"></a>
+					<h3>error</h3>
+					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <a href="_interface_.iproblemdetail.html" class="tsd-signature-type">IProblemDetail</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/interface.ts#L86">interface.ts:86</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/interface.ts#L324">interface.ts:324</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="data" class="tsd-anchor"></a>
-					<h3>data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <a href="_interface_.iroom.html" class="tsd-signature-type">IRoom</a></div>
+					<a name="setting" class="tsd-anchor"></a>
+					<h3>setting</h3>
+					<div class="tsd-signature tsd-kind-icon">setting<span class="tsd-signature-symbol">:</span> <a href="_interface_.isetting.html" class="tsd-signature-type">ISetting</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/8f42224/src/interface.ts#L87">interface.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/swagchat/swagchat-sdk-js/blob/c1e64be/src/interface.ts#L323">interface.ts:323</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -182,6 +182,21 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchroomsresponse.html" class="tsd-kind-icon">IFetch<wbr>Rooms<wbr>Response</a>
 					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.ifetchsettingresponse.html" class="tsd-kind-icon">IFetch<wbr>Setting<wbr>Response</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchsettingresponse.html#error" class="tsd-kind-icon">error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interface_.ifetchsettingresponse.html#setting" class="tsd-kind-icon">setting</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.ifetchuserdeviceresponse.html" class="tsd-kind-icon">IFetch<wbr>User<wbr>Device<wbr>Response</a>
 					</li>
@@ -218,26 +233,17 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroomforuser.html" class="tsd-kind-icon">IRoom<wbr>For<wbr>User</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iroomparams.html" class="tsd-kind-icon">IRoom<wbr>Params</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroomparams.html#client" class="tsd-kind-icon">client</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interface_.iroomparams.html#data" class="tsd-kind-icon">data</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iroomuser.html" class="tsd-kind-icon">IRoom<wbr>User</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.isendmessagesresponse.html" class="tsd-kind-icon">ISend<wbr>Messages<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.isetting.html" class="tsd-kind-icon">ISetting</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_interface_.itextpayload.html" class="tsd-kind-icon">IText<wbr>Payload</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iuisettings.html" class="tsd-kind-icon">IUISettings</a>
@@ -250,9 +256,6 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_interface_.iusermini.html" class="tsd-kind-icon">IUser<wbr>Mini</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_interface_.iuserparams.html" class="tsd-kind-icon">IUser<wbr>Params</a>
 					</li>
 				</ul>
 			</nav>
