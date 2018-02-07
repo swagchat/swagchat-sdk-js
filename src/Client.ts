@@ -41,7 +41,7 @@ export class Client {
     };
   }
 
-  static JsonHeaders(): Object {
+  static JsonHeaders(): {} {
     return Object.assign(
       this.BaseHeaders(),
       {'Content-Type': 'application/json'},

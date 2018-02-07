@@ -1,11 +1,11 @@
-import { isBrowser, logger } from './';
+import { logger } from './';
 import * as I from './interface';
 
 export class Realtime {
   conn: WebSocket;
   endpoint: string;
   userId: string;
-  websocket = isBrowser ? WebSocket : require('ws');
+  websocket = WebSocket;
   subMsgRoomIds: {[key: string]: boolean} | null;
   subUserJoinedRoomIds: {[key: string]: boolean} | null;
   subUserLeftRoomIds: {[key: string]: boolean} | null;

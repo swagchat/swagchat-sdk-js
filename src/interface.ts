@@ -1,7 +1,7 @@
 import { User, Room } from '.';
-import {
-  ISettingState,
-} from './stores/';
+// import {
+//   ISettingState,
+// } from './stores/';
 
 export interface IClientParams {
   apiKey: string;
@@ -248,9 +248,9 @@ export interface IErrorResponse {
 export interface IAddonMessage {
   name: string;
   messageListMarginBottom: number;
-  item: React.ComponentClass<IAddonMessageItemProps>;
-  interaction: React.ComponentClass<IAddonMessageInteractionProps>;
-  menu: React.ComponentClass<IAddonMessageMenuProps>;
+  // item: React.ComponentClass<IAddonMessageItemProps>;
+  // interaction: React.ComponentClass<IAddonMessageInteractionProps>;
+  // menu: React.ComponentClass<IAddonMessageMenuProps>;
   position: 'top' | 'bottom';
   isAlwaysDisplay: boolean;
 }
@@ -264,7 +264,7 @@ export interface IAddonMessageItemProps {
 }
 
 export interface IAddonMessageInteractionProps {
-  settingState: ISettingState;
+  // settingState: ISettingState;
   user: IUser;
   room: IRoom;
   position: 'top' | 'bottom';
@@ -280,7 +280,7 @@ export interface IAddonMessageMenuProps {
 
 export interface IAddonRoomListItem {
   name: string;
-  item: React.ComponentClass<IAddonRoomListItemProps>;
+  // item: React.ComponentClass<IAddonRoomListItemProps>;
 }
 
 export interface IAddonRoomListItemProps {
