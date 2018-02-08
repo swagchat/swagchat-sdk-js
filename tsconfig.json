@@ -18,10 +18,7 @@
     "alwaysStrict": true,
     "declaration": true,
     "typeRoots" : ["./node_modules/@types"],
-    "baseUrl": ".",
-    "paths": {
-      "react-router-redux": ["customTypes/react-router-redux"]
-    }
+    "baseUrl": "."
   },
   "formatCodeOptions": {
     "indentSize": 2,

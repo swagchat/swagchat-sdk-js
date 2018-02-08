@@ -12,7 +12,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build:lib": "./node_modules/.bin/tsc --pretty --watch",
+    "build:lib": "rm -rf ./lib && ./node_modules/.bin/tsc --pretty --watch",
     "build:dev": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.js",
     "build:prod": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin --verbose -o dist/swagchat-sdk.min.js",
     "build:doc": "./node_modules/.bin/typedoc --out ./doc/ ./src/",
@@ -31,10 +31,16 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/react-router-redux": "5.0.11",
+    "@types/redux-logger": "3.0.0",
     "@types/ws": "0.0.39",
     "bufferutil": "^3.0.3",
     "history": "4.7.2",
     "isomorphic-fetch": "2.2.1",
+    "react-router-redux": "5.0.0-alpha.6",
+    "redux": "3.7.1",
+    "redux-logger": "3.0.6",
+    "redux-saga": "0.15.3",
     "ws": "2.2.2"
   },
   "devDependencies": {
