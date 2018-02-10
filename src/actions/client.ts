@@ -4,6 +4,7 @@ import { Client, Room } from '../';
 export const SET_CLIENT = 'SET_CLIENT';
 export const SET_CURRENT_ROOM = 'SET_CURRENT_ROOM';
 export const SET_CURRENT_ROOM_ID = 'SET_CURRENT_ROOM_ID';
+export const SET_CURRENT_ROOM_NAME = 'SET_CURRENT_ROOM_NAME';
 export const SET_AUTH_PARAMS = 'SET_AUTH_PARAMS';
 export const SET_IS_MESSAGELIST_LOADING = 'SET_IS_MESSAGELIST_LOADING';
 
@@ -11,6 +12,7 @@ export type ClientActionTypes =
   typeof SET_CLIENT |
   typeof SET_CURRENT_ROOM |
   typeof SET_CURRENT_ROOM_ID |
+  typeof SET_CURRENT_ROOM_NAME |
   typeof SET_AUTH_PARAMS |
   typeof SET_IS_MESSAGELIST_LOADING
 ;
@@ -43,6 +45,14 @@ export const setCurrentRoomIdActionCreator = (currentRoomId: string): SetCurrent
   currentRoomId: currentRoomId,
 });
 
+export interface SetCurrentRoomNameAction extends ClientBaseAction {
+  currentRoomName: string;
+}
+export const setCurrentRoomNameActionCreator = (currentRoomName: string): SetCurrentRoomNameAction => ({
+  type: SET_CURRENT_ROOM_NAME,
+  currentRoomName: currentRoomName,
+});
+
 export interface SetAuthParamsAction extends ClientBaseAction {
   userId: string;
   accessToken: string;
@@ -69,6 +79,7 @@ export type ClientActions =
   SetClientAction |
   SetCurrentRoomAction |
   SetCurrentRoomIdAction |
+  SetCurrentRoomNameAction |
   SetAuthParamsAction |
   SetIsMessageListLoadingAction
 ;

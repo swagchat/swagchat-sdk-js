@@ -1,7 +1,7 @@
-import { IUser, IRoomForUser } from '../';
+import { User, IUser, IRoomForUser } from '../';
 
 export interface UserState {
-  user: IUser | null;
+  user: User | null;
   userRooms: {[key: string]: IRoomForUser} | null;
   users: IUser[];
   contacts: IUser[];

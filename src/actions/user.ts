@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IUser, IRoomForUser, IProblemDetail } from '../';
+import { User, IRoomForUser, IProblemDetail } from '../';
 
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
 export const FETCH_USER_REQUEST_SUCCESS = 'FETCH_USER_REQUEST_SUCCESS';
@@ -22,11 +22,11 @@ export const fetchUserRequestActionCreator = (): FetchUserRequestAction => ({
 });
 
 export interface FetchUserRequestSuccessAction extends UserBaseAction {
-  user: IUser;
+  user: User;
   userRooms: {[key: string]: IRoomForUser};
 }
 export const fetchUserRequestSuccessActionCreator = (
-  user: IUser, userRooms: {[key: string]: IRoomForUser}): FetchUserRequestSuccessAction => ({
+  user: User, userRooms: {[key: string]: IRoomForUser}): FetchUserRequestSuccessAction => ({
     type: FETCH_USER_REQUEST_SUCCESS,
     user: user,
     userRooms: userRooms,
