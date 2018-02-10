@@ -21,7 +21,9 @@ import {
   SetSpeechModeAction,
   SET_SPEECH_SYNTHESIS_UTTERANCE,
   SetSpeechSynthesisUtteranceAction,
+  CreateMessageAction,
 } from '../actions/message';
+import { createMessage } from '../util';
 
 const getInitialState = (): MessageState => ({
   messagesAllCount: 0,
@@ -87,29 +89,18 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case CREATE_MESSAGE:
-      // const createMessageAction = action as CreateMessageAction;
-      // const rootState: State = store.getState();
-      // if (rootState.room.room === null) {
-      //   return state;
-      // }
-      // let roomId: string;
-      // if (rootState.room.room.roomId === undefined) {
-      //   return state;
-      // } else {
-      //   roomId = rootState.room.room.roomId;
-      // }
-      // const msg = createMessage(
-      //   roomId, rootState.user.user!.userId, createMessageAction.messageType, createMessageAction.payload);
-      // let createMessages = state.createMessages.slice();
-      // createMessages.push(msg);
-      // return Object.assign(
-      //   {},
-      //   state,
-      //   {
-      //     createMessages: createMessages,
-      //   }
-      // );
-      return state;
+      const createMessageAction = action as CreateMessageAction;
+      const msg = createMessage(
+        createMessageAction.roomId, createMessageAction.userId, createMessageAction.messageType, createMessageAction.payload);
+      let createMessages = state.createMessages.slice();
+      createMessages.push(msg);
+      return Object.assign(
+        {},
+        state,
+        {
+          createMessages: createMessages,
+        }
+      );
     case SEND_MESSAGES_REQUEST_SUCCESS:
       const messagesSendAction = action as SendMessagesRequestSuccessAction;
       if (state.messageMap) {

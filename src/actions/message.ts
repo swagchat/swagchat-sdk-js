@@ -70,11 +70,16 @@ export const fetchMessagesRequestFailureActionCreator =
 });
 
 export interface CreateMessageAction extends MessageBaseAction {
+  roomId: string;
+  userId: string;
   messageType: string;
   payload: Object;
 }
-export const createMessageActionCreator = (messageType: string, payload: Object): CreateMessageAction => ({
+export const createMessageActionCreator = (
+    roomId: string, userId: string, messageType: string, payload: Object): CreateMessageAction => ({
   type: CREATE_MESSAGE,
+  roomId: roomId,
+  userId: userId,
   messageType: messageType,
   payload: payload,
 });
@@ -139,7 +144,7 @@ export const setSpeechSynthesisUtteranceActionCreator =
   speechSynthesisUtterance: speechSynthesisUtterance,
 });
 
-export type MessageActions = 
+export type MessageActions =
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |
