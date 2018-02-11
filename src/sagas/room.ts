@@ -31,7 +31,7 @@ function* gFetchRoomRequest(action: FetchRoomRequestAction) {
   }, action.roomId);
   if (res.room) {
     yield put(setCurrentRoomActionCreator(res.room));
-    yield put(fetchRoomRequestSuccessActionCreator(res.room.data));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }
@@ -43,7 +43,7 @@ function* gUpdateRoomRequest(action: UpdateRoomRequestAction) {
     return state.client.currentRoom!.update(putRoom);
   }, action.putRoom);
   if (res.room) {
-    yield put(fetchRoomRequestSuccessActionCreator(res.room.data));
+    yield put(fetchRoomRequestSuccessActionCreator(res.room));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(res.error!));
   }

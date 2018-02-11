@@ -1,8 +1,8 @@
-import { IRoom, IUserForRoom, IProblemDetail } from '../';
+import { Room, IUserForRoom, IProblemDetail } from '../';
 
 export interface RoomState {
   roomId: string;
-  room: IRoom | null;
+  room: Room | null;
   roomUsers: {[key: string]: IUserForRoom} | null;
   updateName: string;
   updatePicture: Blob | null;
