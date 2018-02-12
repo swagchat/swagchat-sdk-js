@@ -21,6 +21,10 @@ import {
   SetSpeechModeAction,
   SET_SPEECH_SYNTHESIS_UTTERANCE,
   SetSpeechSynthesisUtteranceAction,
+  SET_SEARCH_TEXT,
+  SetSearchTextAction,
+  SET_SEARCH_RESULT_TAB_INDEX,
+  SetSearchResultTabIndexAction,
   CreateMessageAction,
 } from '../actions/message';
 import { createMessage } from '../util';
@@ -35,6 +39,8 @@ const getInitialState = (): MessageState => ({
   scrollBottomAnimationDuration: 0,
   isSpeechMode: false,
   speechSynthesisUtterance: null,
+  searchText: '',
+  searchResultTabIndex: 0,
 });
 
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
@@ -177,6 +183,22 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           speechSynthesisUtterance: (action as SetSpeechSynthesisUtteranceAction).speechSynthesisUtterance,
+        }
+      );
+    case SET_SEARCH_TEXT:
+      return Object.assign(
+        {},
+        state,
+        {
+          searchText: (action as SetSearchTextAction).searchText,
+        }
+      );
+    case SET_SEARCH_RESULT_TAB_INDEX:
+      return Object.assign(
+        {},
+        state,
+        {
+          searchResultTabIndex: (action as SetSearchResultTabIndexAction).searchResultTabIndex,
         }
       );
     default:

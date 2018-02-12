@@ -12,4 +12,6 @@ export interface MessageState {
   scrollBottomAnimationDuration: number;
   isSpeechMode: boolean;
   speechSynthesisUtterance: SpeechSynthesisUtterance | null;
+  searchText: string;
+  searchResultTabIndex: number;
 }

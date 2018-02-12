@@ -14,6 +14,8 @@ export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
 export const SET_SPEECH_MODE = 'SET_SPEECH_MODE';
 export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
+export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
+export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
 
 export type MessageActionTypes =
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
@@ -28,7 +30,9 @@ export type MessageActionTypes =
   typeof CLEAR_MESSAGES |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
   typeof SET_SPEECH_MODE |
-  typeof SET_SPEECH_SYNTHESIS_UTTERANCE
+  typeof SET_SPEECH_SYNTHESIS_UTTERANCE |
+  typeof SET_SEARCH_TEXT |
+  typeof SET_SEARCH_RESULT_TAB_INDEX
 ;
 
 export interface MessageBaseAction extends Action {
@@ -144,6 +148,22 @@ export const setSpeechSynthesisUtteranceActionCreator =
   speechSynthesisUtterance: speechSynthesisUtterance,
 });
 
+export interface SetSearchTextAction extends MessageBaseAction {
+  searchText: string;
+}
+export const setSearchTextActionCreator = (searchText: string): SetSearchTextAction => ({
+  type: SET_SEARCH_TEXT,
+  searchText: searchText,
+});
+
+export interface SetSearchResultTabIndexAction extends MessageBaseAction {
+  searchResultTabIndex: number;
+}
+export const setSearchResultTabIndexActionCreator = (searchResultTabIndex: number): SetSearchResultTabIndexAction => ({
+  type: SET_SEARCH_RESULT_TAB_INDEX,
+  searchResultTabIndex: searchResultTabIndex,
+});
+
 export type MessageActions =
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
@@ -155,5 +175,7 @@ export type MessageActions =
   CreateMessageAction |
   ClearMessagesAction |
   SetSpeechModeAction |
-  SetSpeechSynthesisUtteranceAction
+  SetSpeechSynthesisUtteranceAction |
+  SetSearchTextAction |
+  SetSearchResultTabIndexAction
 ;
