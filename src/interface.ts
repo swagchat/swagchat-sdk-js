@@ -261,6 +261,7 @@ export interface IAddonMessageItemProps {
   myUserId: string;
   onRenderComplete?: () => {};
   isLast: boolean;
+  isSearchResult?: boolean;
 }
 
 export interface IAddonMessageInteractionProps {
