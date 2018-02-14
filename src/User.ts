@@ -519,7 +519,7 @@ export class User {
         return response.json().then((json) => {
           return (
             {
-              users: null,
+              users: [],
               error: <I.IProblemDetail>json,
             } as I.IFetchUsersResponse
           );
@@ -527,7 +527,7 @@ export class User {
       }
     }).catch((error) => {
       return {
-        users: null,
+        users: [],
         error: {
           title: error.message,
         } as I.IProblemDetail,

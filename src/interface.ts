@@ -197,7 +197,7 @@ export interface IProblemDetail {
 }
 
 export interface IFetchUsersResponse {
-  users: IUser[] | null;
+  users: IUser[];
   error: IProblemDetail | null;
 }
 

@@ -170,7 +170,7 @@ export class Client {
         return response.json().then((json) => {
           return (
             {
-              users: null,
+              users: [],
               error: <I.IProblemDetail>json,
             } as I.IFetchUsersResponse
           );
@@ -178,7 +178,7 @@ export class Client {
       }
     }).catch((error) => {
       return {
-        users: null,
+        users: [],
         error: {
           title: error.message,
         } as I.IProblemDetail,

@@ -2,15 +2,23 @@ import { takeLatest, call, put, ForkEffect, select } from 'redux-saga/effects';
 import { State } from '../stores';
 
 import {
+  IUser,
   IFetchUserResponse,
+  IFetchUsersResponse,
   IRoomForUser,
   opponentUser,
 } from '../';
 import {
   FETCH_USER_REQUEST,
+  FETCH_USERS_REQUEST,
+  FETCH_CONTACTS_REQUEST,
   FetchUserRequestAction,
   fetchUserRequestSuccessActionCreator,
   fetchUserRequestFailureActionCreator,
+  fetchUsersRequestSuccessActionCreator,
+  fetchUsersRequestFailureActionCreator,
+  fetchContactsRequestSuccessActionCreator,
+  fetchContactsRequestFailureActionCreator,
 } from '../actions/user';
 
 function* gFetchUserRequest(action: FetchUserRequestAction) {
@@ -51,6 +59,49 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
   }
 }
 
+function* gFetchUsersRequest() {
+  const state: State = yield select();
+
+  if (state.client.userId === '' || state.client.accessToken === '') {
+    const error = {
+      title: 'not set auth params',
+    };
+    yield put(fetchUsersRequestFailureActionCreator(error));
+    return;
+  }
+
+  const res: IFetchUsersResponse = yield call(() => {
+    return state.client.client!.getUsers();
+  });
+  if (res.users) {
+    let users: {[key: string]: IUser} = {};
+    res.users.map((value: IUser) => {
+      users[value.userId] = value;
+    });
+    yield put(fetchUsersRequestSuccessActionCreator(users));
+  } else {
+    yield put(fetchUsersRequestFailureActionCreator(res.error!));
+  }
+}
+
+function* gFetchContactsRequest() {
+  const state: State = yield select();
+  const res: IFetchUsersResponse = yield call(() => {
+    return state.user.user!.getContacts();
+  });
+  if (res.users) {
+    let users: {[key: string]: IUser} = {};
+    res.users.map((value: IUser) => {
+      users[value.userId] = value;
+    });
+    yield put(fetchContactsRequestSuccessActionCreator(users));
+  } else {
+    yield put(fetchContactsRequestFailureActionCreator(res.error!));
+  }
+}
+
 export function* userSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(FETCH_USER_REQUEST, gFetchUserRequest);
+  yield takeLatest(FETCH_USERS_REQUEST, gFetchUsersRequest);
+  yield takeLatest(FETCH_CONTACTS_REQUEST, gFetchContactsRequest);
 }

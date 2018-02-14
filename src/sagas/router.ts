@@ -53,8 +53,9 @@ function* gLocationChange() {
     }
   }
 
-  let messagePathRegExp = location.pathname.match(new RegExp('^' + '/messages'));
-  if (messagePathRegExp !== null) {
+  // let roomsPathRegExp = location.pathname.match(new RegExp('^' + '/rooms'));
+  let messagesPathRegExp = location.pathname.match(new RegExp('^' + '/messages'));
+  if (messagesPathRegExp !== null) {
     // messages page
     const roomIds = location.pathname.match(new RegExp('/messages' + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
