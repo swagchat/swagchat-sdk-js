@@ -2,15 +2,24 @@ import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
   IFetchMessagesResponse,
   ISendMessagesResponse,
+  IPostAssetResponse,
 } from '../';
 import {
   FETCH_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST,
+  UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
   fetchMessagesRequestSuccessActionCreator,
   fetchMessagesRequestFailureActionCreator,
+  sendMessagesRequestActionCreator,
   sendMessagesRequestSuccessActionCreator,
   sendMessagesRequestFailureActionCreator,
+  UploadAssetAndSendMessageRequestAction,
+  createMessageActionCreator,
 } from '../actions/message';
+import {
+  uploadAssetRequestSuccessActionCreator,
+  uploadAssetRequestFailureActionCreator,
+} from '../actions/asset';
 import { State } from '../stores';
 import { date2ISO3339String } from '../util';
 
@@ -26,7 +35,7 @@ function* gFetchMessagesRequest() {
     roomId = state.room.room.roomId;
   }
   const {messages, error}: IFetchMessagesResponse = yield call(() => {
-    return state.client.currentRoom!.getMessages({
+    return state.room.room!.getMessages({
       limit: state.message.messagesLimit,
       offset: state.message.messagesOffset,
     });
@@ -55,7 +64,25 @@ function* gSendMessagesRequest() {
   }
 }
 
+function* gUploadAssetAndSendMessageRequest(action: UploadAssetAndSendMessageRequestAction) {
+  const state: State = yield select();
+  const res: IPostAssetResponse = yield call((file: Blob) => {
+    return state.user.user!.fileUpload(file);
+  }, action.file);
+  if (res.asset) {
+    yield put(uploadAssetRequestSuccessActionCreator(res.asset));
+    yield put(createMessageActionCreator(state.room.room!.roomId, state.user.user!.userId, 'image', {
+      mime: res.asset.mime,
+      sourceUrl: res.asset.sourceUrl,
+    }));
+    yield put(sendMessagesRequestActionCreator());
+  } else {
+    yield put(uploadAssetRequestFailureActionCreator(res.error!));
+  }
+}
+
 export function* messageSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(FETCH_MESSAGES_REQUEST, gFetchMessagesRequest);
   yield takeLatest(SEND_MESSAGES_REQUEST, gSendMessagesRequest);
+  yield takeLatest(UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST, gUploadAssetAndSendMessageRequest);
 }

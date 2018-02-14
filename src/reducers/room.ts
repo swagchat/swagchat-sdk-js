@@ -26,9 +26,12 @@ import {
 } from '../actions/room';
 
 const getInitialState = (): RoomState => ({
-  roomId: '',
   room: null,
   roomUsers: null,
+  roomsAllCount: 0,
+  roomsLimit: 0,
+  roomsOffset: 0,
+  rooms: null,
   updateName: '',
   updatePicture: null,
   updatePictureUrl: '',

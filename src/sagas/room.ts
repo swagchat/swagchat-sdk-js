@@ -40,7 +40,7 @@ function* gFetchRoomRequest(action: FetchRoomRequestAction) {
 function* gUpdateRoomRequest(action: UpdateRoomRequestAction) {
   const state: State  = yield select();
   const res: IFetchRoomResponse = yield call((putRoom: IRoom) => {
-    return state.client.currentRoom!.update(putRoom);
+    return state.room.room!.update(putRoom);
   }, action.putRoom);
   if (res.room) {
     yield put(fetchRoomRequestSuccessActionCreator(res.room));
@@ -61,7 +61,7 @@ function* gAddRoomUserRequest(action: AddRoomUserRequestAction) {
     roomId = state.room.room.roomId;
   }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.client.currentRoom!.addUsers(userIds);
+    return state.room.room!.addUsers(userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(addRoomUserRequestSuccessActionCreator(res.roomUsers));
@@ -83,7 +83,7 @@ function* gRemoveRoomUserRequest(action: RemoveRoomUserRequestAction) {
     roomId = state.room.room.roomId;
   }
   const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.client.currentRoom!.removeUsers(userIds);
+    return state.room.room!.removeUsers(userIds);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));

@@ -22,10 +22,14 @@ import { IUser } from '../';
 const getInitialState = (): UserState => ({
   user: null,
   userRooms: null,
+  usersAllCount: 0,
+  usersLimit: 0,
+  usersOffset: 0,
   users: null,
   contacts: null,
   selectedContacts: {},
   blocks: [],
+  problemDetail: null,
 });
 
 export function user(state: UserState = getInitialState(), action: UserActions): UserState {

@@ -17,7 +17,6 @@ import {
 
 const getInitialState = (): ClientState => ({
   client: null,
-  currentRoom: null,
   currentRoomId: '',
   currentRoomName: '',
   userId: '',

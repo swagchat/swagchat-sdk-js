@@ -16,6 +16,7 @@ export const SET_SPEECH_MODE = 'SET_SPEECH_MODE';
 export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
 export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
+export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
 
 export type MessageActionTypes =
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
@@ -32,7 +33,8 @@ export type MessageActionTypes =
   typeof SET_SPEECH_MODE |
   typeof SET_SPEECH_SYNTHESIS_UTTERANCE |
   typeof SET_SEARCH_TEXT |
-  typeof SET_SEARCH_RESULT_TAB_INDEX
+  typeof SET_SEARCH_RESULT_TAB_INDEX |
+  typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST
 ;
 
 export interface MessageBaseAction extends Action {
@@ -164,6 +166,14 @@ export const setSearchResultTabIndexActionCreator = (searchResultTabIndex: numbe
   searchResultTabIndex: searchResultTabIndex,
 });
 
+export interface UploadAssetAndSendMessageRequestAction extends MessageBaseAction {
+  file: Blob;
+}
+export const uploadAssetAndSendMessageRequestActionCreator = (file: Blob): UploadAssetAndSendMessageRequestAction => ({
+  type: UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
+  file: file,
+});
+
 export type MessageActions =
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
@@ -177,5 +187,6 @@ export type MessageActions =
   SetSpeechModeAction |
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |
-  SetSearchResultTabIndexAction
+  SetSearchResultTabIndexAction |
+  UploadAssetAndSendMessageRequestAction
 ;

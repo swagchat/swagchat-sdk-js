@@ -1,8 +1,7 @@
-import { Client, Room } from '../';
+import { Client } from '../';
 
 export interface ClientState {
   client: Client | null;
-  currentRoom: Room | null;
   currentRoomId: string;
   currentRoomName: string;
   userId: string;
