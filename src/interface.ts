@@ -159,6 +159,11 @@ export interface ITextPayload {
   text: string;
 }
 
+export interface IImagePayload {
+  thumbnailUrl: string;
+  sourceUrl: string;
+}
+
 export interface IAsset {
   assetId: string;
   sourceUrl: string;
@@ -266,8 +271,6 @@ export interface IAddonMessageItemProps {
 
 export interface IAddonMessageInteractionProps {
   // settingState: ISettingState;
-  user: IUser;
-  room: IRoom;
   position: 'top' | 'bottom';
   isAlwaysDisplay: boolean;
 }
