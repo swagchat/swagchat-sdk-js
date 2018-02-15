@@ -86,8 +86,8 @@ export class Client {
         });
       } else if (response.status === 404) {
         return {
-            user: null,
-            error: {
+          user: null,
+          error: {
             title: response.statusText,
           } as I.IProblemDetail,
         } as I.IFetchUserResponse;

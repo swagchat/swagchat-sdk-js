@@ -30,7 +30,10 @@ function* gLocationChange() {
   let userRooms: {[key: string]: IRoomForUser} = {};
   if (state.user.user === null) {
     const userRes: IFetchUserResponse = yield call(() => {
-      return client.getUser(state.client.userId, state.client.accessToken);
+      return client.auth({
+        userId: state.client.userId,
+        accessToken: state.client.accessToken
+      });
     });
     if (userRes.user) {
       userRes.user.rooms!.map((value: IRoomForUser) => {
