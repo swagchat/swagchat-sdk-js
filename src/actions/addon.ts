@@ -7,11 +7,12 @@ export const UPDATE_ADDON_MESSAGE_MENU_INDEX = 'UPDATE_ADDON_MESSAGE_MENU_INDEX'
 export const SET_ADDON_ROOM_LIST_ITEM = 'SET_ADDON_ROOM_LIST_ITEM';
 export const SET_CUSTOM_ADDON_ROOM_LIST_ITEM = 'SET_CUSTOM_ADDON_ROOM_LIST_ITEM';
 
-export type AddonActionTypes = typeof SET_ADDON_MESSAGE
-  | typeof SET_CUSTOM_ADDON_MESSAGE
-  | typeof UPDATE_ADDON_MESSAGE_MENU_INDEX
-  | typeof SET_ADDON_ROOM_LIST_ITEM
-  | typeof SET_CUSTOM_ADDON_ROOM_LIST_ITEM
+export type AddonActionTypes =
+  typeof SET_ADDON_MESSAGE |
+  typeof SET_CUSTOM_ADDON_MESSAGE |
+  typeof UPDATE_ADDON_MESSAGE_MENU_INDEX |
+  typeof SET_ADDON_ROOM_LIST_ITEM |
+  typeof SET_CUSTOM_ADDON_ROOM_LIST_ITEM
 ;
 
 export interface AddonBaseAction extends Action {
@@ -53,17 +54,18 @@ export const setAddonRoomListItemActionCreator = (roomListItems: IAddonRoomListI
 
 export interface SetCustomAddonRoomListItemAction extends AddonBaseAction {
   customRoomListItems: {[key: number]: IAddonRoomListItem};
-} 
+}
 export const setCustomAddonRoomListItemActionCreator =
     (customRoomListItems: IAddonRoomListItem[]): SetCustomAddonRoomListItemAction => ({
   type: SET_CUSTOM_ADDON_ROOM_LIST_ITEM,
   customRoomListItems: customRoomListItems,
 });
 
-export type AddonActions = AddonBaseAction
-  | SetAddonMessageAction
-  | SetCustomAddonMessageAction
-  | UpdateAddonMessageMenuIndexAction
-  | SetAddonRoomListItemAction
-  | SetCustomAddonRoomListItemAction
+export type AddonActions =
+  AddonBaseAction |
+  SetAddonMessageAction |
+  SetCustomAddonMessageAction |
+  UpdateAddonMessageMenuIndexAction |
+  SetAddonRoomListItemAction |
+  SetCustomAddonRoomListItemAction
 ;

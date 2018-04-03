@@ -114,11 +114,11 @@ export const sendMessagesRequestFailureActionCreator =
 });
 
 export interface UpdateMessagesAction extends MessageBaseAction {
-  messageList: IMessage[];
+  messages: IMessage[];
 }
-export const updateMessagesActionCreator = (messageList: IMessage[]): UpdateMessagesAction => ({
+export const updateMessagesActionCreator = (messages: IMessage[]): UpdateMessagesAction => ({
   type: UPDATE_MESSAGES,
-  messageList: messageList,
+  messages: messages,
 });
 
 export interface ClearMessagesAction extends MessageBaseAction {
@@ -167,14 +167,15 @@ export const setSearchResultTabIndexActionCreator = (searchResultTabIndex: numbe
 });
 
 export interface UploadAssetAndSendMessageRequestAction extends MessageBaseAction {
-  file: Blob;
+  file: File;
 }
-export const uploadAssetAndSendMessageRequestActionCreator = (file: Blob): UploadAssetAndSendMessageRequestAction => ({
+export const uploadAssetAndSendMessageRequestActionCreator = (file: File): UploadAssetAndSendMessageRequestAction => ({
   type: UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
   file: file,
 });
 
 export type MessageActions =
+  MessageBaseAction |
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |

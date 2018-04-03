@@ -1,5 +1,3 @@
-export const isBrowser = typeof window !== 'undefined';
-
 export enum Platform {
   IOS = 1,
   ANDROID = 2,

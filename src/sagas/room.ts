@@ -1,19 +1,15 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import {
-  IRoom,
-  IFetchRoomResponse,
-  IFetchRoomUsersResponse,
+  IFetchRoomResponse, IFetchRoomUsersResponse,
+  generateRoomName,
 } from '../';
-import { setCurrentRoomActionCreator } from '../actions/client';
 import {
-  FETCH_ROOM_REQUEST,
-  UPDATE_ROOM_REQUEST,
-  ADD_ROOM_USER_REQUEST,
-  REMOVE_ROOM_USER_REQUEST,
-  FetchRoomRequestAction,
-  UpdateRoomRequestAction,
-  AddRoomUserRequestAction,
-  RemoveRoomUserRequestAction,
+  setCurrentRoomIdActionCreator,
+  setCurrentRoomNameActionCreator,
+  FETCH_ROOM_REQUEST, FetchRoomRequestAction, fetchRoomRequestActionCreator,
+  ADD_ROOM_USER_REQUEST, AddRoomUserRequestAction,
+  REMOVE_ROOM_USER_REQUEST, RemoveRoomUserRequestAction,
   fetchRoomRequestSuccessActionCreator,
   fetchRoomRequestFailureActionCreator,
   addRoomUserRequestSuccessActionCreator,
@@ -26,26 +22,19 @@ import { State } from '../stores';
 
 function* gFetchRoomRequest(action: FetchRoomRequestAction) {
   const state: State = yield select();
-  const res: IFetchRoomResponse = yield call((roomId: string) => {
-    return state.client.client!.getRoom(roomId);
+  const client = state.client.client;
+  const roomRes: IFetchRoomResponse = yield call((roomId: string) => {
+    return client!.getRoom(roomId);
   }, action.roomId);
-  if (res.room) {
-    yield put(setCurrentRoomActionCreator(res.room));
-    yield put(fetchRoomRequestSuccessActionCreator(res.room));
+  if (roomRes.room !== null) {
+    yield put(fetchRoomRequestSuccessActionCreator(roomRes.room));
+    yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
+    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ? generateRoomName(roomRes.room.users!, state.user.user!.userId) : roomRes.room.name));
   } else {
-    yield put(fetchRoomRequestFailureActionCreator(res.error!));
-  }
-}
-
-function* gUpdateRoomRequest(action: UpdateRoomRequestAction) {
-  const state: State  = yield select();
-  const res: IFetchRoomResponse = yield call((putRoom: IRoom) => {
-    return state.room.room!.update(putRoom);
-  }, action.putRoom);
-  if (res.room) {
-    yield put(fetchRoomRequestSuccessActionCreator(res.room));
-  } else {
-    yield put(fetchRoomRequestFailureActionCreator(res.error!));
+    yield put(fetchRoomRequestFailureActionCreator(roomRes.error!));
+    if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {
+      yield put(push(client!.paths.roomListPath!));
+    }
   }
 }
 
@@ -65,7 +54,7 @@ function* gAddRoomUserRequest(action: AddRoomUserRequestAction) {
   }, action.userIds);
   if (res.roomUsers) {
     yield put(addRoomUserRequestSuccessActionCreator(res.roomUsers));
-    yield put(fetchUserRequestActionCreator());
+    yield put(fetchRoomRequestActionCreator(roomId));
   } else {
     yield put(addRoomUserRequestFailureActionCreator(res.error!));
   }
@@ -88,7 +77,14 @@ function* gRemoveRoomUserRequest(action: RemoveRoomUserRequestAction) {
   if (res.roomUsers) {
     yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));
     yield put(fetchUserRequestActionCreator());
-    location.href = '#';
+    if (action.userIds.indexOf(state.user.user!.userId) >= 0) {
+      const client = state.client.client;
+      if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {
+        yield put(push(client!.paths.roomListPath!));
+      }
+    } else {
+      yield put(fetchRoomRequestActionCreator(roomId));
+    }
   } else {
     yield put(removeRoomUserRequestFailureActionCreator(res.error!));
   }
@@ -96,7 +92,6 @@ function* gRemoveRoomUserRequest(action: RemoveRoomUserRequestAction) {
 
 export function* roomSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(FETCH_ROOM_REQUEST, gFetchRoomRequest);
-  yield takeLatest(UPDATE_ROOM_REQUEST, gUpdateRoomRequest);
   yield takeLatest(ADD_ROOM_USER_REQUEST, gAddRoomUserRequest);
   yield takeLatest(REMOVE_ROOM_USER_REQUEST, gRemoveRoomUserRequest);
 }

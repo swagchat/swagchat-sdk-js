@@ -27,7 +27,7 @@ export class Realtime {
 
   public connect() {
     if (this.userId) {
-      this.conn = new this.websocket(this.endpoint + '?userId=' + this.userId);
+      this.conn = new this.websocket(this.endpoint + '/ws?userId=' + this.userId);
     } else {
       this.conn = new this.websocket(this.endpoint);
     }
@@ -160,7 +160,9 @@ export class Realtime {
       if (this.sendEvent(roomId, 'message', 'unbind')) {
         this.onMessageReceived = null;
         logger('realtime', 'info', 'Unsubscribe message success roomId[' + roomId + ']');
-        this.subMsgRoomIds![roomId] = false;
+        if (this.subMsgRoomIds !== undefined && this.subMsgRoomIds![roomId] === undefined) {
+          this.subMsgRoomIds![roomId] = false;
+        }
       } else {
         logger('realtime', 'error', 'Unsubscribe message failure roomId[' + roomId + ']');
       }

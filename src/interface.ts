@@ -1,35 +1,11 @@
-import { User, Room } from '.';
-// import {
-//   ISettingState,
-// } from './stores/';
-
-export interface IClientParams {
-  apiKey: string;
-  apiSecret: string;
-  apiEndpoint: string;
-  realtime?: IRealtimeConfig;
-}
-
-export interface IRealtimeConfig {
-  endpoint: string;
-}
-
-// export interface IUserParams {
-//   client: Client;
-//   data: IUser;
-// }
-
-export interface IAuthParams {
-  userId: string;
-  accessToken: string;
-}
-
+import { Room } from './';
 export interface IDevice {
   userId: string;
   platform: number;
   token: string;
   notificationDeviceId: string;
 }
+
 
 export interface IUser {
   userId: string;
@@ -78,11 +54,6 @@ export interface IRoomForUser {
   ruModified: string;
 }
 
-// export interface IRoomParams {
-//   client: Client;
-//   data: IRoom;
-// }
-
 export interface IRoom {
   roomId?: string;
   userId?: string;
@@ -129,11 +100,11 @@ export interface IRoomUser {
   modified: string;
 }
 
-export interface IBlockUser {
-  userId: string;
-  blockUserId: string;
-  created: string;
-}
+// export interface IBlockUser {
+//   userId: string;
+//   blockUserId: string;
+//   created: string;
+// }
 
 export interface IMessages {
   allCount: number;
@@ -166,8 +137,9 @@ export interface IImagePayload {
 
 export interface IAsset {
   assetId: string;
-  sourceUrl: string;
   mime: string;
+  extension: string;
+  url: string;
 }
 
 export interface ICloseEvent extends Event {
@@ -207,7 +179,7 @@ export interface IFetchUsersResponse {
 }
 
 export interface IFetchUserResponse {
-  user: User | null;
+  user: IUser | null;
   error: IProblemDetail | null;
 }
 

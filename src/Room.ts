@@ -1,7 +1,13 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
-import { Client, createQueryParams, logger, SpeechMode } from './';
+import { Realtime, createQueryParams, logger, SpeechMode } from './';
 
+export interface IRoomParams {
+  apiEndpoint: string;
+  accessToken: string;
+  room: I.IRoom;
+  conn?: Realtime;
+}
 /**
  * Room class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -11,14 +17,60 @@ import { Client, createQueryParams, logger, SpeechMode } from './';
  * console.log(room.name);</code>
  */
 export class Room {
-  private _data: I.IRoom;
+  private _apiEndpoint: string;
 
-  constructor(roomData: I.IRoom) {
-    this._data = roomData;
+  // private _apiKey: string;
+  // private _apiSecret: string;
+  private _accessToken: string;
+  private _data: I.IRoom;
+  private _conn: Realtime;
+
+  private _baseHeaders(): Object {
+    let baseHeaders = {
+      // 'X-SwagChat-Api-Key': this._apiKey,
+      // 'X-SwagChat-Api-Secret': this._apiSecret,
+    };
+    if (this._accessToken !== undefined) {
+      baseHeaders = Object.assign(
+        baseHeaders,
+        {'Authorization': 'Bearer ' + this._accessToken},
+      );
+    }
+    return baseHeaders;
+  }
+
+  private _jsonHeaders(): {} {
+    return Object.assign(
+      this._baseHeaders(),
+      {'Content-Type': 'application/json'},
+    );
+  }
+
+  constructor(params: IRoomParams) {
+    if (!params.apiEndpoint || params.apiEndpoint === '' || typeof(params.apiEndpoint) !== 'string') {
+      logger('api', 'error', 'Initialize error. apiEndpoint is invalid.');
+      return;
+    }
+    if (!params.room || typeof(params.room) !== 'object') {
+      logger('api', 'error', 'Initialize error. room is invalid.');
+      return;
+    }
+
+    this._apiEndpoint = params.apiEndpoint;
+    this._accessToken = params.accessToken;
+    this._data = params.room;
+
+    if (params.accessToken !== undefined) {
+      this._accessToken = params.accessToken;
+    }
+
+    if (params.conn) {
+      this._conn = params.conn;
+    }
   }
 
   set onMessageReceived(onMessageReceived: Function) {
-    Client.CONNECTION.onMessageReceived = onMessageReceived;
+    this._conn.onMessageReceived = onMessageReceived;
   }
 
   get data(): I.IRoom {
@@ -165,17 +217,21 @@ export class Room {
    * Please set the data of this object beforehand.
    */
   public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
-    return fetch(Client.API_ENDPOINT + '/rooms/' + this.roomId, {
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId, {
       method: 'PUT',
-      headers: Client.JsonHeaders(),
+      headers: this._jsonHeaders(),
       body: JSON.stringify(putRoom)
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((room) => {
-          this._data = room;
           return (
             {
-              room: this,
+              room: new Room({
+                apiEndpoint: this._apiEndpoint,
+                accessToken: this._accessToken,
+                room: room,
+                conn: this._conn ? this._conn : undefined,
+              }),
               error: null,
             } as I.IFetchRoomResponse
           );
@@ -203,7 +259,7 @@ export class Room {
   public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
     let fetchParam = {
       method: 'PUT',
-      headers: Client.JsonHeaders(),
+      headers: this._jsonHeaders(),
       body: JSON.stringify({
         userIds: userIds
       })
@@ -211,7 +267,7 @@ export class Room {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(Client.API_ENDPOINT + '/rooms/' + this.roomId + '/users',
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {
@@ -253,7 +309,7 @@ export class Room {
   public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
     let fetchParam = {
       method: 'DELETE',
-      headers: Client.JsonHeaders(),
+      headers: this._jsonHeaders(),
       body: JSON.stringify({
         userIds: userIds
       })
@@ -261,7 +317,7 @@ export class Room {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(Client.API_ENDPOINT + '/rooms/' + this.roomId + '/users',
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {
@@ -301,9 +357,9 @@ export class Room {
   }
 
   public reflesh(): Promise<I.IFetchRoomResponse> {
-    return fetch(Client.API_ENDPOINT + '/rooms/' + this.roomId, {
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId, {
       method: 'GET',
-      headers: Client.JsonHeaders(),
+      headers: this._jsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((room) => {
@@ -347,9 +403,9 @@ export class Room {
     if (queryParams !== undefined) {
       queryParamsString = createQueryParams(queryParams);
     }
-    return fetch(Client.API_ENDPOINT + '/rooms/' + this.roomId + '/messages?' + queryParamsString, {
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/messages?' + queryParamsString, {
       method: 'GET',
-      headers: Client.JsonHeaders(),
+      headers: this._jsonHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((messages) => {
@@ -381,26 +437,26 @@ export class Room {
   }
 
   public subscribeMessage(onMessageReceived: Function): void {
-    Client.CONNECTION ? Client.CONNECTION.subscribeMessage(onMessageReceived, this.roomId) : null;
+    this._conn ? this._conn.subscribeMessage(onMessageReceived, this.roomId) : null;
   }
 
   public unsubscribeMessage(): void {
-    Client.CONNECTION ? Client.CONNECTION.unsubscribeMessage(this.roomId) : null;
+    this._conn ? this._conn.unsubscribeMessage(this.roomId) : null;
   }
 
   public subscribeUserJoin(onUserJoined: Function): void {
-    Client.CONNECTION ? Client.CONNECTION.subscribeUserJoin(onUserJoined, this.roomId) : null;
+    this._conn ? this._conn.subscribeUserJoin(onUserJoined, this.roomId) : null;
   }
 
   public unsubscribeUserJoin(): void {
-    Client.CONNECTION ? Client.CONNECTION.unsubscribeUserJoin(this.roomId) : null;
+    this._conn ? this._conn.unsubscribeUserJoin(this.roomId) : null;
   }
 
   public subscribeUserLeft(onUserLeft: Function): void {
-    Client.CONNECTION ? Client.CONNECTION.subscribeUserLeft(onUserLeft, this.roomId) : null;
+    this._conn ? this._conn.subscribeUserLeft(onUserLeft, this.roomId) : null;
   }
 
   public unsubscribeUserLeft(): void {
-    Client.CONNECTION ? Client.CONNECTION.unsubscribeUserLeft(this.roomId) : null;
+    this._conn ? this._conn.unsubscribeUserLeft(this.roomId) : null;
   }
 }

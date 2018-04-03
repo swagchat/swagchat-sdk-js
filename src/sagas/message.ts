@@ -1,19 +1,16 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
-  IFetchMessagesResponse,
-  ISendMessagesResponse,
-  IPostAssetResponse,
+  IFetchMessagesResponse, ISendMessagesResponse, IPostAssetResponse,
+  isUrl,
 } from '../';
 import {
   FETCH_MESSAGES_REQUEST,
-  SEND_MESSAGES_REQUEST,
-  UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST,
   fetchMessagesRequestSuccessActionCreator,
   fetchMessagesRequestFailureActionCreator,
-  sendMessagesRequestActionCreator,
+  SEND_MESSAGES_REQUEST, sendMessagesRequestActionCreator,
   sendMessagesRequestSuccessActionCreator,
   sendMessagesRequestFailureActionCreator,
-  UploadAssetAndSendMessageRequestAction,
+  UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST, UploadAssetAndSendMessageRequestAction,
   createMessageActionCreator,
 } from '../actions/message';
 import {
@@ -50,7 +47,7 @@ function* gFetchMessagesRequest() {
 function* gSendMessagesRequest() {
   const state: State = yield select();
   const {messageIds, error}: ISendMessagesResponse = yield call(() => {
-    return state.user.user!.sendMessages(...state.message.createMessages);
+    return state.client.client!.sendMessages(...state.message.createMessages);
   });
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
@@ -66,14 +63,18 @@ function* gSendMessagesRequest() {
 
 function* gUploadAssetAndSendMessageRequest(action: UploadAssetAndSendMessageRequestAction) {
   const state: State = yield select();
-  const res: IPostAssetResponse = yield call((file: Blob) => {
-    return state.user.user!.fileUpload(file);
+  const res: IPostAssetResponse = yield call((file: File) => {
+    return state.client.client!.fileUpload(file);
   }, action.file);
   if (res.asset) {
+    let url = res.asset.url === undefined ? '' : res.asset.url;
+    if (!isUrl(url)) {
+      url = res.asset.assetId + '.' + res.asset.extension;
+    }
     yield put(uploadAssetRequestSuccessActionCreator(res.asset));
     yield put(createMessageActionCreator(state.room.room!.roomId, state.user.user!.userId, 'image', {
       mime: res.asset.mime,
-      sourceUrl: res.asset.sourceUrl,
+      sourceUrl: url,
     }));
     yield put(sendMessagesRequestActionCreator());
   } else {

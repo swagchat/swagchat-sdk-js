@@ -1,31 +1,20 @@
 import { IMessage, mergeList, messageList2map } from '../';
 import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
-  BeforeFetchMessagesRequestAction,
-  FetchMessagesRequestSuccessAction,
-  FetchMessagesRequestFailureAction,
-  SendMessagesRequestSuccessAction,
-  SendMessagesRequestFailureAction,
-  UpdateMessagesAction,
-  BEFORE_FETCH_MESSAGES_REQUEST,
-  FETCH_MESSAGES_REQUEST_SUCCESS,
-  FETCH_MESSAGES_REQUEST_FAILURE,
-  CREATE_MESSAGE,
-  SEND_MESSAGES_REQUEST_SUCCESS,
-  SEND_MESSAGES_REQUEST_FAILURE,
-  UPDATE_MESSAGES,
+  MessageActions,
+  BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
+  FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
+  FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
+  CREATE_MESSAGE, CreateMessageAction,
+  SEND_MESSAGES_REQUEST_SUCCESS, SendMessagesRequestSuccessAction,
+  SEND_MESSAGES_REQUEST_FAILURE, SendMessagesRequestFailureAction,
+  UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
-  MessageActions,
-  SET_SPEECH_MODE,
-  SetSpeechModeAction,
-  SET_SPEECH_SYNTHESIS_UTTERANCE,
-  SetSpeechSynthesisUtteranceAction,
-  SET_SEARCH_TEXT,
-  SetSearchTextAction,
-  SET_SEARCH_RESULT_TAB_INDEX,
-  SetSearchResultTabIndexAction,
-  CreateMessageAction,
+  SET_SPEECH_MODE, SetSpeechModeAction,
+  SET_SPEECH_SYNTHESIS_UTTERANCE, SetSpeechSynthesisUtteranceAction,
+  SET_SEARCH_TEXT, SetSearchTextAction,
+  SET_SEARCH_RESULT_TAB_INDEX, SetSearchResultTabIndexAction,
 } from '../actions/message';
 import { createMessage } from '../util';
 
@@ -136,9 +125,9 @@ export function message(state: MessageState = getInitialState(), action: Message
     case UPDATE_MESSAGES:
       const updateMessageAction = action as UpdateMessagesAction;
       if (state.messageMap) {
-        mergedList = mergeList(state.messageList, updateMessageAction.messageList);
+        mergedList = mergeList(state.messageList, updateMessageAction.messages);
       } else {
-        mergedList = updateMessageAction.messageList;
+        mergedList = updateMessageAction.messages;
       }
       return Object.assign(
         {},

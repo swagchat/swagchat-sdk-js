@@ -1,21 +1,22 @@
 import { UserState } from '../stores/user';
 import {
-  FetchUserRequestSuccessAction,
-  FetchUserRequestFailureAction,
-  FetchUsersRequestSuccessAction,
-  FetchUsersRequestFailureAction,
-  FetchContactsRequestSuccessAction,
-  FetchContactsRequestFailureAction,
-  UpdateSelectContactsAction,
-  FETCH_USER_REQUEST_SUCCESS,
-  FETCH_USER_REQUEST_FAILURE,
-  FETCH_USERS_REQUEST_SUCCESS,
-  FETCH_USERS_REQUEST_FAILURE,
-  FETCH_CONTACTS_REQUEST_SUCCESS,
-  FETCH_CONTACTS_REQUEST_FAILURE,
-  UPDATE_SELECT_CONTACTS,
-  CLEAR_SELECT_CONTACTS,
   UserActions,
+  FETCH_USER_REQUEST_SUCCESS, FetchUserRequestSuccessAction,
+  FETCH_USER_REQUEST_FAILURE, FetchUserRequestFailureAction,
+  SET_PROFILE_USER_ID, SetProfileUserIdAction,
+  FETCH_PROFILE_USER_REQUEST_SUCCESS, FetchProfileUserRequestSuccessAction,
+  FETCH_PROFILE_USER_REQUEST_FAILURE, FetchProfileUserRequestFailureAction,
+  CLEAR_PROFILE_USER,
+  FETCH_CONTACTS_REQUEST_SUCCESS, FetchContactsRequestSuccessAction,
+  FETCH_CONTACTS_REQUEST_FAILURE, FetchContactsRequestFailureAction,
+  UPDATE_SELECT_CONTACTS, UpdateSelectContactsAction,
+  CLEAR_SELECT_CONTACTS,
+  MARK_AS_READ_REQUEST_SUCCESS,
+  MARK_AS_READ_REQUEST_FAILURE, MarkAsReadRequestFailureAction,
+  USER_BLOCK_REQUEST_SUCCESS, UserBlockRequestSuccessAction,
+  USER_BLOCK_REQUEST_FAILURE, UserBlockRequestFailureAction,
+  USER_UNBLOCK_REQUEST_SUCCESS, UserUnBlockRequestSuccessAction,
+  USER_UNBLOCK_REQUEST_FAILURE, UserUnBlockRequestFailureAction,
 } from '../actions/user';
 import { IUser } from '../';
 
@@ -29,6 +30,8 @@ const getInitialState = (): UserState => ({
   contacts: null,
   selectedContacts: {},
   blocks: [],
+  profileUserId: '',
+  profileUser: null,
   problemDetail: null,
 });
 
@@ -36,15 +39,18 @@ export function user(state: UserState = getInitialState(), action: UserActions):
   switch (action.type) {
     case FETCH_USER_REQUEST_SUCCESS:
       const fursAction = action as FetchUserRequestSuccessAction;
-      return Object.assign(
+      let resUser = Object.assign(
         {},
         state,
-        {
-          user: fursAction.user,
-          userRooms: fursAction.userRooms,
-          blocks: fursAction.user.blocks,
-        }
+        {user: fursAction.user}
       );
+      if (fursAction.userRooms !== undefined) {
+        resUser = Object.assign(resUser, {userRooms: fursAction.userRooms});
+      }
+      if (fursAction.blocks !== undefined) {
+        resUser = Object.assign(resUser, {blocks: fursAction.blocks});
+      }
+      return resUser;
     case FETCH_USER_REQUEST_FAILURE:
       return Object.assign(
         {},
@@ -54,21 +60,38 @@ export function user(state: UserState = getInitialState(), action: UserActions):
           problemDetail: (action as FetchUserRequestFailureAction).problemDetail,
         }
       );
-    case FETCH_USERS_REQUEST_SUCCESS:
+    case SET_PROFILE_USER_ID:
       return Object.assign(
         {},
         state,
         {
-          users: (action as FetchUsersRequestSuccessAction).users,
+          profileUserId: (action as SetProfileUserIdAction).profileUserId,
         }
       );
-    case FETCH_USERS_REQUEST_FAILURE:
+    case FETCH_PROFILE_USER_REQUEST_SUCCESS:
       return Object.assign(
         {},
         state,
         {
-          users: null,
-          problemDetail: (action as FetchUsersRequestFailureAction).problemDetail,
+          profileUser: (action as FetchProfileUserRequestSuccessAction).profileUser,
+          problemDetail: null,
+        }
+      );
+    case FETCH_PROFILE_USER_REQUEST_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          profileUser: null,
+          problemDetail: (action as FetchProfileUserRequestFailureAction).problemDetail,
+        }
+      );
+    case CLEAR_PROFILE_USER:
+      return Object.assign(
+        {},
+        state,
+        {
+          profileUser: null,
         }
       );
     case FETCH_CONTACTS_REQUEST_SUCCESS:
@@ -92,13 +115,11 @@ export function user(state: UserState = getInitialState(), action: UserActions):
       const updateSelectContactsAction = action as UpdateSelectContactsAction;
       const contactUserId = updateSelectContactsAction.contact.userId;
       let selectedContacts = Object.assign({}, state.selectedContacts) as {[key: string]: IUser};
-      // if (Object.keys(selectContacts).length > 0) {}
-        if (selectedContacts[contactUserId]) {
-          delete selectedContacts[contactUserId];
-        } else {
-          selectedContacts[contactUserId] = updateSelectContactsAction.contact;
-        }
-      // }
+      if (selectedContacts[contactUserId]) {
+        delete selectedContacts[contactUserId];
+      } else {
+        selectedContacts[contactUserId] = updateSelectContactsAction.contact;
+      }
       return Object.assign(
         {},
         state,
@@ -112,6 +133,50 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           selectedContacts: {},
+        }
+      );
+    case MARK_AS_READ_REQUEST_SUCCESS:
+      return state;
+    case MARK_AS_READ_REQUEST_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          problemDetail: (action as MarkAsReadRequestFailureAction).problemDetail,
+        }
+      );
+    case USER_BLOCK_REQUEST_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          blocks: (action as UserBlockRequestSuccessAction).blocks,
+        }
+      );
+    case USER_BLOCK_REQUEST_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          user: null,
+          problemDetail: (action as UserBlockRequestFailureAction).problemDetail,
+        }
+      );
+    case USER_UNBLOCK_REQUEST_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          blocks: (action as UserUnBlockRequestSuccessAction).blocks,
+        }
+      );
+    case USER_UNBLOCK_REQUEST_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          user: null,
+          problemDetail: (action as UserUnBlockRequestFailureAction).problemDetail,
         }
       );
     default:

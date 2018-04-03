@@ -1,16 +1,11 @@
 import { AddonState } from '../stores/addon';
 import {
-  SetAddonMessageAction,
-  SetCustomAddonMessageAction,
-  UpdateAddonMessageMenuIndexAction,
-  SetAddonRoomListItemAction,
-  SetCustomAddonRoomListItemAction,
-  SET_ADDON_MESSAGE,
-  SET_CUSTOM_ADDON_MESSAGE,
-  UPDATE_ADDON_MESSAGE_MENU_INDEX,
-  SET_ADDON_ROOM_LIST_ITEM,
-  SET_CUSTOM_ADDON_ROOM_LIST_ITEM,
   AddonActions,
+  SET_ADDON_MESSAGE, SetAddonMessageAction,
+  SET_CUSTOM_ADDON_MESSAGE, SetCustomAddonMessageAction,
+  UPDATE_ADDON_MESSAGE_MENU_INDEX, UpdateAddonMessageMenuIndexAction,
+  SET_ADDON_ROOM_LIST_ITEM, SetAddonRoomListItemAction,
+  SET_CUSTOM_ADDON_ROOM_LIST_ITEM, SetCustomAddonRoomListItemAction,
 } from '../actions/addon';
 
 const getInitialState = (): AddonState => ({

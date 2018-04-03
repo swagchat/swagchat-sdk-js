@@ -1,4 +1,4 @@
-import { IUserForRoom, IUserMini, IMessage } from './';
+import { IUserForRoom, IMessage, Room } from './';
 import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -50,7 +50,7 @@ export function date2ISO3339String(date: Date) {
     + pad(date.getUTCSeconds()) + 'Z';
 }
 
-export function opponentUser(users: IUserForRoom[] | IUserMini[], myUserId: string): (IUserForRoom[] | null) {
+export function opponentUser(users: IUserForRoom[], myUserId: string): (IUserForRoom[] | null) {
   let userForRooms = new Array;
   (users as IUserForRoom[]).forEach((user) => {
     if (user.userId !== myUserId) {
@@ -58,6 +58,45 @@ export function opponentUser(users: IUserForRoom[] | IUserMini[], myUserId: stri
     }
   });
   return userForRooms;
+}
+
+export function generateRoomName(users: IUserForRoom[], myUserId: string): string {
+  const separator = ', ';
+  let roomName = '';
+
+  for (let i = 0; i < users.length; i++) {
+    let isLast = i === users.length - 1;
+
+    if (users[i].userId === myUserId) {
+      if (isLast) {
+        roomName = roomName.slice(0, -1 * separator.length);
+      }
+    } else {
+      roomName += users[i].name;
+      if (!isLast) {
+        roomName += separator;
+      }
+    }
+  }
+
+  return roomName;
+}
+
+export function generateRoomPictureUrl(room: Room, myUserId: string): string {
+  let roomPictureUrl = room.pictureUrl;
+
+  if (room.users === null || room.users === undefined || room.users.length === 0) {
+    return roomPictureUrl;
+  }
+
+  if (roomPictureUrl === '') {
+    const user = opponentUser(room.users, myUserId);
+    if (user !== null && user.length !== 0) {
+      roomPictureUrl = user[0].pictureUrl;
+    }
+  }
+
+  return roomPictureUrl;
 }
 
 export function randomAvatarUrl(avatars: string[]): string {
@@ -114,25 +153,25 @@ export const countString = (str: string): number => {
 };
 
 export function createQueryParams(params: {[key: string]: string | number}) {
-    return Object.keys(params)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(String(params[key])))
-        .join('&');
+  return Object.keys(params)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(String(params[key])))
+    .join('&');
 }
 
 export function createMessage(roomId: string, userId: string, type: string, payload: Object): I.IMessage {
-    if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
-        throw Error('Creating message failure. Parameter invalid.');
-    }
-    if (Object.keys(payload).length === 0) {
-        throw Error('Creating message failure. Parameter invalid.');
-    }
-    return {
-        roomId: roomId,
-        userId: userId,
-        type: type,
-        eventName: 'message',
-        payload: payload
-    };
+  if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
+    throw Error('Creating message failure. Parameter invalid.');
+  }
+  if (Object.keys(payload).length === 0) {
+    throw Error('Creating message failure. Parameter invalid.');
+  }
+  return {
+    roomId: roomId,
+    userId: userId,
+    type: type,
+    eventName: 'message',
+    payload: payload
+  };
 }
 
 const apiLogColor = '#039BE5';
@@ -144,28 +183,28 @@ const infoLogColor = '#03A9F4';
 const errorLogColor = '#F44336';
 
 export function logger(label: string, level: string, message: string) {
-    let labelName = 'SwagChatSDK';
-    let logColor = apiLogColor;
-    if (label === 'realtime') {
-        labelName = 'SwagchatSDK-RTM';
-        logColor = realtimeLogColor;
-    }
-    switch (level) {
-        case 'normal':
-            console.log('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + normalLogColor);
-            break;
-        case 'debug':
-            console.debug('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + debugLogColor);
-            break;
-        case 'info':
-            console.info('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + infoLogColor);
-            break;
-        case 'error':
-            console.log('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + errorLogColor);
-            break;
-        default:
-            break;
-    }
+  let labelName = 'SwagChatSDK';
+  let logColor = apiLogColor;
+  if (label === 'realtime') {
+    labelName = 'SwagchatSDK-RTM';
+    logColor = realtimeLogColor;
+  }
+  switch (level) {
+    case 'normal':
+      console.log('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + normalLogColor);
+      break;
+    case 'debug':
+      console.debug('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + debugLogColor);
+      break;
+    case 'info':
+      console.info('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + infoLogColor);
+      break;
+    case 'error':
+      console.log('%c[' + labelName + ']%c' + message, 'color:' + logColor, 'color: ' + errorLogColor);
+      break;
+    default:
+      break;
+  }
 }
 
 export function mergeList(sortedList: IMessage[], unsortedList: IMessage[]): IMessage[] {
@@ -197,3 +236,42 @@ export function messageList2map(messageList: IMessage[]): {[key: string]: IMessa
   });
   return messages;
 }
+
+export function isUrl(str: string): boolean {
+  if (str === '') {
+    return false;
+  }
+
+  if (str.slice(0, 7) === 'http://' || str.slice(0, 8) === 'https://') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function isDataUrl(str: string): boolean {
+  if (str === '') {
+    return false;
+  }
+
+  if (str.slice(0, 11) === 'data:image/') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// export function generateUuid() {
+//   let chars = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.split('');
+//   for (let i = 0, len = chars.length; i < len; i++) {
+//       switch (chars[i]) {
+//           case 'x':
+//               chars[i] = Math.floor(Math.random() * 16).toString(16);
+//               break;
+//           case 'y':
+//               chars[i] = (Math.floor(Math.random() * 4) + 8).toString(16);
+//               break;
+//       }
+//   }
+//   return chars.join('');
+// }

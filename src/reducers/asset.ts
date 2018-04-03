@@ -1,14 +1,11 @@
 import { AssetState } from '../stores/asset';
 import {
-  UploadAssetRequestSuccessAction,
-  UploadAssetRequestFailureAction,
-  UPLOAD_ASSET_REQUEST_SUCCESS,
-  UPLOAD_ASSET_REQUEST_FAILURE,
   AssetActions,
+  UPLOAD_ASSET_REQUEST_SUCCESS, UploadAssetRequestSuccessAction,
+  UPLOAD_ASSET_REQUEST_FAILURE, UploadAssetRequestFailureAction,
 } from '../actions/asset';
 
 const getInitialState = (): AssetState => ({
-  file: null,
   asset: null,
 });
 

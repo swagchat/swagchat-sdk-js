@@ -5,9 +5,10 @@ export const UPLOAD_ASSET_REQUEST = 'UPLOAD_ASSET_REQUEST';
 export const UPLOAD_ASSET_REQUEST_SUCCESS = 'UPLOAD_ASSET_REQUEST_SUCCESS';
 export const UPLOAD_ASSET_REQUEST_FAILURE = 'UPLOAD_ASSET_REQUEST_FAILURE';
 
-export type AssetActionTypes = typeof UPLOAD_ASSET_REQUEST
-  | typeof UPLOAD_ASSET_REQUEST_SUCCESS
-  | typeof UPLOAD_ASSET_REQUEST_FAILURE
+export type AssetActionTypes =
+  typeof UPLOAD_ASSET_REQUEST |
+  typeof UPLOAD_ASSET_REQUEST_SUCCESS |
+  typeof UPLOAD_ASSET_REQUEST_FAILURE
 ;
 
 export interface AssetBaseAction extends Action {
@@ -15,9 +16,9 @@ export interface AssetBaseAction extends Action {
 }
 
 export interface UploadAssetRequestAction extends AssetBaseAction {
-  file: Blob;
+  file: File;
 }
-export const uploadAssetRequestActionCreator = (file: Blob): UploadAssetRequestAction => ({
+export const uploadAssetRequestActionCreator = (file: File): UploadAssetRequestAction => ({
   type: UPLOAD_ASSET_REQUEST,
   file: file,
 });
@@ -38,8 +39,9 @@ export const uploadAssetRequestFailureActionCreator = (problemDetail: IProblemDe
   problemDetail: problemDetail,
 });
 
-export type AssetActions = AssetBaseAction
-  | UploadAssetRequestAction
-  | UploadAssetRequestSuccessAction
-  | UploadAssetRequestFailureAction
+export type AssetActions =
+  AssetBaseAction |
+  UploadAssetRequestAction |
+  UploadAssetRequestSuccessAction |
+  UploadAssetRequestFailureAction
 ;
