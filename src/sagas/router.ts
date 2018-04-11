@@ -51,15 +51,15 @@ function* gLocationChange() {
     }
   }
 
-  let roomsPathRegExp = location.pathname.match(new RegExp('^' + '/rooms'));
+  let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
   if (roomsPathRegExp !== null) {
     // rooms page
   }
 
-  let messagesPathRegExp = location.pathname.match(new RegExp('^' + '/messages'));
+  let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
   if (messagesPathRegExp !== null) {
     // messages page
-    const roomIds = location.pathname.match(new RegExp('/messages' + '/([a-zA-z0-9-]+)'));
+    const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
       const currentRoomId = roomIds[1];
       let state: State = yield select();
@@ -70,10 +70,10 @@ function* gLocationChange() {
     }
   }
 
-  let roomSettingPathRegExp = location.pathname.match(new RegExp('^' + '/roomSetting'));
+  let roomSettingPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomSettingPath));
   if (roomSettingPathRegExp !== null) {
     // roomSetting page
-    const roomIds = location.pathname.match(new RegExp('/roomSetting' + '/([a-zA-z0-9-]+)'));
+    const roomIds = location.pathname.match(new RegExp(client.paths.roomSettingPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
       const currentRoomId = roomIds[1];
       let state: State = yield select();
@@ -84,18 +84,18 @@ function* gLocationChange() {
     }
   }
 
-  let profilePathRegExp = location.pathname.match(new RegExp('^' + '/profile'));
+  let profilePathRegExp = location.pathname.match(new RegExp('^' + client.paths.profilePath));
   if (profilePathRegExp !== null) {
     // profile page
     yield put(clearProfileUserActionCreator());
-    const userIds = location.pathname.match(new RegExp('/profile' + '/([a-zA-z0-9-]+)'));
+    const userIds = location.pathname.match(new RegExp(client.paths.profilePath + '/([a-zA-z0-9-]+)'));
     if (userIds !== null) {
       const userId = userIds[1];
       yield put(setProfileUserIdActionCreator(userId));
     }
   }
 
-  let accountPathRegExp = location.pathname.match(new RegExp('^' + '/account'));
+  let accountPathRegExp = location.pathname.match(new RegExp('^' + client.paths.accountPath));
   if (accountPathRegExp !== null) {
     // accout page
   }
