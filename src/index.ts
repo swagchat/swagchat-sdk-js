@@ -32,6 +32,7 @@ export * from './sagas/combined';
 export * from './sagas/message';
 export * from './sagas/room';
 export * from './sagas/user';
+export * from './sagas';
 
 export * from './stores/asset';
 export * from './stores/client';

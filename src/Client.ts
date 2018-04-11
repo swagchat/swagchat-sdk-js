@@ -1,3 +1,4 @@
+import { History } from 'history';
 import { Realtime, Room, Platform, logger } from './';
 import * as I from './interface';
 import 'isomorphic-fetch';
@@ -9,6 +10,7 @@ export interface IClientParams {
   userId: string;
   username: string;
   paths?: IPaths;
+  history: History;
 }
 
 export interface IPaths {
@@ -31,6 +33,7 @@ export class Client {
   private _conn: Realtime;
   private _speechRt: Realtime;
   private _paths: IPaths;
+  private _history: History;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -50,6 +53,10 @@ export class Client {
 
   get paths(): IPaths {
     return this._paths;
+  }
+
+  get history(): History {
+    return this._history;
   }
 
   private _baseHeaders(): {} {
@@ -107,6 +114,10 @@ export class Client {
 
     if (params.paths !== undefined) {
       this._paths = params.paths;
+    }
+
+    if (params.history !== undefined) {
+      this._history = params.history;
     }
 
     logger('api', 'info', 'Initialized API Client OK');
