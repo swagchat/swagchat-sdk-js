@@ -3,6 +3,7 @@ import {
   IUser, IRoom, IPostAssetResponse, IFetchUserResponse, IFetchRoomResponse, RoomType,
   generateRoomName, isUrl,
 } from '../';
+import { setClientActionCreator } from '../actions/client';
 import {
   uploadAssetRequestSuccessActionCreator,
   uploadAssetRequestFailureActionCreator,
@@ -11,6 +12,7 @@ import {
   CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
   UPLOAD_ASSET_AND_UPDATE_USER_REQUEST, UploadAssetAndUpdateUserRequestAction,
   UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST, UploadAssetAndUpdateRoomRequestAction,
+  CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
 } from '../actions/combined';
 import {
   setCurrentRoomIdActionCreator,
@@ -24,7 +26,7 @@ import {
   fetchUserRequestFailureActionCreator,
 } from '../actions/user';
 import { State } from '../stores';
-
+import Cookie from '../utils/cookie';
 
 function* gCreateRoomAndFetchMessagesRequest() {
   const state: State = yield select();
@@ -138,8 +140,73 @@ function* gUploadAssetAndUpdateRoomRequest(action: UploadAssetAndUpdateRoomReque
   }
 }
 
+function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
+  const state: State = yield select();
+  const cookieUserIdKey = 'sc_user_id';
+  const cookieRoomIdKey = 'sc_room_id';
+
+  const userId = new Cookie().read(cookieUserIdKey);
+  const roomId = new Cookie().read(cookieRoomIdKey);
+
+  let client = Object.assign(state.client.client!);
+  if (userId === '' || userId === null) {
+    const userRes = yield call(() => {
+      return client.createGuestUser();
+    });
+    if (userRes.user !== null) {
+      client.userId = userRes.user.userId;
+      client.username = userRes.user.name;
+      client.accessToken = userRes.user.accessToken;
+      client.socketOpen();
+      yield put(setClientActionCreator(client));
+      yield put(fetchUserRequestActionCreator());
+      new Cookie().write(cookieUserIdKey, userRes.user.userId);
+    }
+  } else {
+    const userRes = yield call(() => {
+      return client.getGuestUser(userId);
+    });
+    if (userRes.user !== null) {
+      client.userId = userRes.user.userId;
+      client.username = userRes.user.name;
+      client.accessToken = userRes.user.accessToken;
+      client.socketOpen();
+      yield put(setClientActionCreator(client));
+      yield put(fetchUserRequestActionCreator());
+    }
+  }
+
+  if (roomId === '' || roomId === null) {
+    let room = {
+      name: 'test',
+      userId: client.userId,
+      type: RoomType.PRIVATE_ROOM,
+      userIds: ['499d6832-4218-44d6-a1f8-1ce7cda9c63f'],
+    } as IRoom;
+  
+    const roomRes = yield call((room: IRoom) => {
+      return client.createRoom(room);
+    }, room);
+    if (roomRes.room !== null) {
+      // yield put(fetchUserRequestActionCreator());
+      yield put(setCurrentRoomNameActionCreator(roomRes.room.name));
+      yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
+      new Cookie().write(cookieRoomIdKey, roomRes.room.roomId);
+    }
+  } else {
+    const roomRes = yield call(() => {
+      return client.getRoom(roomId);
+    });
+    if (roomRes.room !== null) {
+      yield put(setCurrentRoomNameActionCreator(roomRes.room.name));
+      yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
+    }
+  }
+}
+
 export function* combinedSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST, gCreateRoomAndFetchMessagesRequest);
   yield takeLatest(UPLOAD_ASSET_AND_UPDATE_USER_REQUEST, gUploadAssetAndUpdateUserRequest);
   yield takeLatest(UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST, gUploadAssetAndUpdateRoomRequest);
+  yield takeLatest(CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST, gCreateGuestuserAndCreateRoomAndFetchMessagesRequest);
 }

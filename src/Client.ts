@@ -7,10 +7,12 @@ export interface IClientParams {
   apiEndpoint: string;
   wsEndpoint?: string;
   accessToken?: string;
-  userId: string;
-  username: string;
+  userId?: string;
+  username?: string;
   paths?: IPaths;
   history: History;
+  isGuest?: boolean;
+  realm?: string;
 }
 
 export interface IPaths {
@@ -19,21 +21,21 @@ export interface IPaths {
   roomSettingPath?: string;
   profilePath?: string;
   accountPath?: string;
+  guestMessageListPath?: string;
 }
 
 export class Client {
   private _apiEndpoint: string;
   private _wsEndpoint: string;
 
-  // private _apiKey: string;
-  // private _apiSecret: string;
-  private _accessToken: string;
-  private _userId: string;
-  private _username: string;
+  public accessToken?: string;
+  public userId?: string;
+  public username?: string;
   private _conn: Realtime;
   private _speechRt: Realtime;
   private _paths: IPaths;
   private _history: History;
+  private _realm: string;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -61,13 +63,12 @@ export class Client {
 
   private _baseHeaders(): {} {
     let baseHeaders = {
-      // 'X-SwagChat-Api-Key': this._apiKey,
-      // 'X-SwagChat-Api-Secret': this._apiSecret,
+      'X-Sub': this.userId,
     };
-    if (this._accessToken !== undefined) {
+    if (this.accessToken !== undefined) {
       baseHeaders = Object.assign(
         baseHeaders,
-        {'Authorization': 'Bearer ' + this._accessToken},
+        {'Authorization': 'Bearer ' + this.accessToken},
       );
     }
     return baseHeaders;
@@ -86,18 +87,28 @@ export class Client {
       logger('api', 'error', 'Initialize error. apiEndpoint is invalid.');
       return;
     }
-    if (!params.userId || params.userId === '' || typeof(params.userId) !== 'string') {
-      logger('api', 'error', 'Initialize error. userId is invalid.');
-      return;
-    }
-    if (!params.username || params.username === '' || typeof(params.username) !== 'string') {
-      logger('api', 'error', 'Initialize error. username is invalid.');
-      return;
+    this._apiEndpoint = params.apiEndpoint;
+
+    if (params.isGuest === undefined) {
+      params.isGuest = false;
     }
 
-    this._apiEndpoint = params.apiEndpoint;
-    this._userId = params.userId;
-    this._username = params.username;
+    if (!params.isGuest) {
+      if (!params.userId || params.userId === '' || typeof(params.userId) !== 'string') {
+        logger('api', 'error', 'Initialize error. userId is invalid.');
+        return;
+      }
+      if (!params.username || params.username === '' || typeof(params.username) !== 'string') {
+        logger('api', 'error', 'Initialize error. username is invalid.');
+        return;
+      }
+      this.userId = params.userId;
+      this.username = params.username;
+
+      if (params.accessToken !== undefined) {
+        this.accessToken = params.accessToken;
+      }
+    }
 
     if (params.wsEndpoint !== undefined) {
       if (!params.wsEndpoint || params.wsEndpoint === '' || typeof(params.wsEndpoint) !== 'string') {
@@ -105,11 +116,6 @@ export class Client {
         return;
       }
       this._wsEndpoint = params.wsEndpoint!;
-      this._conn = new Realtime(this._wsEndpoint, params.userId);
-    }
-
-    if (params.accessToken !== undefined) {
-      this._accessToken = params.accessToken;
     }
 
     if (params.paths !== undefined) {
@@ -120,7 +126,15 @@ export class Client {
       this._history = params.history;
     }
 
+    if (params.realm !== undefined) {
+      this._realm = params.realm;
+    }
+
     logger('api', 'info', 'Initialized API Client OK');
+  }
+
+  public socketOpen() {
+    this._conn = new Realtime(this._wsEndpoint, this.userId);
   }
 
   public socketClose() {
@@ -131,7 +145,7 @@ export class Client {
    * Create websocket connection for speech
    */
   public createSpeechRt() {
-    const speechRt = new Realtime(this._wsEndpoint + '/speech', null);
+    const speechRt = new Realtime(this._wsEndpoint + '/speech', undefined);
     speechRt.conn.binaryType = 'arraybuffer';
     this._speechRt = speechRt;
   }
@@ -141,8 +155,8 @@ export class Client {
    */
   public createUser(): Promise<I.IFetchUserResponse> {
     const user = {
-      userId: this._userId,
-      name: this._username,
+      userId: this.userId,
+      name: this.username,
     };
 
     return fetch(this._apiEndpoint + '/users', {
@@ -183,7 +197,7 @@ export class Client {
    * Get my user infomation
    */
   public getUser(): Promise<I.IFetchUserResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this._userId, {
+    return fetch(this._apiEndpoint + '/users/' + this.userId, {
       method: 'GET',
       headers: this._jsonHeaders(),
     }).then((response: Response) => {
@@ -276,7 +290,7 @@ export class Client {
             {
               room: new Room({
                 apiEndpoint: this._apiEndpoint,
-                accessToken: this._accessToken,
+                accessToken: this.accessToken!,
                 room: room,
                 conn: this._conn,
               }),
@@ -357,7 +371,7 @@ export class Client {
           {
             room: new Room({
               apiEndpoint: this._apiEndpoint,
-              accessToken: this._accessToken,
+              accessToken: this.accessToken!,
               room: room,
               conn: this._conn ? this._conn : undefined,
             }),
@@ -481,7 +495,7 @@ export class Client {
    * @param token device token.
    */
   public setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this._userId + '/devices/' + String(platform), {
+    return fetch(this._apiEndpoint + '/users/' + this.userId + '/devices/' + String(platform), {
       method: 'PUT',
       headers: this._jsonHeaders(),
       body: JSON.stringify({
@@ -528,7 +542,7 @@ export class Client {
    * Delete device token.
    */
   public removeDevice(platform: Platform): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this._userId + '/devices/' + String(platform), {
+    return fetch(this._apiEndpoint + '/users/' + this.userId + '/devices/' + String(platform), {
       method: 'DELETE',
       headers: this._jsonHeaders(),
     }).then((response: Response) => {
@@ -592,7 +606,7 @@ export class Client {
    * @param user
    */
   public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this._userId, {
+    return fetch(this._apiEndpoint + '/users/' + this.userId, {
       method: 'PUT',
       headers: this._jsonHeaders(),
       body: JSON.stringify(putUser)
@@ -671,7 +685,7 @@ export class Client {
    * @param roomId Room ID
    */
   public markAsRead(roomId: string): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/rooms/' + roomId + '/users/' + this._userId, {
+    return fetch(this._apiEndpoint + '/rooms/' + roomId + '/users/' + this.userId, {
       method: 'PUT',
       headers: this._jsonHeaders(),
       body: JSON.stringify({unreadCount: 0})
@@ -706,7 +720,7 @@ export class Client {
    * Reset the number of unread for each room for the user.
    */
   public markAllAsRead(): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this._userId, {
+    return fetch(this._apiEndpoint + '/users/' + this.userId, {
       method: 'PUT',
       headers: this._jsonHeaders(),
       body: JSON.stringify({unreadCount: 0})
@@ -782,7 +796,7 @@ export class Client {
    * Get my contacts
    */
   public getContacts(): Promise<I.IFetchUsersResponse> {
-    return fetch(this._apiEndpoint + '/contacts/' + this._userId, {
+    return fetch(this._apiEndpoint + '/users/' + this.userId + '/contacts', {
       method: 'GET',
       headers: this._jsonHeaders(),
     }).then((response: Response) => {
@@ -830,7 +844,7 @@ export class Client {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(this._apiEndpoint + '/users/' + this._userId + '/blocks',
+    return fetch(this._apiEndpoint + '/users/' + this.userId + '/blocks',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {
@@ -884,7 +898,7 @@ export class Client {
     if (!(userIds instanceof Array) || userIds.length === 0) {
       fetchParam.body = JSON.stringify({});
     }
-    return fetch(this._apiEndpoint + '/users/' + this._userId + '/blocks',
+    return fetch(this._apiEndpoint + '/users/' + this.userId + '/blocks',
       fetchParam
     ).then((response: Response) => {
       if (response.status === 200) {
@@ -920,6 +934,83 @@ export class Client {
           title: error.message,
         } as I.IProblemDetail,
       } as I.IFetchBlockUsersResponse;
+    });
+  }
+
+
+  /**
+   * Create a guest user
+   */
+  public createGuestUser(): Promise<I.IFetchUserResponse> {
+    return fetch(this._apiEndpoint + '/guests', {
+      method: 'POST',
+      headers: {'X-Realm': this._realm ? this._realm : ''},
+    }).then((response: Response) => {
+      if (response.status === 201) {
+        return response.json().then((user) => {
+          return (
+            {
+              user: user,
+              error: null,
+            } as I.IFetchUserResponse
+          );
+        });
+      } else {
+        return response.json().then((json) => {
+          return (
+            {
+              user: null,
+              error: <I.IProblemDetail>json,
+            } as I.IFetchUserResponse
+          );
+        });
+      }
+    }).catch((error) => {
+      return {
+        user: null,
+        error: {
+          title: error.message,
+        } as I.IProblemDetail,
+      } as I.IFetchUserResponse;
+    });
+  }
+
+  /**
+   * Get a guest user infomation
+   */
+  public getGuestUser(userId: string): Promise<I.IFetchUserResponse> {
+    return fetch(this._apiEndpoint + '/guests/' + userId, {
+      method: 'GET',
+      headers: {'X-Realm': this._realm ? this._realm : ''},
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((user) => {
+          return (
+            {
+              user: user,
+              error: null,
+            } as I.IFetchUserResponse
+          );
+        });
+      } else if (response.status === 404) {
+        return this.createUser();
+      } else {
+        return response.json().then((json) => {
+          return (
+            {
+              user: null,
+              error: <I.IProblemDetail>json,
+            } as I.IFetchUserResponse
+          );
+        });
+      }
+    }).catch((error) => {
+      return {
+        user: null,
+        error: {
+          title: error.message,
+        } as I.IProblemDetail,
+      } as I.IFetchUserResponse;
     });
   }
 }

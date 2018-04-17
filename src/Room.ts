@@ -18,17 +18,13 @@ export interface IRoomParams {
  */
 export class Room {
   private _apiEndpoint: string;
-
-  // private _apiKey: string;
-  // private _apiSecret: string;
   private _accessToken: string;
   private _data: I.IRoom;
   private _conn: Realtime;
 
   private _baseHeaders(): Object {
     let baseHeaders = {
-      // 'X-SwagChat-Api-Key': this._apiKey,
-      // 'X-SwagChat-Api-Secret': this._apiSecret,
+      'X-Sub': this.userId,
     };
     if (this._accessToken !== undefined) {
       baseHeaders = Object.assign(

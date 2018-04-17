@@ -1,5 +1,6 @@
 import { takeLatest, ForkEffect, put, select, call } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import { createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator } from '../actions/combined';
 import {
   setCurrentRoomIdActionCreator,
   setCurrentRoomNameActionCreator,
@@ -27,6 +28,13 @@ function* gLocationChange() {
   }
 
   const client = state.client.client;
+
+  let guestMessagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.guestMessageListPath));
+  if (guestMessagesPathRegExp !== null) {
+    // guest messages page
+    yield put(createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator());
+    return;
+  }
 
   let userRooms: {[key: string]: IRoomForUser} = {};
   if (state.user.user === null) {

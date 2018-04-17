@@ -3,11 +3,13 @@ import { Action } from 'redux';
 export const CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST = 'CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST';
 export const UPLOAD_ASSET_AND_UPDATE_USER_REQUEST = 'UPLOAD_ASSET_AND_UPDATE_USER_REQUEST';
 export const UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST = 'UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST';
+export const CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST = 'CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST';
 
 export type CombinedActionTypes =
   typeof CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST |
   typeof UPLOAD_ASSET_AND_UPDATE_USER_REQUEST |
-  typeof UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST
+  typeof UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST |
+  typeof CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST
 ;
 
 export interface CombinedBaseAction extends Action {
@@ -42,9 +44,17 @@ export const uploadAssetAndUpdateRoomRequestActionCreator = (roomName: string, f
   file: file,
 });
 
+export interface CreateGuestuserAndCreateRoomAndFetchMessagesRequestAction extends CombinedBaseAction {
+}
+export const createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator = (): CreateGuestuserAndCreateRoomAndFetchMessagesRequestAction => ({
+  type: CREATE_GUESTUSER_AND_CREATE_ROOM_AND_FETCH_MESSAGES_REQUEST,
+});
+
+
 export type CombinedActions =
   CombinedBaseAction |
   CreateRoomAndFetchMessagesRequestAction |
   UploadAssetAndUpdateUserRequestAction |
-  UploadAssetAndUpdateRoomRequestAction
+  UploadAssetAndUpdateRoomRequestAction |
+  CreateGuestuserAndCreateRoomAndFetchMessagesRequestAction
 ;

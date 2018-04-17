@@ -17,7 +17,7 @@ export class Realtime {
   public onUserLeft: Function | null;
   public onSpeech2Text: Function | null;
 
-  constructor(endpoint: string, userId: string | null) {
+  constructor(endpoint: string, userId: string | undefined) {
     logger('realtime', 'info', 'Connecting Realtime Server...');
 
     this.endpoint = endpoint;
