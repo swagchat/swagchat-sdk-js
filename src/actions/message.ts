@@ -1,14 +1,17 @@
 import { Action } from 'redux';
 import { IMessages, IMessage, IProblemDetail } from '../';
 
+export const SET_FETCH_MESSAGES_COMPLETED = 'SET_FETCH_MESSAGES_COMPLETED';
 export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
 export const FETCH_MESSAGES_REQUEST_FAILURE = 'FETCH_MESSAGES_REQUEST_FAILURE';
-export const CREATE_MESSAGE = 'CREATE_MESSAGE';
+export const PUSH_LOCAL_MESSAGE = 'PUSH_LOCAL_MESSAGE';
+export const BEFORE_SEND_MESSAGES_REQUEST = 'BEFORE_SEND_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST = 'SEND_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST_SUCCESS = 'SEND_MESSAGES_REQUEST_SUCCESS';
 export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
+export const DELETE_LOCAL_MESSAGES = 'DELETE_LOCAL_MESSAGES';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
@@ -19,14 +22,17 @@ export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
 export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
 
 export type MessageActionTypes =
+  typeof SET_FETCH_MESSAGES_COMPLETED |
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST_SUCCESS |
   typeof FETCH_MESSAGES_REQUEST_FAILURE |
-  typeof CREATE_MESSAGE |
+  typeof PUSH_LOCAL_MESSAGE |
+  typeof BEFORE_SEND_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST_SUCCESS |
   typeof SEND_MESSAGES_REQUEST_FAILURE |
+  typeof DELETE_LOCAL_MESSAGES |
   typeof UPDATE_MESSAGES |
   typeof CLEAR_MESSAGES |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
@@ -40,6 +46,15 @@ export type MessageActionTypes =
 export interface MessageBaseAction extends Action {
   type: MessageActionTypes;
 }
+
+export interface SetFetchMessagesCompletedAction extends MessageBaseAction {
+  fetchCompleted: boolean;
+}
+export const setFetchMessagesCompletedActionCreator =
+    (fetchCompleted: boolean): SetFetchMessagesCompletedAction => ({
+  type: SET_FETCH_MESSAGES_COMPLETED,
+  fetchCompleted: fetchCompleted,
+});
 
 export interface BeforeFetchMessagesRequestAction extends MessageBaseAction {
   messagesAllCount: number;
@@ -75,19 +90,18 @@ export const fetchMessagesRequestFailureActionCreator =
   problemDetail: problemDetail,
 });
 
-export interface CreateMessageAction extends MessageBaseAction {
-  roomId: string;
-  userId: string;
-  messageType: string;
-  payload: Object;
+export interface PushLocalMessageAction extends MessageBaseAction {
+  message: IMessage;
 }
-export const createMessageActionCreator = (
-    roomId: string, userId: string, messageType: string, payload: Object): CreateMessageAction => ({
-  type: CREATE_MESSAGE,
-  roomId: roomId,
-  userId: userId,
-  messageType: messageType,
-  payload: payload,
+export const pushLocalMessageActionCreator = (message: IMessage): PushLocalMessageAction => ({
+  type: PUSH_LOCAL_MESSAGE,
+  message: message,
+});
+
+export interface BeforeSendMessagesRequestAction extends MessageBaseAction {
+}
+export const beforeSendMessagesRequestActionCreator = (): BeforeSendMessagesRequestAction => ({
+  type: BEFORE_SEND_MESSAGES_REQUEST,
 });
 
 export interface SendMessagesRequestAction extends MessageBaseAction {
@@ -111,6 +125,13 @@ export const sendMessagesRequestFailureActionCreator =
     (problemDetail: IProblemDetail): SendMessagesRequestFailureAction => ({
   type: SEND_MESSAGES_REQUEST_FAILURE,
   problemDetail: problemDetail,
+});
+
+
+export interface DeleteLocalMessagesAction extends MessageBaseAction {
+}
+export const deleteLocalMessagesActionCreator = (): DeleteLocalMessagesAction => ({
+  type: DELETE_LOCAL_MESSAGES,
 });
 
 export interface UpdateMessagesAction extends MessageBaseAction {
@@ -176,6 +197,7 @@ export const uploadAssetAndSendMessageRequestActionCreator = (file: File): Uploa
 
 export type MessageActions =
   MessageBaseAction |
+  SetFetchMessagesCompletedAction |
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |
@@ -183,7 +205,8 @@ export type MessageActions =
   SendMessagesRequestAction |
   SendMessagesRequestSuccessAction |
   SendMessagesRequestFailureAction |
-  CreateMessageAction |
+  DeleteLocalMessagesAction |
+  PushLocalMessageAction |
   ClearMessagesAction |
   SetSpeechModeAction |
   SetSpeechSynthesisUtteranceAction |

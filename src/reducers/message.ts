@@ -1,13 +1,16 @@
-import { IMessage, mergeList, messageList2map } from '../';
+import { IMessage, messageList2map } from '../';
 import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   MessageActions,
+  SET_FETCH_MESSAGES_COMPLETED, SetFetchMessagesCompletedAction,
   BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
   FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
   FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
-  CREATE_MESSAGE, CreateMessageAction,
+  PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
+  BEFORE_SEND_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST_SUCCESS, SendMessagesRequestSuccessAction,
-  SEND_MESSAGES_REQUEST_FAILURE, SendMessagesRequestFailureAction,
+  SEND_MESSAGES_REQUEST_FAILURE,
+  DELETE_LOCAL_MESSAGES,
   UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
@@ -16,18 +19,24 @@ import {
   SET_SEARCH_TEXT, SetSearchTextAction,
   SET_SEARCH_RESULT_TAB_INDEX, SetSearchResultTabIndexAction,
 } from '../actions/message';
-import { createMessage } from '../util';
 
 const getInitialState = (): MessageState => ({
+  fetchCompleted: false,
+  sending: false,
   messagesAllCount: 0,
   messagesLimit: 0,
   messagesOffset: 0,
-  messageMap: {},
+  messagesBeforeSending: [],
+  messagesSending: [],
   messageList: [],
-  createMessages: [],
+  messageMap: {},
   scrollBottomAnimationDuration: 0,
+
+  // speech
   isSpeechMode: false,
   speechSynthesisUtterance: null,
+
+  // search
   searchText: '',
   searchResultTabIndex: 0,
 });
@@ -35,6 +44,14 @@ const getInitialState = (): MessageState => ({
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
   let mergedList: IMessage[];
   switch (action.type) {
+    case SET_FETCH_MESSAGES_COMPLETED:
+      return Object.assign(
+        {},
+        state,
+        {
+          fetchCompleted: (action as SetFetchMessagesCompletedAction).fetchCompleted,
+        }
+      );
     case BEFORE_FETCH_MESSAGES_REQUEST:
       const beforeMessagesFetchAction = action as BeforeFetchMessagesRequestAction;
       let beforeLimit = beforeMessagesFetchAction.messagesLimit;
@@ -63,7 +80,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         newOffset = 0;
       }
       const messagesFetchAction = action as FetchMessagesRequestSuccessAction;
-      mergedList = mergeList(state.messageList, messagesFetchAction.messages.messages);
+      mergedList = Array.from(new Set([...state.messageList, ...messagesFetchAction.messages.messages]));
       return Object.assign(
         {},
         state,
@@ -79,35 +96,48 @@ export function message(state: MessageState = getInitialState(), action: Message
         {},
         state,
         {
-          user: null,
           problemDetail: (action as FetchMessagesRequestFailureAction).problemDetail,
         }
       );
-    case CREATE_MESSAGE:
-      const createMessageAction = action as CreateMessageAction;
-      const msg = createMessage(
-        createMessageAction.roomId, createMessageAction.userId, createMessageAction.messageType, createMessageAction.payload);
-      let createMessages = state.createMessages.slice();
-      createMessages.push(msg);
+    case PUSH_LOCAL_MESSAGE:
+      const createMessageAction = action as PushLocalMessageAction;
+      const message = Object.assign({}, createMessageAction.message);
+      message.created = new Date().toISOString();
+      mergedList = Array.from(new Set([...state.messagesBeforeSending, message]));
       return Object.assign(
         {},
         state,
         {
-          createMessages: createMessages,
+          messagesBeforeSending: mergedList,
+        }
+      );
+    case BEFORE_SEND_MESSAGES_REQUEST:
+      mergedList = Array.from(new Set([...state.messageList, ...state.messagesBeforeSending]));
+      return Object.assign(
+        {},
+        state,
+        {
+          sending: true,
+          messagesBeforeSending: [],
+          messagesSending: state.messagesBeforeSending,
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
         }
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
-      const messagesSendAction = action as SendMessagesRequestSuccessAction;
-      if (state.messageMap) {
-        mergedList = mergeList(state.messageList, messagesSendAction.messageList);
-      } else {
-        mergedList = messagesSendAction.messageList;
-      }
+      mergedList = Array.from(new Set([...state.messageList]));
+      mergedList = mergedList.filter((v: IMessage) => {
+        return v.messageId!.indexOf('local-') < 0;
+      });
+      const sendMessagesRequestSuccessAction = action as SendMessagesRequestSuccessAction;
+      mergedList = Array.from(new Set([...mergedList, ...sendMessagesRequestSuccessAction.messageList]));
       return Object.assign(
         {},
         state,
         {
-          createMessages: [],
+          sending: false,
+          messagesBeforeSending: [],
+          messagesSending: [],
           messageMap: messageList2map(mergedList),
           messageList: mergedList,
           scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
@@ -118,14 +148,25 @@ export function message(state: MessageState = getInitialState(), action: Message
         {},
         state,
         {
-          user: null,
-          problemDetail: (action as SendMessagesRequestFailureAction).problemDetail,
+          // TODO
+        }
+      );
+    case DELETE_LOCAL_MESSAGES:
+      mergedList = state.messageList.slice(0, state.messageList.length - state.messagesSending.length);
+      return Object.assign(
+        {},
+        state,
+        {
+          messagesBeforeSending: [],
+          messagesSending: [],
+          messageMap: messageList2map(mergedList),
+          messageList: mergedList,
         }
       );
     case UPDATE_MESSAGES:
       const updateMessageAction = action as UpdateMessagesAction;
       if (state.messageMap) {
-        mergedList = mergeList(state.messageList, updateMessageAction.messages);
+        mergedList = Array.from(new Set([...state.messageList, ...updateMessageAction.messages]));
       } else {
         mergedList = updateMessageAction.messages;
       }

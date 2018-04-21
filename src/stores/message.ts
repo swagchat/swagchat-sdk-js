@@ -3,15 +3,22 @@ import { IMessage } from '../';
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
 export interface MessageState {
+  fetchCompleted: boolean;
+  sending: boolean;
   messagesAllCount: number;
   messagesLimit: number;
   messagesOffset: number;
-  messageMap: {[key: string]: IMessage};
+  messagesBeforeSending: IMessage[];
+  messagesSending: IMessage[];
   messageList: IMessage[];
-  createMessages: IMessage[];
+  messageMap: {[key: string]: IMessage};
   scrollBottomAnimationDuration: number;
+
+  // speech
   isSpeechMode: boolean;
   speechSynthesisUtterance: SpeechSynthesisUtterance | null;
+
+  // search
   searchText: string;
   searchResultTabIndex: number;
 }

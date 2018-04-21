@@ -144,9 +144,10 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
   const state: State = yield select();
   const cookieUserIdKey = 'sc_user_id';
   const cookieRoomIdKey = 'sc_room_id';
+  const cookie = new Cookie();
 
-  const userId = new Cookie().read(cookieUserIdKey);
-  const roomId = new Cookie().read(cookieRoomIdKey);
+  const userId = cookie.read(cookieUserIdKey);
+  const roomId = cookie.read(cookieRoomIdKey);
 
   let client = Object.assign(state.client.client!);
   if (userId === '' || userId === null) {
@@ -160,7 +161,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       client.socketOpen();
       yield put(setClientActionCreator(client));
       yield put(fetchUserRequestActionCreator());
-      new Cookie().write(cookieUserIdKey, userRes.user.userId);
+      cookie.write(cookieUserIdKey, userRes.user.userId);
     }
   } else {
     const userRes = yield call(() => {
@@ -173,25 +174,27 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       client.socketOpen();
       yield put(setClientActionCreator(client));
       yield put(fetchUserRequestActionCreator());
+    } else {
+      cookie.remove(cookieUserIdKey);
     }
   }
 
   if (roomId === '' || roomId === null) {
+    cookie.remove(cookieRoomIdKey);
     let room = {
-      name: 'test',
+      name: client.guestChatRoomName,
       userId: client.userId,
       type: RoomType.PRIVATE_ROOM,
       userIds: ['499d6832-4218-44d6-a1f8-1ce7cda9c63f'],
     } as IRoom;
-  
+
     const roomRes = yield call((room: IRoom) => {
       return client.createRoom(room);
     }, room);
     if (roomRes.room !== null) {
-      // yield put(fetchUserRequestActionCreator());
       yield put(setCurrentRoomNameActionCreator(roomRes.room.name));
       yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
-      new Cookie().write(cookieRoomIdKey, roomRes.room.roomId);
+      cookie.write(cookieRoomIdKey, roomRes.room.roomId);
     }
   } else {
     const roomRes = yield call(() => {
@@ -200,6 +203,8 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
     if (roomRes.room !== null) {
       yield put(setCurrentRoomNameActionCreator(roomRes.room.name));
       yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
+    } else {
+      cookie.remove(cookieRoomIdKey);
     }
   }
 }

@@ -27,15 +27,15 @@ export interface IPaths {
 export class Client {
   private _apiEndpoint: string;
   private _wsEndpoint: string;
-
-  public accessToken?: string;
-  public userId?: string;
-  public username?: string;
   private _conn: Realtime;
   private _speechRt: Realtime;
   private _paths: IPaths;
   private _history: History;
   private _realm: string;
+
+  public accessToken?: string;
+  public userId?: string;
+  public username?: string;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -134,6 +134,7 @@ export class Client {
   }
 
   public socketOpen() {
+    if (this._wsEndpoint !== undefined && this._wsEndpoint !== '' && this.userId !== undefined && this.userId !== '')
     this._conn = new Realtime(this._wsEndpoint, this.userId);
   }
 
@@ -646,10 +647,19 @@ export class Client {
    * @param messages An array for message objects to send.
    */
   public sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
+    const sendMessages: I.IMessage[] = [];
+    let copyMessage: I.IMessage;
+    messages.forEach(message => {
+      copyMessage = Object.assign({}, message);
+      delete copyMessage.messageId;
+      delete copyMessage.created;
+      delete copyMessage.modified;
+      sendMessages.push(copyMessage);
+    });
     return fetch(this._apiEndpoint + '/messages', {
       method: 'POST',
       headers: this._jsonHeaders(),
-      body: JSON.stringify({messages: messages})
+      body: JSON.stringify({messages: sendMessages})
     }).then((response: Response) => {
       if (response.status === 201) {
         return response.json().then((messagesRes) => {
@@ -948,6 +958,7 @@ export class Client {
     }).then((response: Response) => {
       if (response.status === 201) {
         return response.json().then((user) => {
+          this.accessToken = user.accessToken;
           return (
             {
               user: user,
@@ -985,6 +996,7 @@ export class Client {
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((user) => {
+          this.accessToken = user.accessToken;
           return (
             {
               user: user,

@@ -60,6 +60,33 @@ export function opponentUser(users: IUserForRoom[], myUserId: string): (IUserFor
   return userForRooms;
 }
 
+export function generateUUID() {
+  let uuid = '', i, random;
+  for (i = 0; i < 32; i++) {
+    random = Math.random() * 16 | 0;
+    if (i === 8 || i === 12 || i === 16 || i === 20) {
+      uuid += '-';
+    }
+    uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
+  }
+  return uuid;
+}
+
+// export function generateUUID() {
+//   let chars = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.split('');
+//   for (let i = 0, len = chars.length; i < len; i++) {
+//       switch (chars[i]) {
+//           case 'x':
+//               chars[i] = Math.floor(Math.random() * 16).toString(16);
+//               break;
+//           case 'y':
+//               chars[i] = (Math.floor(Math.random() * 4) + 8).toString(16);
+//               break;
+//       }
+//   }
+//   return chars.join('');
+// }
+
 export function generateRoomName(users: IUserForRoom[], myUserId: string): string {
   const separator = ', ';
   let roomName = '';
@@ -158,7 +185,7 @@ export function createQueryParams(params: {[key: string]: string | number}) {
     .join('&');
 }
 
-export function createMessage(roomId: string, userId: string, type: string, payload: Object): I.IMessage {
+export function createMessage(messageId: string, roomId: string, userId: string, type: string, payload: Object): I.IMessage {
   if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
     throw Error('Creating message failure. Parameter invalid.');
   }
@@ -166,11 +193,12 @@ export function createMessage(roomId: string, userId: string, type: string, payl
     throw Error('Creating message failure. Parameter invalid.');
   }
   return {
+    messageId: messageId,
     roomId: roomId,
     userId: userId,
     type: type,
     eventName: 'message',
-    payload: payload
+    payload: payload,
   };
 }
 
@@ -207,27 +235,27 @@ export function logger(label: string, level: string, message: string) {
   }
 }
 
-export function mergeList(sortedList: IMessage[], unsortedList: IMessage[]): IMessage[] {
-  unsortedList.sort(function(a: IMessage, b: IMessage) {
-    if (new Date(a.created!) < new Date(b.created!)) return -1;
-    if (new Date(a.created!) > new Date(b.created!)) return 1;
-    return 0;
-  });
+// export function mergeList(sortedList: IMessage[], unsortedList: IMessage[]): IMessage[] {
+//   unsortedList.sort(function(a: IMessage, b: IMessage) {
+//     if (new Date(a.created!) < new Date(b.created!)) return -1;
+//     if (new Date(a.created!) > new Date(b.created!)) return 1;
+//     return 0;
+//   });
 
-  let mergedList: IMessage[] = [];
-  while (sortedList.length || unsortedList.length) {
-    if (sortedList.length === 0) {
-      mergedList.push(unsortedList.shift()!);
-    } else if (unsortedList.length === 0) {
-      mergedList.push(sortedList.shift()!);
-    } else if (new Date(sortedList[0].created!) > new Date(unsortedList[0].created!)) {
-      mergedList.push(unsortedList.shift()!);
-    } else {
-      mergedList.push(sortedList.shift()!);
-    }
-  }
-  return mergedList;
-}
+//   let mergedList: IMessage[] = [];
+//   while (sortedList.length || unsortedList.length) {
+//     if (sortedList.length === 0) {
+//       mergedList.push(unsortedList.shift()!);
+//     } else if (unsortedList.length === 0) {
+//       mergedList.push(sortedList.shift()!);
+//     } else if (new Date(sortedList[0].created!) > new Date(unsortedList[0].created!)) {
+//       mergedList.push(unsortedList.shift()!);
+//     } else {
+//       mergedList.push(sortedList.shift()!);
+//     }
+//   }
+//   return mergedList;
+// }
 
 export function messageList2map(messageList: IMessage[]): {[key: string]: IMessage} {
   let messages: {[key: string]: IMessage} = {};
@@ -238,7 +266,7 @@ export function messageList2map(messageList: IMessage[]): {[key: string]: IMessa
 }
 
 export function isUrl(str: string): boolean {
-  if (str === '') {
+  if (str === '' || str === undefined) {
     return false;
   }
 
@@ -260,18 +288,3 @@ export function isDataUrl(str: string): boolean {
     return false;
   }
 }
-
-// export function generateUuid() {
-//   let chars = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.split('');
-//   for (let i = 0, len = chars.length; i < len; i++) {
-//       switch (chars[i]) {
-//           case 'x':
-//               chars[i] = Math.floor(Math.random() * 16).toString(16);
-//               break;
-//           case 'y':
-//               chars[i] = (Math.floor(Math.random() * 4) + 8).toString(16);
-//               break;
-//       }
-//   }
-//   return chars.join('');
-// }

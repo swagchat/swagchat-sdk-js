@@ -119,6 +119,7 @@ export interface IMessage {
   eventName?: string;
   payload: Object;
   created?: string;
+  modified?: string;
 }
 
 export interface ISendMessagesResponse {
@@ -133,6 +134,10 @@ export interface ITextPayload {
 export interface IImagePayload {
   thumbnailUrl: string;
   sourceUrl: string;
+  dataUrl?: string;
+  width?: number;
+  height?: number;
+  mime?: string;
 }
 
 export interface IAsset {
@@ -245,6 +250,7 @@ export interface IAddonMessageInteractionProps {
   // settingState: ISettingState;
   position: 'top' | 'bottom';
   isAlwaysDisplay: boolean;
+  onSendListener?: (message: IMessage) => void;
 }
 
 export interface IAddonMessageMenuProps {
