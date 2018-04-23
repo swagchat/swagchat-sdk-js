@@ -654,6 +654,15 @@ export class Client {
       delete copyMessage.messageId;
       delete copyMessage.created;
       delete copyMessage.modified;
+      if (copyMessage.payload.hasOwnProperty('dataUrl')) {
+        delete (copyMessage.payload as I.IImagePayload).dataUrl;
+      }
+      if (copyMessage.payload.hasOwnProperty('width')) {
+        delete (copyMessage.payload as I.IImagePayload).width;
+      }
+      if (copyMessage.payload.hasOwnProperty('height')) {
+        delete (copyMessage.payload as I.IImagePayload).height;
+      }
       sendMessages.push(copyMessage);
     });
     return fetch(this._apiEndpoint + '/messages', {
