@@ -291,6 +291,7 @@ export class Client {
             {
               room: new Room({
                 apiEndpoint: this._apiEndpoint,
+                userId: this.userId!,
                 accessToken: this.accessToken!,
                 room: room,
                 conn: this._conn,
@@ -372,6 +373,7 @@ export class Client {
           {
             room: new Room({
               apiEndpoint: this._apiEndpoint,
+              userId: this.userId!,
               accessToken: this.accessToken!,
               room: room,
               conn: this._conn ? this._conn : undefined,

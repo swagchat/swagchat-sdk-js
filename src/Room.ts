@@ -4,6 +4,7 @@ import { Realtime, createQueryParams, logger, SpeechMode } from './';
 
 export interface IRoomParams {
   apiEndpoint: string;
+  userId: string;
   accessToken: string;
   room: I.IRoom;
   conn?: Realtime;
@@ -19,12 +20,13 @@ export interface IRoomParams {
 export class Room {
   private _apiEndpoint: string;
   private _accessToken: string;
+  private _userId: string;
   private _data: I.IRoom;
   private _conn: Realtime;
 
   private _baseHeaders(): Object {
     let baseHeaders = {
-      'X-Sub': this.userId,
+      'X-Sub': this._userId,
     };
     if (this._accessToken !== undefined) {
       baseHeaders = Object.assign(
@@ -53,7 +55,7 @@ export class Room {
     }
 
     this._apiEndpoint = params.apiEndpoint;
-    this._accessToken = params.accessToken;
+    this._userId = params.userId;
     this._data = params.room;
 
     if (params.accessToken !== undefined) {
@@ -224,6 +226,7 @@ export class Room {
             {
               room: new Room({
                 apiEndpoint: this._apiEndpoint,
+                userId: this._userId,
                 accessToken: this._accessToken,
                 room: room,
                 conn: this._conn ? this._conn : undefined,

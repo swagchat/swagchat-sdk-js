@@ -184,8 +184,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
     let room = {
       name: client.guestChatRoomName,
       userId: client.userId,
-      type: RoomType.PRIVATE_ROOM,
-      userIds: ['499d6832-4218-44d6-a1f8-1ce7cda9c63f'],
+      type: RoomType.CUSTOMER_ROOM,
     } as IRoom;
 
     const roomRes = yield call((room: IRoom) => {

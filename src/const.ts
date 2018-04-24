@@ -8,6 +8,7 @@ export enum RoomType {
   PRIVATE_ROOM = 2,
   PUBLIC_ROOM = 3,
   NOTICE_ROOM = 4,
+  CUSTOMER_ROOM= 5,
 }
 
 export enum SpeechMode {
