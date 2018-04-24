@@ -19,6 +19,7 @@ export interface IUser {
   isShowUsers?: boolean;
   lang?: string;
   accessToken?: string;
+  lastAccessRoomId?: string;
   created?: string;
   modified?: string;
   rooms?: IRoomForUser[];

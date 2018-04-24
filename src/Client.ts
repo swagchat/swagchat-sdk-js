@@ -13,6 +13,7 @@ export interface IClientParams {
   history: History;
   isGuest?: boolean;
   realm?: string;
+  updateLastAccessRoomId?: boolean;
 }
 
 export interface IPaths {
@@ -36,6 +37,7 @@ export class Client {
   public accessToken?: string;
   public userId?: string;
   public username?: string;
+  public updateLastAccessRoomId: boolean;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -128,6 +130,12 @@ export class Client {
 
     if (params.realm !== undefined) {
       this._realm = params.realm;
+    }
+
+    if (params.updateLastAccessRoomId === undefined) {
+      this.updateLastAccessRoomId = false;
+    } else {
+      this.updateLastAccessRoomId = params.updateLastAccessRoomId;
     }
 
     logger('api', 'info', 'Initialized API Client OK');

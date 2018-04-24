@@ -35,6 +35,10 @@ import {
   userUnBlockRequestSuccessActionCreator,
   userUnBlockRequestFailureActionCreator,
 } from '../actions/user';
+import {
+  setCurrentRoomIdActionCreator,
+  setCurrentRoomNameActionCreator,
+} from '../actions/room';
 
 function* gFetchUserRequest() {
   const state: State = yield select();
@@ -54,6 +58,10 @@ function* gFetchUserRequest() {
       });
     }
     yield put(fetchUserRequestSuccessActionCreator(userRes.user, userRooms, userRes.user.blocks!));
+    if (state.client.client!.updateLastAccessRoomId && userRes.user.lastAccessRoomId) {
+      yield put(setCurrentRoomIdActionCreator(userRes.user.lastAccessRoomId));
+      yield put(setCurrentRoomNameActionCreator(userRooms[userRes.user.lastAccessRoomId].name));
+    }
   } else {
     yield put(fetchUserRequestFailureActionCreator(userRes.error!));
   }
