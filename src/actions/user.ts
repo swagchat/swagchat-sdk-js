@@ -229,13 +229,11 @@ export const userUnBlockRequestFailureActionCreator = (problemDetail: IProblemDe
 export interface UpdateUserRoomAction extends UserBaseAction {
   roomId: string;
   userRoom: IRoomForUser;
-  moveTop: boolean;
 }
-export const updateUserRoomActionCreator = (roomId: string, userRoom: IRoomForUser, moveTop: boolean): UpdateUserRoomAction => ({
+export const updateUserRoomActionCreator = (roomId: string, userRoom: IRoomForUser): UpdateUserRoomAction => ({
   type: UPDATE_USER_ROOM,
   roomId: roomId,
   userRoom: userRoom,
-  moveTop: moveTop,
 });
 
 export type UserActions =

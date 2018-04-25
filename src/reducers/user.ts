@@ -188,9 +188,6 @@ export function user(state: UserState = getInitialState(), action: UserActions):
       userRoom = uura.userRoom,
       userRooms = Object.assign({}, state.userRooms);
       if (userRooms![uura.roomId] !== undefined) {
-        if (uura.moveTop) {
-          delete userRooms![uura.roomId];
-        }
         userRooms![uura.roomId] = userRoom;
       }
       return Object.assign(
