@@ -303,3 +303,13 @@ export function messageToString(message: IMessage): string {
   }
   return str;
 }
+
+export function replaceUrlToLink(str: string) {
+  const regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+  const regexp_makeLink = (all: string, url: string, h: string, href: string) => {
+    all;
+    h;
+    return '<a href="h' + href + '">' + url + '</a>';
+  };
+  return str.replace(regexp_url, regexp_makeLink);
+}
