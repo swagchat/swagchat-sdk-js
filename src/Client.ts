@@ -1,5 +1,5 @@
 import { History } from 'history';
-import { Realtime, Room, Platform, logger } from './';
+import { Realtime, Room, Platform, logger, EventName } from './';
 import * as I from './interface';
 import 'isomorphic-fetch';
 
@@ -1043,5 +1043,17 @@ export class Client {
         } as I.IProblemDetail,
       } as I.IFetchUserResponse;
     });
+  }
+
+  public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
+    if (this.userId) {
+      this._conn ? this._conn.subscribe(eventName, funcName, onMessage, this.userId) : null;
+    }
+  }
+
+  public unsubscribe(eventName: EventName, funcName: string): void {
+    if (this.userId) {
+      this._conn ? this._conn.unsubscribe(eventName, funcName, this.userId) : null;
+    }
   }
 }

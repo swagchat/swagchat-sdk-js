@@ -3,6 +3,10 @@ export enum Platform {
   ANDROID = 2,
 }
 
+export enum EventName {
+  MESSAGE = 'message',
+}
+
 export enum RoomType {
   ONE_ON_ONE = 1,
   PRIVATE_ROOM = 2,

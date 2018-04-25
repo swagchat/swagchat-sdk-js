@@ -23,6 +23,7 @@ export const USER_BLOCK_REQUEST_FAILURE = 'USER_BLOCK_REQUEST_FAILURE';
 export const USER_UNBLOCK_REQUEST = 'USER_UNBLOCK_REQUEST';
 export const USER_UNBLOCK_REQUEST_SUCCESS = 'USER_UNBLOCK_REQUEST_SUCCESS';
 export const USER_UNBLOCK_REQUEST_FAILURE = 'USER_UNBLOCK_REQUEST_FAILURE';
+export const UPDATE_USER_ROOM = 'UPDATE_USER_ROOM';
 
 export type UserActionTypes =
   typeof FETCH_USER_REQUEST |
@@ -46,7 +47,8 @@ export type UserActionTypes =
   typeof USER_BLOCK_REQUEST_FAILURE |
   typeof USER_UNBLOCK_REQUEST |
   typeof USER_UNBLOCK_REQUEST_SUCCESS |
-  typeof USER_UNBLOCK_REQUEST_FAILURE
+  typeof USER_UNBLOCK_REQUEST_FAILURE |
+  typeof UPDATE_USER_ROOM
 ;
 
 export interface UserBaseAction extends Action {
@@ -224,6 +226,18 @@ export const userUnBlockRequestFailureActionCreator = (problemDetail: IProblemDe
   problemDetail: problemDetail,
 });
 
+export interface UpdateUserRoomAction extends UserBaseAction {
+  roomId: string;
+  userRoom: IRoomForUser;
+  moveTop: boolean;
+}
+export const updateUserRoomActionCreator = (roomId: string, userRoom: IRoomForUser, moveTop: boolean): UpdateUserRoomAction => ({
+  type: UPDATE_USER_ROOM,
+  roomId: roomId,
+  userRoom: userRoom,
+  moveTop: moveTop,
+});
+
 export type UserActions =
   UserBaseAction |
   FetchUserRequestAction |
@@ -247,5 +261,6 @@ export type UserActions =
   UserBlockRequestFailureAction |
   UserUnBlockRequestAction |
   UserUnBlockRequestSuccessAction |
-  UserUnBlockRequestFailureAction
+  UserUnBlockRequestFailureAction |
+  UpdateUserRoomAction
 ;

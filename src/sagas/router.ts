@@ -36,8 +36,13 @@ function* gLocationChange() {
     return;
   }
 
-  let userRooms: {[key: string]: IRoomForUser} = {};
-  if (state.user.user === null) {
+  let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
+  if (roomsPathRegExp !== null) {
+    // rooms page
+  }
+
+  if (state.user.user === null || roomsPathRegExp !== null) {
+    let userRooms: {[key: string]: IRoomForUser} = {};
     const userRes: IFetchUserResponse = yield call(() => {
       return client.getUser();
     });
@@ -59,10 +64,6 @@ function* gLocationChange() {
     }
   }
 
-  let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
-  if (roomsPathRegExp !== null) {
-    // rooms page
-  }
 
   let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
   if (messagesPathRegExp !== null) {

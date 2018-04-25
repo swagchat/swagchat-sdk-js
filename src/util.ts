@@ -288,3 +288,18 @@ export function isDataUrl(str: string): boolean {
     return false;
   }
 }
+
+export function messageToString(message: IMessage): string {
+  let str = '';
+  switch (message.type) {
+    case 'text':
+      str = (message.payload as I.ITextPayload).text;
+      break;
+    case 'image':
+      str = '画像を受信しました';
+      break;
+    default:
+      break;
+  }
+  return str;
+}

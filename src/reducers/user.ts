@@ -17,8 +17,9 @@ import {
   USER_BLOCK_REQUEST_FAILURE, UserBlockRequestFailureAction,
   USER_UNBLOCK_REQUEST_SUCCESS, UserUnBlockRequestSuccessAction,
   USER_UNBLOCK_REQUEST_FAILURE, UserUnBlockRequestFailureAction,
+  UPDATE_USER_ROOM, UpdateUserRoomAction,
 } from '../actions/user';
-import { IUser } from '../';
+import { IUser, IRoomForUser } from '../';
 
 const getInitialState = (): UserState => ({
   user: null,
@@ -36,6 +37,9 @@ const getInitialState = (): UserState => ({
 });
 
 export function user(state: UserState = getInitialState(), action: UserActions): UserState {
+  let userRooms: {[key: string]: IRoomForUser} | null;
+  let userRoom: IRoomForUser;
+
   switch (action.type) {
     case FETCH_USER_REQUEST_SUCCESS:
       const fursAction = action as FetchUserRequestSuccessAction;
@@ -177,6 +181,23 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         {
           user: null,
           problemDetail: (action as UserUnBlockRequestFailureAction).problemDetail,
+        }
+      );
+    case UPDATE_USER_ROOM:
+      const uura = (action as UpdateUserRoomAction);
+      userRoom = uura.userRoom,
+      userRooms = Object.assign({}, state.userRooms);
+      if (userRooms![uura.roomId] !== undefined) {
+        if (uura.moveTop) {
+          delete userRooms![uura.roomId];
+        }
+        userRooms![uura.roomId] = userRoom;
+      }
+      return Object.assign(
+        {},
+        state,
+        {
+          userRooms: userRooms,
         }
       );
     default:

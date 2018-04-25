@@ -67,10 +67,6 @@ export class Room {
     }
   }
 
-  set onMessageReceived(onMessageReceived: Function) {
-    this._conn.onMessageReceived = onMessageReceived;
-  }
-
   get data(): I.IRoom {
     return this._data;
   }
@@ -433,29 +429,5 @@ export class Room {
         } as I.IProblemDetail,
       } as I.IFetchMessagesResponse;
     });
-  }
-
-  public subscribeMessage(onMessageReceived: Function): void {
-    this._conn ? this._conn.subscribeMessage(onMessageReceived, this.roomId) : null;
-  }
-
-  public unsubscribeMessage(): void {
-    this._conn ? this._conn.unsubscribeMessage(this.roomId) : null;
-  }
-
-  public subscribeUserJoin(onUserJoined: Function): void {
-    this._conn ? this._conn.subscribeUserJoin(onUserJoined, this.roomId) : null;
-  }
-
-  public unsubscribeUserJoin(): void {
-    this._conn ? this._conn.unsubscribeUserJoin(this.roomId) : null;
-  }
-
-  public subscribeUserLeft(onUserLeft: Function): void {
-    this._conn ? this._conn.subscribeUserLeft(onUserLeft, this.roomId) : null;
-  }
-
-  public unsubscribeUserLeft(): void {
-    this._conn ? this._conn.unsubscribeUserLeft(this.roomId) : null;
   }
 }
