@@ -245,6 +245,7 @@ export interface IAddonMessageItemProps {
   onRenderComplete?: () => {};
   isLast: boolean;
   isSearchResult?: boolean;
+  opponentUser?: IUserForRoom;
 }
 
 export interface IAddonMessageInteractionProps {
