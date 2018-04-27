@@ -2,7 +2,6 @@ import { IMessage, messageList2map } from '../';
 import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   MessageActions,
-  SET_FETCH_MESSAGES_COMPLETED, SetFetchMessagesCompletedAction,
   BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
   FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
   FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
@@ -21,7 +20,6 @@ import {
 } from '../actions/message';
 
 const getInitialState = (): MessageState => ({
-  fetchCompleted: false,
   sending: false,
   messagesAllCount: 0,
   messagesLimit: 0,
@@ -44,14 +42,6 @@ const getInitialState = (): MessageState => ({
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
   let mergedList: IMessage[];
   switch (action.type) {
-    case SET_FETCH_MESSAGES_COMPLETED:
-      return Object.assign(
-        {},
-        state,
-        {
-          fetchCompleted: (action as SetFetchMessagesCompletedAction).fetchCompleted,
-        }
-      );
     case BEFORE_FETCH_MESSAGES_REQUEST:
       const beforeMessagesFetchAction = action as BeforeFetchMessagesRequestAction;
       let beforeLimit = beforeMessagesFetchAction.messagesLimit;
@@ -80,7 +70,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         newOffset = 0;
       }
       const messagesFetchAction = action as FetchMessagesRequestSuccessAction;
-      mergedList = Array.from(new Set([...state.messageList, ...messagesFetchAction.messages.messages]));
+      mergedList = Array.from(new Set([...messagesFetchAction.messages.messages, ...state.messageList]));
       return Object.assign(
         {},
         state,

@@ -3,7 +3,6 @@ import { IMessage } from '../';
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
 export interface MessageState {
-  fetchCompleted: boolean;
   sending: boolean;
   messagesAllCount: number;
   messagesLimit: number;
