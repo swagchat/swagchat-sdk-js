@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { IMessages, IMessage, IProblemDetail } from '../';
 
-export const SET_FETCH_MESSAGES_COMPLETED = 'SET_FETCH_MESSAGES_COMPLETED';
+export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
 export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
@@ -22,7 +22,7 @@ export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
 export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
 
 export type MessageActionTypes =
-  typeof SET_FETCH_MESSAGES_COMPLETED |
+  typeof SET_IS_FIRST_FETCH |
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST_SUCCESS |
@@ -47,13 +47,13 @@ export interface MessageBaseAction extends Action {
   type: MessageActionTypes;
 }
 
-export interface SetFetchMessagesCompletedAction extends MessageBaseAction {
-  fetchCompleted: boolean;
+export interface SetIsFirstFetchAction extends MessageBaseAction {
+  isFirstFetch: boolean;
 }
-export const setFetchMessagesCompletedActionCreator =
-    (fetchCompleted: boolean): SetFetchMessagesCompletedAction => ({
-  type: SET_FETCH_MESSAGES_COMPLETED,
-  fetchCompleted: fetchCompleted,
+export const setIsFirstFetchActionCreator =
+    (isFirstFetch: boolean): SetIsFirstFetchAction => ({
+  type: SET_IS_FIRST_FETCH,
+  isFirstFetch: isFirstFetch,
 });
 
 export interface BeforeFetchMessagesRequestAction extends MessageBaseAction {
@@ -197,7 +197,7 @@ export const uploadAssetAndSendMessageRequestActionCreator = (file: File): Uploa
 
 export type MessageActions =
   MessageBaseAction |
-  SetFetchMessagesCompletedAction |
+  SetIsFirstFetchAction |
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |

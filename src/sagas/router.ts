@@ -12,6 +12,9 @@ import {
   clearProfileUserActionCreator,
 } from '../actions/user';
 import {
+  setIsFirstFetchActionCreator,
+} from '../actions/message';
+import {
   State, IFetchUserResponse, IRoomForUser,
   opponentUser, generateRoomName,
 } from '../';
@@ -73,6 +76,7 @@ function* gLocationChange() {
       const currentRoomId = roomIds[1];
       let state: State = yield select();
       if (state.user.userRooms![currentRoomId] !== undefined) {
+        yield put(setIsFirstFetchActionCreator(true));
         yield put(setCurrentRoomIdActionCreator(currentRoomId));
         yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
       }

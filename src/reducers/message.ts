@@ -2,6 +2,7 @@ import { IMessage, messageList2map } from '../';
 import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   MessageActions,
+  SET_IS_FIRST_FETCH, SetIsFirstFetchAction,
   BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
   FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
   FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
@@ -20,6 +21,7 @@ import {
 } from '../actions/message';
 
 const getInitialState = (): MessageState => ({
+  isFirstFetch: false,
   sending: false,
   messagesAllCount: 0,
   messagesLimit: 0,
@@ -42,6 +44,14 @@ const getInitialState = (): MessageState => ({
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
   let mergedList: IMessage[];
   switch (action.type) {
+    case SET_IS_FIRST_FETCH:
+      return Object.assign(
+        {},
+        state,
+        {
+          isFirstFetch: (action as SetIsFirstFetchAction).isFirstFetch,
+        }
+      );
     case BEFORE_FETCH_MESSAGES_REQUEST:
       const beforeMessagesFetchAction = action as BeforeFetchMessagesRequestAction;
       let beforeLimit = beforeMessagesFetchAction.messagesLimit;
