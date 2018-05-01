@@ -239,13 +239,15 @@ export interface IAddonMessage {
 }
 
 export interface IAddonMessageItemProps {
-  message: IMessage;
-  user: IUserForRoom;
-  myUserId: string;
+  message?: IMessage;
+  user?: IUserForRoom;
+  myUserId?: string;
   onRenderComplete?: () => {};
-  isLast: boolean;
+  isLast?: boolean;
   isSearchResult?: boolean;
   opponentUser?: IUserForRoom;
+  calcHeight?: (height: number) => void;
+  text?: string;
 }
 
 export interface IAddonMessageInteractionProps {

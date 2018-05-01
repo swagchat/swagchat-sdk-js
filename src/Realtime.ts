@@ -103,18 +103,23 @@ export class Realtime {
   }
 
   public subscribe(eventName: EventName, funcName: string, func: Function, userId: string): void {
+    if (!eventName || typeof(eventName) !== 'string') {
+      logger('realtime', 'error', 'Subscribe failure. eventName is not setting.');
+      return;
+    }
+
     if (!funcName || typeof(funcName) !== 'string') {
-      logger('realtime', 'error', 'Subscribe message failure. funcName is not setting.');
+      logger('realtime', 'error', 'Subscribe ' + eventName + 'failure. funcName is not setting.');
       return;
     }
 
     if (func === undefined) {
-      logger('realtime', 'error', 'Subscribe message failure. function is undefined.');
+      logger('realtime', 'error', 'Subscribe ' + eventName + 'failure. function is undefined.');
       return;
     }
 
     if (!userId || typeof(userId) !== 'string') {
-      logger('realtime', 'error', 'Subscribe message failure. userId is not setting.');
+      logger('realtime', 'error', 'Subscribe ' + eventName + 'failure. userId is not setting.');
       return;
     }
 
@@ -123,7 +128,7 @@ export class Realtime {
     }
 
     if (!this.sendEvent(userId, eventName, 'subscribe')) {
-      logger('realtime', 'error', 'Subscribe message failure userId[' + userId + ']');
+      logger('realtime', 'error', 'Subscribe ' + eventName + ' failure funcName[' + funcName + '] userId[' + userId + ']');
       return;
     }
 
@@ -132,7 +137,7 @@ export class Realtime {
     }
 
     this.onEventHandlers[eventName][funcName] = func;
-    logger('realtime', 'info', 'Subscribe message success userId[' + userId + ']');
+    logger('realtime', 'info', 'Subscribe ' + eventName + 'success funcName[' + funcName + '] userId[' + userId + ']');
   }
 
   public unsubscribe(eventName: EventName, funcName: string, userId: string): void {
@@ -141,13 +146,13 @@ export class Realtime {
     }
 
     if (!this.sendEvent(userId, eventName, 'unsubscribe')) {
-      logger('realtime', 'error', 'Unsubscribe message failure userId[' + userId + ']');
+      logger('realtime', 'error', 'Unsubscribe ' + eventName + 'failure funcName[' + funcName + '] userId[' + userId + ']');
     }
 
     if (this.onEventHandlers[eventName] && this.onEventHandlers[eventName][funcName]) {
       delete this.onEventHandlers[eventName][funcName];
     }
 
-    logger('realtime', 'info', 'Unsubscribe message success userId[' + userId + ']');
+    logger('realtime', 'info', 'Unsubscribe ' + eventName + 'success funcName[' + funcName + '] userId[' + userId + ']');
   }
 }

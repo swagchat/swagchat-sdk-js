@@ -44,7 +44,9 @@ export class Client {
   }
 
   set onConnected(callback: Function) {
-    this._conn.onConnected = callback;
+    if (this._conn) {
+      this._conn.onConnected = callback;
+    }
   }
 
   set onError(callback: Function) {
@@ -142,8 +144,9 @@ export class Client {
   }
 
   public socketOpen() {
-    if (this._wsEndpoint !== undefined && this._wsEndpoint !== '' && this.userId !== undefined && this.userId !== '')
-    this._conn = new Realtime(this._wsEndpoint, this.userId);
+    if (this._wsEndpoint && this.userId) {
+      this._conn = new Realtime(this._wsEndpoint, this.userId);
+    }
   }
 
   public socketClose() {
@@ -667,12 +670,6 @@ export class Client {
       if (copyMessage.payload.hasOwnProperty('dataUrl')) {
         delete (copyMessage.payload as I.IImagePayload).dataUrl;
       }
-      if (copyMessage.payload.hasOwnProperty('width')) {
-        delete (copyMessage.payload as I.IImagePayload).width;
-      }
-      if (copyMessage.payload.hasOwnProperty('height')) {
-        delete (copyMessage.payload as I.IImagePayload).height;
-      }
       sendMessages.push(copyMessage);
     });
     return fetch(this._apiEndpoint + '/messages', {
@@ -784,9 +781,17 @@ export class Client {
    * File upload.
    * @param file Image data.
    */
-  public fileUpload(file: File): Promise<I.IPostAssetResponse> {
+  public fileUpload(file: File): Promise<I.IPostAssetResponse>;
+  public fileUpload(file: File, width: number, height: number): Promise<I.IPostAssetResponse>;
+  public fileUpload(file: File, width?: number, height?: number): Promise<I.IPostAssetResponse> {
     let formData = new FormData();
     formData.append('asset', file);
+    if (width) {
+      formData.append('width', String(width));
+    }
+    if (height) {
+      formData.append('height', String(height));
+    }
     return fetch(this._apiEndpoint + '/assets', {
       method: 'POST',
       headers: this._baseHeaders(),
@@ -1046,14 +1051,14 @@ export class Client {
   }
 
   public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
-    if (this.userId) {
-      this._conn ? this._conn.subscribe(eventName, funcName, onMessage, this.userId) : null;
+    if (this._conn && this.userId) {
+      this._conn.subscribe(eventName, funcName, onMessage, this.userId);
     }
   }
 
   public unsubscribe(eventName: EventName, funcName: string): void {
-    if (this.userId) {
-      this._conn ? this._conn.unsubscribe(eventName, funcName, this.userId) : null;
+    if (this._conn && this.userId) {
+      this._conn.unsubscribe(eventName, funcName, this.userId);
     }
   }
 }
