@@ -85,9 +85,9 @@ function* gUploadAssetAndUpdateUserRequest(action: UploadAssetAndUpdateUserReque
   };
 
   if (action.file !== null && action.file !== undefined) {
-    const assetRes: IPostAssetResponse = yield call((file: File) => {
-      return state.client.client!.fileUpload(file);
-    }, action.file);
+    const assetRes: IPostAssetResponse = yield call((file: File, mime: string) => {
+      return state.client.client!.fileUpload(file, mime);
+    }, action.file, action.mime);
     if (assetRes.asset) {
       yield put(uploadAssetRequestSuccessActionCreator(assetRes.asset));
       user.pictureUrl = assetRes.asset.url;
@@ -114,9 +114,9 @@ function* gUploadAssetAndUpdateRoomRequest(action: UploadAssetAndUpdateRoomReque
   };
 
   if (action.file !== null && action.file !== undefined) {
-    const assetRes: IPostAssetResponse = yield call((file: File) => {
-      return state.client.client!.fileUpload(file);
-    }, action.file);
+    const assetRes: IPostAssetResponse = yield call((file: File, mime: string) => {
+      return state.client.client!.fileUpload(file, mime);
+    }, action.file, action.mime);
     if (assetRes.asset) {
       yield put(uploadAssetRequestSuccessActionCreator(assetRes.asset));
       let url = assetRes.asset.url;

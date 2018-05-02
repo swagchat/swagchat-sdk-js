@@ -781,9 +781,9 @@ export class Client {
    * File upload.
    * @param file Image data.
    */
-  public fileUpload(file: File): Promise<I.IPostAssetResponse>;
-  public fileUpload(file: File, width: number, height: number): Promise<I.IPostAssetResponse>;
-  public fileUpload(file: File, width?: number, height?: number): Promise<I.IPostAssetResponse> {
+  public fileUpload(file: File, mime: string): Promise<I.IPostAssetResponse>;
+  public fileUpload(file: File, mime: string, width: number, height: number): Promise<I.IPostAssetResponse>;
+  public fileUpload(file: File, mime: string, width?: number, height?: number): Promise<I.IPostAssetResponse> {
     let formData = new FormData();
     formData.append('asset', file);
     if (width) {
@@ -791,6 +791,9 @@ export class Client {
     }
     if (height) {
       formData.append('height', String(height));
+    }
+    if (mime !== '') {
+      formData.append('mime', mime);
     }
     return fetch(this._apiEndpoint + '/assets', {
       method: 'POST',

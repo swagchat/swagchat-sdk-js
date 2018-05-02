@@ -26,22 +26,26 @@ export interface UploadAssetAndUpdateUserRequestAction extends CombinedBaseActio
   type: CombinedActionTypes;
   userName: string;
   file: File | null;
+  mime: string;
 }
-export const uploadAssetAndUpdateUserRequestActionCreator = (userName: string, file: File | null): UploadAssetAndUpdateUserRequestAction => ({
+export const uploadAssetAndUpdateUserRequestActionCreator = (userName: string, file: File | null, mime: string): UploadAssetAndUpdateUserRequestAction => ({
   type: UPLOAD_ASSET_AND_UPDATE_USER_REQUEST,
   userName: userName,
   file: file,
+  mime: mime,
 });
 
 export interface UploadAssetAndUpdateRoomRequestAction extends CombinedBaseAction {
   type: CombinedActionTypes;
   roomName: string;
   file: File | null;
+  mime: string;
 }
-export const uploadAssetAndUpdateRoomRequestActionCreator = (roomName: string, file: File | null): UploadAssetAndUpdateRoomRequestAction => ({
+export const uploadAssetAndUpdateRoomRequestActionCreator = (roomName: string, file: File | null, mime: string): UploadAssetAndUpdateRoomRequestAction => ({
   type: UPLOAD_ASSET_AND_UPDATE_ROOM_REQUEST,
   roomName: roomName,
   file: file,
+  mime: mime,
 });
 
 export interface CreateGuestuserAndCreateRoomAndFetchMessagesRequestAction extends CombinedBaseAction {

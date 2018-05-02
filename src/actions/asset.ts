@@ -17,10 +17,12 @@ export interface AssetBaseAction extends Action {
 
 export interface UploadAssetRequestAction extends AssetBaseAction {
   file: File;
+  mime: string;
 }
-export const uploadAssetRequestActionCreator = (file: File): UploadAssetRequestAction => ({
+export const uploadAssetRequestActionCreator = (file: File, mime: string): UploadAssetRequestAction => ({
   type: UPLOAD_ASSET_REQUEST,
   file: file,
+  mime: mime,
 });
 
 export interface UploadAssetRequestSuccessAction extends AssetBaseAction {

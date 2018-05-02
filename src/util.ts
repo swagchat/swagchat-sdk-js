@@ -297,6 +297,8 @@ export function messageToString(message: IMessage): string {
       break;
     case 'image':
       str = '画像を受信しました';
+    case 'file':
+      str = '[' + (message.payload as I.IFilePayload).filename + ']' + 'を受信しました';
       break;
     default:
       break;
@@ -328,4 +330,18 @@ export function generateOnlineText(ISO3339: string): string {
 
   const text = minutesDiff === 0 ? '1分以内' : minutesDiff + '分前';
   return text;
+}
+
+export function getExtention(fileName: string) {
+  let ret;
+  if (!fileName) {
+      return ret;
+  }
+  const fileTypes = fileName.split('.');
+  const len = fileTypes.length;
+  if (len === 0) {
+      return ret;
+  }
+  ret = fileTypes[len - 1];
+  return ret;
 }

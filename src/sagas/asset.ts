@@ -10,9 +10,9 @@ import { State } from '../stores';
 
 function* gUploadAssetRequest(action: UploadAssetRequestAction) {
   const state: State = yield select();
-  const res: IPostAssetResponse = yield call((file: File) => {
-    return state.client.client!.fileUpload(file);
-  }, action.file);
+  const res: IPostAssetResponse = yield call((file: File, mime: string) => {
+    return state.client.client!.fileUpload(file, mime);
+  }, action.file, action.mime);
   if (res.asset) {
     yield put(uploadAssetRequestSuccessActionCreator(res.asset));
   } else {

@@ -139,16 +139,27 @@ export interface IImagePayload {
   thumbnailUrl: string;
   sourceUrl: string;
   dataUrl?: string;
+  mime?: string;
+  size: string;
   width?: number;
   height?: number;
-  mime?: string;
+}
+
+export interface IFilePayload {
+  sourceUrl: string;
+  filename: string;
+  mime: string;
+  size: number;
 }
 
 export interface IAsset {
   assetId: string;
   mime: string;
+  size: string;
   extension: string;
   url: string;
+  width?: number;
+  height?: number;
 }
 
 export interface ICloseEvent extends Event {
