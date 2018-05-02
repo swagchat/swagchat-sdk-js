@@ -300,6 +300,9 @@ export function messageToString(message: IMessage): string {
     case 'file':
       str = '[' + (message.payload as I.IFilePayload).filename + ']' + 'を受信しました';
       break;
+    case 'operatorMessage':
+      str = (message.payload as I.ITextPayload).text;
+      break;
     default:
       break;
   }
