@@ -20,6 +20,7 @@ export interface IUser {
   lang?: string;
   accessToken?: string;
   lastAccessRoomId?: string;
+  lastAccessed?: string;
   created?: string;
   modified?: string;
   rooms?: IRoomForUser[];
@@ -33,6 +34,7 @@ export interface IUserMini {
   userId: string;
   name: string;
   pictureUrl: string;
+  lastAccessed: string;
 }
 
 export interface IRoomForUser {
@@ -84,6 +86,7 @@ export interface IUserForRoom {
   metaData?: {[key: string]: string | number | boolean | Object};
   isCanBlock?: boolean;
   isShowUsers?: boolean;
+  lastAccessed?: string;
   created?: string;
   modified?: string;
   ruUnreadCount?: number;

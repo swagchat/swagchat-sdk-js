@@ -317,3 +317,15 @@ export function replaceUrlToLink(str: string, targetBlank: boolean) {
   };
   return str.replace(regexp_url, regexp_makeLink);
 }
+
+export function generateOnlineText(ISO3339: string): string {
+  const lastAccessedDate = new Date(ISO3339);
+  const msDiff = new Date().getTime() - lastAccessedDate.getTime();
+  const minutesDiff = Math.floor(msDiff / (1000 * 60));
+  if (minutesDiff >= 15) {
+    return '';
+  }
+
+  const text = minutesDiff === 0 ? '1分以内' : minutesDiff + '分前';
+  return text;
+}
