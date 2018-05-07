@@ -14,6 +14,9 @@ import {
   UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
+  SET_DROP_IMAGE_FILE, SetDropImageFileAction,
+  SET_DROP_FILE, SetDropFileAction,
+  CLEAR_DROP_FILE,
   SET_SPEECH_MODE, SetSpeechModeAction,
   SET_SPEECH_SYNTHESIS_UTTERANCE, SetSpeechSynthesisUtteranceAction,
   SET_SEARCH_TEXT, SetSearchTextAction,
@@ -31,6 +34,10 @@ const getInitialState = (): MessageState => ({
   messageList: [],
   messageMap: {},
   scrollBottomAnimationDuration: 0,
+
+  // drag and drop file
+  dropImageFile: null,
+  dropFile: null,
 
   // speech
   isSpeechMode: false,
@@ -197,6 +204,33 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           scrollBottomAnimationDuration: 0,
+        }
+      );
+    case SET_DROP_IMAGE_FILE:
+      return Object.assign(
+        {},
+        state,
+        {
+          dropImageFile: (action as SetDropImageFileAction).dropImageFile,
+          dropFile: null,
+        }
+      );
+    case SET_DROP_FILE:
+      return Object.assign(
+        {},
+        state,
+        {
+          dropImageFile: null,
+          dropFile: (action as SetDropFileAction).dropFile,
+        }
+      );
+    case CLEAR_DROP_FILE:
+      return Object.assign(
+        {},
+        state,
+        {
+          dropImageFile: null,
+          dropFile: null,
         }
       );
     case SET_SPEECH_MODE:

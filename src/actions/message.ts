@@ -15,6 +15,9 @@ export const DELETE_LOCAL_MESSAGES = 'DELETE_LOCAL_MESSAGES';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
+export const SET_DROP_IMAGE_FILE = 'SET_DROP_IMAGE_FILE';
+export const SET_DROP_FILE = 'SET_DROP_FILE';
+export const CLEAR_DROP_FILE = 'CLEAR_DROP_FILE';
 export const SET_SPEECH_MODE = 'SET_SPEECH_MODE';
 export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
@@ -36,6 +39,9 @@ export type MessageActionTypes =
   typeof UPDATE_MESSAGES |
   typeof CLEAR_MESSAGES |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
+  typeof SET_DROP_IMAGE_FILE |
+  typeof SET_DROP_FILE |
+  typeof CLEAR_DROP_FILE |
   typeof SET_SPEECH_MODE |
   typeof SET_SPEECH_SYNTHESIS_UTTERANCE |
   typeof SET_SEARCH_TEXT |
@@ -154,6 +160,28 @@ export const resetScrollBottomAnimationDurationActionCreator = (): ResetScrollBo
   type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
 });
 
+export interface SetDropImageFileAction extends MessageBaseAction {
+  dropImageFile: File;
+}
+export const setDropImageFileActionCreator = (dropImageFile: File): SetDropImageFileAction => ({
+  type: SET_DROP_IMAGE_FILE,
+  dropImageFile: dropImageFile,
+});
+
+export interface SetDropFileAction extends MessageBaseAction {
+  dropFile: File;
+}
+export const setDropFileActionCreator = (dropFile: File): SetDropFileAction => ({
+  type: SET_DROP_FILE,
+  dropFile: dropFile,
+});
+
+export interface ClearDropFileAction extends MessageBaseAction {
+}
+export const clearDropFileActionCreator = (): ClearDropFileAction => ({
+  type: CLEAR_DROP_FILE,
+});
+
 export interface SetSpeechModeAction extends MessageBaseAction {
   isSpeechMode: boolean;
 }
@@ -208,6 +236,9 @@ export type MessageActions =
   DeleteLocalMessagesAction |
   PushLocalMessageAction |
   ClearMessagesAction |
+  SetDropImageFileAction |
+  SetDropFileAction |
+  ClearDropFileAction |
   SetSpeechModeAction |
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |

@@ -14,6 +14,10 @@ export interface MessageState {
   messageMap: {[key: string]: IMessage};
   scrollBottomAnimationDuration: number;
 
+  // drag and drop file
+  dropImageFile: File | null;
+  dropFile: File | null;
+
   // speech
   isSpeechMode: boolean;
   speechSynthesisUtterance: SpeechSynthesisUtterance | null;
