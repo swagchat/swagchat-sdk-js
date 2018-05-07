@@ -297,6 +297,7 @@ export function messageToString(message: IMessage): string {
       break;
     case 'image':
       str = '画像を受信しました';
+      break;
     case 'file':
       str = '[' + (message.payload as I.IFilePayload).filename + ']' + 'を受信しました';
       break;
