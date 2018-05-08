@@ -13,6 +13,7 @@ export interface MessageState {
   messageList: IMessage[];
   messageMap: {[key: string]: IMessage};
   scrollBottomAnimationDuration: number;
+  displayScrollBottomButton: boolean;
 
   // drag and drop file
   dropImageFile: File | null;

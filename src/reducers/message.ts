@@ -14,6 +14,7 @@ import {
   UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
+  SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
   SET_DROP_IMAGE_FILE, SetDropImageFileAction,
   SET_DROP_FILE, SetDropFileAction,
   CLEAR_DROP_FILE,
@@ -34,6 +35,7 @@ const getInitialState = (): MessageState => ({
   messageList: [],
   messageMap: {},
   scrollBottomAnimationDuration: 0,
+  displayScrollBottomButton: false,
 
   // drag and drop file
   dropImageFile: null,
@@ -204,6 +206,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           scrollBottomAnimationDuration: 0,
+        }
+      );
+    case SET_DISPLAY_SCROLL_BOTTOM_BUTTON:
+      return Object.assign(
+        {},
+        state,
+        {
+          displayScrollBottomButton: (action as SetDisplayScrollBottomButtonAction).displayScrollBottomButton,
         }
       );
     case SET_DROP_IMAGE_FILE:

@@ -15,6 +15,7 @@ export const DELETE_LOCAL_MESSAGES = 'DELETE_LOCAL_MESSAGES';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
+export const SET_DISPLAY_SCROLL_BOTTOM_BUTTON = 'SET_DISPLAY_SCROLL_BOTTOM_BUTTON';
 export const SET_DROP_IMAGE_FILE = 'SET_DROP_IMAGE_FILE';
 export const SET_DROP_FILE = 'SET_DROP_FILE';
 export const CLEAR_DROP_FILE = 'CLEAR_DROP_FILE';
@@ -39,6 +40,7 @@ export type MessageActionTypes =
   typeof UPDATE_MESSAGES |
   typeof CLEAR_MESSAGES |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
+  typeof SET_DISPLAY_SCROLL_BOTTOM_BUTTON |
   typeof SET_DROP_IMAGE_FILE |
   typeof SET_DROP_FILE |
   typeof CLEAR_DROP_FILE |
@@ -160,6 +162,14 @@ export const resetScrollBottomAnimationDurationActionCreator = (): ResetScrollBo
   type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
 });
 
+export interface SetDisplayScrollBottomButtonAction extends MessageBaseAction {
+  displayScrollBottomButton: boolean;
+}
+export const setDisplayScrollBottomButtonActionCreator = (displayScrollBottomButton: boolean): SetDisplayScrollBottomButtonAction => ({
+  type: SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
+  displayScrollBottomButton: displayScrollBottomButton,
+});
+
 export interface SetDropImageFileAction extends MessageBaseAction {
   dropImageFile: File;
 }
@@ -239,6 +249,8 @@ export type MessageActions =
   SetDropImageFileAction |
   SetDropFileAction |
   ClearDropFileAction |
+  ResetScrollBottomAnimationDurationAction |
+  SetDisplayScrollBottomButtonAction |
   SetSpeechModeAction |
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |
