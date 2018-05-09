@@ -71,7 +71,8 @@ function* gCreateRoomAndFetchMessagesRequest() {
   }, room);
   if (roomRes.room !== null) {
     yield put(fetchUserRequestActionCreator());
-    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ? generateRoomName(roomRes.room.users, state.user.user!.userId) : roomRes.room.name));
+    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ?
+      generateRoomName(roomRes.room.users, state.user.user!.userId, roomRes.room.type) : roomRes.room.name));
     yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId!));
   }
 }
@@ -134,7 +135,8 @@ function* gUploadAssetAndUpdateRoomRequest(action: UploadAssetAndUpdateRoomReque
   });
   if (roomRes.room) {
     yield put(fetchRoomRequestSuccessActionCreator(roomRes.room));
-    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ? generateRoomName(roomRes.room.users!, state.user.user!.userId) : roomRes.room.name));
+    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ?
+      generateRoomName(roomRes.room.users!, state.user.user!.userId, roomRes.room.type) : roomRes.room.name));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(roomRes.error!));
   }
@@ -162,6 +164,8 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       yield put(setClientActionCreator(client));
       yield put(fetchUserRequestActionCreator());
       cookie.write(cookieUserIdKey, userRes.user.userId);
+    } else {
+      return;
     }
   } else {
     const userRes = yield call(() => {
@@ -176,6 +180,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       yield put(fetchUserRequestActionCreator());
     } else {
       cookie.remove(cookieUserIdKey);
+      return;
     }
   }
 

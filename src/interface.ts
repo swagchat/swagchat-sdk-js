@@ -34,6 +34,7 @@ export interface IUserMini {
   userId: string;
   name: string;
   pictureUrl: string;
+  role: number;
   lastAccessed: string;
 }
 
@@ -84,6 +85,7 @@ export interface IUserForRoom {
   pictureUrl: string;
   informationUrl?: string;
   metaData?: {[key: string]: string | number | boolean | Object};
+  role: number;
   isCanBlock?: boolean;
   isShowUsers?: boolean;
   lastAccessed?: string;

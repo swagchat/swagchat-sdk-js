@@ -1,4 +1,4 @@
-import { IUserForRoom, IMessage, Room } from './';
+import { IUserForRoom, IMessage, Room, RoomType, RoleType } from './';
 import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -87,9 +87,17 @@ export function generateUUID() {
 //   return chars.join('');
 // }
 
-export function generateRoomName(users: IUserForRoom[], myUserId: string): string {
+export function generateRoomName(users: IUserForRoom[], myUserId: string, type: number): string {
   const separator = ', ';
   let roomName = '';
+
+  if (type === RoomType.CUSTOMER_ROOM) {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].role === RoleType.Guest) {
+        return users[i].name;
+      }
+    }
+  }
 
   for (let i = 0; i < users.length; i++) {
     let isLast = i === users.length - 1;

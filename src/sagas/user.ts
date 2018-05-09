@@ -51,7 +51,8 @@ function* gFetchUserRequest() {
       userRes.user.rooms!.map((roomForUser: IRoomForUser) => {
         const users = opponentUser(roomForUser.users, userRes.user!.userId);
         if (users) {
-          roomForUser.name = roomForUser.name === '' ? generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
+          roomForUser.name = roomForUser.name === '' ?
+            generateRoomName(roomForUser.users, userRes.user!.userId, roomForUser.type) : roomForUser.name;
           roomForUser.pictureUrl = users[0].pictureUrl;
         }
         userRooms[roomForUser.roomId] = roomForUser;
