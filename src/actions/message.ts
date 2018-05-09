@@ -3,6 +3,8 @@ import { IMessages, IMessage, IProblemDetail } from '../';
 
 export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
 export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
+export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
+export const SET_DISPLAY_SCROLL_BOTTOM_BUTTON = 'SET_DISPLAY_SCROLL_BOTTOM_BUTTON';
 export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
 export const FETCH_MESSAGES_REQUEST_FAILURE = 'FETCH_MESSAGES_REQUEST_FAILURE';
@@ -14,8 +16,7 @@ export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
 export const DELETE_LOCAL_MESSAGES = 'DELETE_LOCAL_MESSAGES';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
-export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
-export const SET_DISPLAY_SCROLL_BOTTOM_BUTTON = 'SET_DISPLAY_SCROLL_BOTTOM_BUTTON';
+export const SET_MESSAGE_TEXT = 'SET_MESSAGE_TEXT';
 export const SET_DROP_IMAGE_FILE = 'SET_DROP_IMAGE_FILE';
 export const SET_DROP_FILE = 'SET_DROP_FILE';
 export const CLEAR_DROP_FILE = 'CLEAR_DROP_FILE';
@@ -28,6 +29,8 @@ export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESS
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
+  typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
+  typeof SET_DISPLAY_SCROLL_BOTTOM_BUTTON |
   typeof FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST_SUCCESS |
   typeof FETCH_MESSAGES_REQUEST_FAILURE |
@@ -39,8 +42,7 @@ export type MessageActionTypes =
   typeof DELETE_LOCAL_MESSAGES |
   typeof UPDATE_MESSAGES |
   typeof CLEAR_MESSAGES |
-  typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
-  typeof SET_DISPLAY_SCROLL_BOTTOM_BUTTON |
+  typeof SET_MESSAGE_TEXT |
   typeof SET_DROP_IMAGE_FILE |
   typeof SET_DROP_FILE |
   typeof CLEAR_DROP_FILE |
@@ -62,6 +64,20 @@ export const setIsFirstFetchActionCreator =
     (isFirstFetch: boolean): SetIsFirstFetchAction => ({
   type: SET_IS_FIRST_FETCH,
   isFirstFetch: isFirstFetch,
+});
+
+export interface ResetScrollBottomAnimationDurationAction extends MessageBaseAction {
+}
+export const resetScrollBottomAnimationDurationActionCreator = (): ResetScrollBottomAnimationDurationAction => ({
+  type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
+});
+
+export interface SetDisplayScrollBottomButtonAction extends MessageBaseAction {
+  displayScrollBottomButton: boolean;
+}
+export const setDisplayScrollBottomButtonActionCreator = (displayScrollBottomButton: boolean): SetDisplayScrollBottomButtonAction => ({
+  type: SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
+  displayScrollBottomButton: displayScrollBottomButton,
 });
 
 export interface BeforeFetchMessagesRequestAction extends MessageBaseAction {
@@ -135,7 +151,6 @@ export const sendMessagesRequestFailureActionCreator =
   problemDetail: problemDetail,
 });
 
-
 export interface DeleteLocalMessagesAction extends MessageBaseAction {
 }
 export const deleteLocalMessagesActionCreator = (): DeleteLocalMessagesAction => ({
@@ -156,18 +171,13 @@ export const clearMessagesActionCreator = (): ClearMessagesAction => ({
   type: CLEAR_MESSAGES
 });
 
-export interface ResetScrollBottomAnimationDurationAction extends MessageBaseAction {
-}
-export const resetScrollBottomAnimationDurationActionCreator = (): ResetScrollBottomAnimationDurationAction => ({
-  type: RESET_SCROLL_BOTTOM_ANIMATION_DURATION
-});
 
-export interface SetDisplayScrollBottomButtonAction extends MessageBaseAction {
-  displayScrollBottomButton: boolean;
+export interface SetMessageTextAction extends MessageBaseAction {
+  text: string;
 }
-export const setDisplayScrollBottomButtonActionCreator = (displayScrollBottomButton: boolean): SetDisplayScrollBottomButtonAction => ({
-  type: SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
-  displayScrollBottomButton: displayScrollBottomButton,
+export const setMessageTextActionCreator = (text: string): SetMessageTextAction => ({
+  type: SET_MESSAGE_TEXT,
+  text: text,
 });
 
 export interface SetDropImageFileAction extends MessageBaseAction {

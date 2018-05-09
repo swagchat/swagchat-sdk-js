@@ -3,6 +3,8 @@ import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/messag
 import {
   MessageActions,
   SET_IS_FIRST_FETCH, SetIsFirstFetchAction,
+  RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
+  SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
   BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
   FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
   FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
@@ -13,8 +15,7 @@ import {
   DELETE_LOCAL_MESSAGES,
   UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
-  RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
-  SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
+  SET_MESSAGE_TEXT, SetMessageTextAction,
   SET_DROP_IMAGE_FILE, SetDropImageFileAction,
   SET_DROP_FILE, SetDropFileAction,
   CLEAR_DROP_FILE,
@@ -23,10 +24,15 @@ import {
   SET_SEARCH_TEXT, SetSearchTextAction,
   SET_SEARCH_RESULT_TAB_INDEX, SetSearchResultTabIndexAction,
 } from '../actions/message';
+const R = require('ramda');
 
 const getInitialState = (): MessageState => ({
   isFirstFetch: false,
   sending: false,
+  scrollBottomAnimationDuration: 0,
+  displayScrollBottomButton: false,
+
+  // message data
   messagesAllCount: 0,
   messagesLimit: 0,
   messagesOffset: 0,
@@ -34,8 +40,9 @@ const getInitialState = (): MessageState => ({
   messagesSending: [],
   messageList: [],
   messageMap: {},
-  scrollBottomAnimationDuration: 0,
-  displayScrollBottomButton: false,
+
+  // text
+  text: '',
 
   // drag and drop file
   dropImageFile: null,
@@ -59,6 +66,22 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           isFirstFetch: (action as SetIsFirstFetchAction).isFirstFetch,
+        }
+      );
+    case RESET_SCROLL_BOTTOM_ANIMATION_DURATION:
+      return Object.assign(
+        {},
+        state,
+        {
+          scrollBottomAnimationDuration: 0,
+        }
+      );
+    case SET_DISPLAY_SCROLL_BOTTOM_BUTTON:
+      return Object.assign(
+        {},
+        state,
+        {
+          displayScrollBottomButton: (action as SetDisplayScrollBottomButtonAction).displayScrollBottomButton,
         }
       );
     case BEFORE_FETCH_MESSAGES_REQUEST:
@@ -112,7 +135,9 @@ export function message(state: MessageState = getInitialState(), action: Message
       const createMessageAction = action as PushLocalMessageAction;
       const message = Object.assign({}, createMessageAction.message);
       message.created = new Date().toISOString();
-      mergedList = Array.from(new Set([...state.messagesBeforeSending, message]));
+      // mergedList = Array.from(new Set([...state.messagesBeforeSending, message]));
+      mergedList = R.concat(state.messagesBeforeSending, [message]);
+
       return Object.assign(
         {},
         state,
@@ -121,7 +146,8 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case BEFORE_SEND_MESSAGES_REQUEST:
-      mergedList = Array.from(new Set([...state.messageList, ...state.messagesBeforeSending]));
+      // mergedList = Array.from(new Set([...state.messageList, ...state.messagesBeforeSending]));
+      mergedList = R.concat(state.messageList, state.messagesBeforeSending);
       return Object.assign(
         {},
         state,
@@ -134,12 +160,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
-      mergedList = Array.from(new Set([...state.messageList]));
-      mergedList = mergedList.filter((v: IMessage) => {
+      // mergedList = Array.from(new Set([...state.messageList]));
+      // mergedList = R.concat(state.messageList);
+      mergedList = state.messageList.filter((v: IMessage) => {
         return v.messageId!.indexOf('local-') < 0;
       });
       const sendMessagesRequestSuccessAction = action as SendMessagesRequestSuccessAction;
-      mergedList = Array.from(new Set([...mergedList, ...sendMessagesRequestSuccessAction.messageList]));
+      // mergedList = Array.from(new Set([...mergedList, ...sendMessagesRequestSuccessAction.messageList]));
+      mergedList = R.concat(mergedList, sendMessagesRequestSuccessAction.messageList);
       return Object.assign(
         {},
         state,
@@ -200,20 +228,12 @@ export function message(state: MessageState = getInitialState(), action: Message
           messagesOffset: 0,
         }
       );
-    case RESET_SCROLL_BOTTOM_ANIMATION_DURATION:
+    case SET_MESSAGE_TEXT:
       return Object.assign(
         {},
         state,
         {
-          scrollBottomAnimationDuration: 0,
-        }
-      );
-    case SET_DISPLAY_SCROLL_BOTTOM_BUTTON:
-      return Object.assign(
-        {},
-        state,
-        {
-          displayScrollBottomButton: (action as SetDisplayScrollBottomButtonAction).displayScrollBottomButton,
+          text: (action as SetMessageTextAction).text,
         }
       );
     case SET_DROP_IMAGE_FILE:

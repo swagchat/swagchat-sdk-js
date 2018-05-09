@@ -5,6 +5,10 @@ export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 export interface MessageState {
   isFirstFetch: boolean;
   sending: boolean;
+  scrollBottomAnimationDuration: number;
+  displayScrollBottomButton: boolean;
+
+  // message data
   messagesAllCount: number;
   messagesLimit: number;
   messagesOffset: number;
@@ -12,8 +16,9 @@ export interface MessageState {
   messagesSending: IMessage[];
   messageList: IMessage[];
   messageMap: {[key: string]: IMessage};
-  scrollBottomAnimationDuration: number;
-  displayScrollBottomButton: boolean;
+
+  // text
+  text: string;
 
   // drag and drop file
   dropImageFile: File | null;
