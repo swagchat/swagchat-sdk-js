@@ -15,6 +15,20 @@ export enum RoomType {
   CUSTOMER_ROOM= 5,
 }
 
+export enum MessageType {
+  TEXT = 'text',
+  IMAGE = 'image',
+  FILE = 'file',
+  INDICATOR = 'indicator',
+}
+
+export enum RoleType {
+	General = 1,
+	Guest = 2,
+	Operator = 3,
+	External = 4,
+}
+
 export enum SpeechMode {
   WAKEUP_WEB_TO_WEB = 1,
   WAKEUP_WEB_TO_CLOUD = 2,
