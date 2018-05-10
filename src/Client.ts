@@ -982,6 +982,7 @@ export class Client {
     return fetch(this._apiEndpoint + '/guests', {
       method: 'POST',
       headers: {'X-Realm': this._realm ? this._realm : ''},
+      credentials: 'same-origin',
     }).then((response: Response) => {
       if (response.status === 201) {
         return response.json().then((user) => {
@@ -1020,6 +1021,7 @@ export class Client {
     return fetch(this._apiEndpoint + '/guests/' + userId, {
       method: 'GET',
       headers: {'X-Realm': this._realm ? this._realm : ''},
+      credentials: 'same-origin',
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((user) => {
