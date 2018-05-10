@@ -264,6 +264,7 @@ export interface IAddonMessageItemProps {
   opponentUser?: IUserForRoom;
   calcHeight?: (height: number) => void;
   text?: string;
+  animation?: boolean;
 }
 
 export interface IAddonMessageInteractionProps {
