@@ -5,6 +5,7 @@ import {
   SET_IS_FIRST_FETCH, SetIsFirstFetchAction,
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
   SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
+  SET_MESSAGE_MODAL, SetMessageModalAction,
   BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
   FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
   FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
@@ -34,6 +35,7 @@ const getInitialState = (): MessageState => ({
   sending: false,
   scrollBottomAnimationDuration: 0,
   displayScrollBottomButton: false,
+  modal: false,
 
   // message data
   messagesAllCount: 0,
@@ -88,6 +90,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           displayScrollBottomButton: (action as SetDisplayScrollBottomButtonAction).displayScrollBottomButton,
+        }
+      );
+    case SET_MESSAGE_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          modal: (action as SetMessageModalAction).modal,
         }
       );
     case BEFORE_FETCH_MESSAGES_REQUEST:
@@ -313,7 +323,6 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case REFRESH_INDICATORS:
-      // TODO
       const refreshIndicators = R.filter((v: IMessage) => {
         return ((new Date().getTime() - new Date(v.created!).getTime()) / 1000 - 5 < 0);
       }, state.indicators);

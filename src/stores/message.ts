@@ -7,6 +7,7 @@ export interface MessageState {
   sending: boolean;
   scrollBottomAnimationDuration: number;
   displayScrollBottomButton: boolean;
+  modal: boolean;
 
   // message data
   messagesAllCount: number;
@@ -34,4 +35,5 @@ export interface MessageState {
 
   // indicator
   indicators: {[key: string]: IMessage};
+
 }

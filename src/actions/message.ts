@@ -5,6 +5,7 @@ export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
 export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
 export const SET_DISPLAY_SCROLL_BOTTOM_BUTTON = 'SET_DISPLAY_SCROLL_BOTTOM_BUTTON';
+export const SET_MESSAGE_MODAL = 'SET_MESSAGE_MODAL';
 export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
 export const FETCH_MESSAGES_REQUEST_FAILURE = 'FETCH_MESSAGES_REQUEST_FAILURE';
@@ -34,6 +35,7 @@ export type MessageActionTypes =
   typeof BEFORE_FETCH_MESSAGES_REQUEST |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
   typeof SET_DISPLAY_SCROLL_BOTTOM_BUTTON |
+  typeof SET_MESSAGE_MODAL |
   typeof FETCH_MESSAGES_REQUEST |
   typeof FETCH_MESSAGES_REQUEST_SUCCESS |
   typeof FETCH_MESSAGES_REQUEST_FAILURE |
@@ -84,6 +86,14 @@ export interface SetDisplayScrollBottomButtonAction extends MessageBaseAction {
 export const setDisplayScrollBottomButtonActionCreator = (displayScrollBottomButton: boolean): SetDisplayScrollBottomButtonAction => ({
   type: SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
   displayScrollBottomButton: displayScrollBottomButton,
+});
+
+export interface SetMessageModalAction extends MessageBaseAction {
+  modal: boolean;
+}
+export const setMessageModalActionCreator = (modal: boolean): SetMessageModalAction => ({
+  type: SET_MESSAGE_MODAL,
+  modal: modal,
 });
 
 export interface BeforeFetchMessagesRequestAction extends MessageBaseAction {
@@ -272,6 +282,9 @@ export const clearIndicatorsActionCreator = (): ClearIndicatorsAction => ({
 export type MessageActions =
   MessageBaseAction |
   SetIsFirstFetchAction |
+  ResetScrollBottomAnimationDurationAction |
+  SetDisplayScrollBottomButtonAction |
+  SetMessageModalAction |
   BeforeFetchMessagesRequestAction |
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |
@@ -285,8 +298,6 @@ export type MessageActions =
   SetDropImageFileAction |
   SetDropFileAction |
   ClearDropFileAction |
-  ResetScrollBottomAnimationDurationAction |
-  SetDisplayScrollBottomButtonAction |
   SetSpeechModeAction |
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |
