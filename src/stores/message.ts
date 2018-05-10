@@ -31,4 +31,7 @@ export interface MessageState {
   // search
   searchText: string;
   searchResultTabIndex: number;
+
+  // indicator
+  indicators: {[key: string]: IMessage};
 }

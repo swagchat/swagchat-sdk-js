@@ -23,6 +23,9 @@ import {
   SET_SPEECH_SYNTHESIS_UTTERANCE, SetSpeechSynthesisUtteranceAction,
   SET_SEARCH_TEXT, SetSearchTextAction,
   SET_SEARCH_RESULT_TAB_INDEX, SetSearchResultTabIndexAction,
+  ADD_INDICATORS, AddIndicatorsAction,
+  REFRESH_INDICATORS,
+  CLEAR_INDICATORS,
 } from '../actions/message';
 const R = require('ramda');
 
@@ -55,6 +58,9 @@ const getInitialState = (): MessageState => ({
   // search
   searchText: '',
   searchResultTabIndex: 0,
+
+  // indicator
+  indicators: {},
 });
 
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
@@ -112,7 +118,8 @@ export function message(state: MessageState = getInitialState(), action: Message
         newOffset = 0;
       }
       const messagesFetchAction = action as FetchMessagesRequestSuccessAction;
-      mergedList = Array.from(new Set([...messagesFetchAction.messages.messages, ...state.messageList]));
+      // mergedList = Array.from(new Set([...messagesFetchAction.messages.messages, ...state.messageList]));
+      mergedList = R.concat(messagesFetchAction.messages.messages, state.messageList);
       return Object.assign(
         {},
         state,
@@ -203,7 +210,8 @@ export function message(state: MessageState = getInitialState(), action: Message
     case UPDATE_MESSAGES:
       const updateMessageAction = action as UpdateMessagesAction;
       if (state.messageMap) {
-        mergedList = Array.from(new Set([...state.messageList, ...updateMessageAction.messages]));
+        // mergedList = Array.from(new Set([...state.messageList, ...updateMessageAction.messages]));
+        mergedList = R.concat(state.messageList, updateMessageAction.messages);
       } else {
         mergedList = updateMessageAction.messages;
       }
@@ -293,6 +301,35 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           searchResultTabIndex: (action as SetSearchResultTabIndexAction).searchResultTabIndex,
+        }
+      );
+    case ADD_INDICATORS:
+      const aia = action as AddIndicatorsAction;
+      return Object.assign(
+        {},
+        state,
+        {
+          indicators: R.assoc(aia.indicator.messageId, aia.indicator, state.indicators),
+        }
+      );
+    case REFRESH_INDICATORS:
+      // TODO
+      const refreshIndicators = R.filter((v: IMessage) => {
+        return ((new Date().getTime() - new Date(v.created!).getTime()) / 1000 - 5 < 0);
+      }, state.indicators);
+      return Object.assign(
+        {},
+        state,
+        {
+          indicators: refreshIndicators,
+        }
+      );
+    case CLEAR_INDICATORS:
+      return Object.assign(
+        {},
+        state,
+        {
+          indicators: {},
         }
       );
     default:

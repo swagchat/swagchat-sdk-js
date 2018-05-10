@@ -25,6 +25,9 @@ export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
 export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
 export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
+export const ADD_INDICATORS = 'ADD_INDICATORS';
+export const REFRESH_INDICATORS = 'REFRESH_INDICATORS';
+export const CLEAR_INDICATORS = 'CLEAR_INDICATORS';
 
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
@@ -50,7 +53,10 @@ export type MessageActionTypes =
   typeof SET_SPEECH_SYNTHESIS_UTTERANCE |
   typeof SET_SEARCH_TEXT |
   typeof SET_SEARCH_RESULT_TAB_INDEX |
-  typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST
+  typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST |
+  typeof ADD_INDICATORS |
+  typeof REFRESH_INDICATORS |
+  typeof CLEAR_INDICATORS
 ;
 
 export interface MessageBaseAction extends Action {
@@ -243,6 +249,26 @@ export const uploadAssetAndSendMessageRequestActionCreator = (file: File): Uploa
   file: file,
 });
 
+export interface AddIndicatorsAction extends MessageBaseAction {
+  indicator: IMessage;
+}
+export const addIndicatorsActionCreator = (indicator: IMessage): AddIndicatorsAction => ({
+  type: ADD_INDICATORS,
+  indicator: indicator,
+});
+
+export interface RefreshIndicatorsAction extends MessageBaseAction {
+}
+export const refreshIndicatorsActionCreator = (): RefreshIndicatorsAction => ({
+  type: REFRESH_INDICATORS,
+});
+
+export interface ClearIndicatorsAction extends MessageBaseAction {
+}
+export const clearIndicatorsActionCreator = (): ClearIndicatorsAction => ({
+  type: CLEAR_INDICATORS,
+});
+
 export type MessageActions =
   MessageBaseAction |
   SetIsFirstFetchAction |
@@ -265,5 +291,8 @@ export type MessageActions =
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |
   SetSearchResultTabIndexAction |
-  UploadAssetAndSendMessageRequestAction
+  UploadAssetAndSendMessageRequestAction |
+  AddIndicatorsAction |
+  RefreshIndicatorsAction |
+  ClearIndicatorsAction
 ;
