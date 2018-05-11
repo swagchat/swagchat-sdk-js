@@ -77,7 +77,7 @@ function* gRemoveRoomUserRequest(action: RemoveRoomUserRequestAction) {
   }, action.userIds);
   if (res.roomUsers) {
     yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));
-    yield put(fetchUserRequestActionCreator());
+    yield put(fetchUserRequestActionCreator(false));
     if (action.userIds.indexOf(state.user.user!.userId) >= 0) {
       const client = state.client.client;
       if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {

@@ -70,7 +70,7 @@ function* gCreateRoomAndFetchMessagesRequest() {
     return state.client.client!.createRoom(room);
   }, room);
   if (roomRes.room !== null) {
-    yield put(fetchUserRequestActionCreator());
+    yield put(fetchUserRequestActionCreator(false));
     yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ?
       generateRoomName(roomRes.room.users, state.user.user!.userId, roomRes.room.type) : roomRes.room.name));
     yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId!));
@@ -162,7 +162,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       client.accessToken = userRes.user.accessToken;
       client.socketOpen();
       yield put(setClientActionCreator(client));
-      yield put(fetchUserRequestActionCreator());
+      yield put(fetchUserRequestActionCreator(false));
       cookie.write(cookieUserIdKey, userRes.user.userId);
     } else {
       return;
@@ -177,7 +177,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       client.accessToken = userRes.user.accessToken;
       client.socketOpen();
       yield put(setClientActionCreator(client));
-      yield put(fetchUserRequestActionCreator());
+      yield put(fetchUserRequestActionCreator(false));
     } else {
       cookie.remove(cookieUserIdKey);
       return;

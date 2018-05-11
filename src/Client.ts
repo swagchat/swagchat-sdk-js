@@ -14,6 +14,7 @@ export interface IClientParams {
   isGuest?: boolean;
   realm?: string;
   updateLastAccessRoomId?: boolean;
+  singlePaneView?: boolean;
 }
 
 export interface IPaths {
@@ -38,6 +39,7 @@ export class Client {
   public userId?: string;
   public username?: string;
   public updateLastAccessRoomId: boolean;
+  public singlePaneView: boolean;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -138,6 +140,12 @@ export class Client {
       this.updateLastAccessRoomId = false;
     } else {
       this.updateLastAccessRoomId = params.updateLastAccessRoomId;
+    }
+
+    if (params.singlePaneView === undefined) {
+      this.singlePaneView = true;
+    } else {
+      this.singlePaneView = params.singlePaneView;
     }
 
     logger('api', 'info', 'Initialized API Client OK');

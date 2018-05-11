@@ -55,9 +55,11 @@ export interface UserBaseAction extends Action {
   type: UserActionTypes;
 }
 export interface FetchUserRequestAction extends UserBaseAction {
+  updateLastAccessRoomId: boolean;
 }
-export const fetchUserRequestActionCreator = (): FetchUserRequestAction => ({
+export const fetchUserRequestActionCreator = (updateLastAccessRoomId: boolean): FetchUserRequestAction => ({
   type: FETCH_USER_REQUEST,
+  updateLastAccessRoomId: updateLastAccessRoomId,
 });
 
 export interface FetchUserRequestSuccessAction extends UserBaseAction {

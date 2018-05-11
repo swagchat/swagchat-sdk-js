@@ -20,6 +20,7 @@ export enum MessageType {
   IMAGE = 'image',
   FILE = 'file',
   INDICATOR = 'indicator',
+  UPDATE_ROOM_USER = 'updateRoomUser',
 }
 
 export enum RoleType {

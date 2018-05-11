@@ -21,6 +21,7 @@ import {
   MarkAsReadRequestAction,
   UserBlockRequestAction,
   UserUnBlockRequestAction,
+  FetchUserRequestAction,
   fetchUserRequestActionCreator,
   fetchUserRequestSuccessActionCreator,
   fetchUserRequestFailureActionCreator,
@@ -40,7 +41,7 @@ import {
   setCurrentRoomNameActionCreator,
 } from '../actions/room';
 
-function* gFetchUserRequest() {
+function* gFetchUserRequest(action: FetchUserRequestAction) {
   const state: State = yield select();
   let userRooms: {[key: string]: IRoomForUser} = {};
   const userRes: IFetchUserResponse = yield call(() => {
@@ -59,7 +60,7 @@ function* gFetchUserRequest() {
       });
     }
     yield put(fetchUserRequestSuccessActionCreator(userRes.user, userRooms, userRes.user.blocks!));
-    if (state.client.client!.updateLastAccessRoomId && userRes.user.lastAccessRoomId) {
+    if (action.updateLastAccessRoomId && userRes.user.lastAccessRoomId) {
       yield put(setCurrentRoomIdActionCreator(userRes.user.lastAccessRoomId));
       yield put(setCurrentRoomNameActionCreator(userRooms[userRes.user.lastAccessRoomId].name));
     }
@@ -115,7 +116,7 @@ function* gUserBlockRequest(action: UserBlockRequestAction) {
   }, action.blockUserIds);
   if (res.blockUsers) {
     yield put(userBlockRequestSuccessActionCreator(res.blockUsers));
-    yield put(fetchUserRequestActionCreator());
+    yield put(fetchUserRequestActionCreator(false));
   } else {
     yield put(userBlockRequestFailureActionCreator(res.error!));
   }
@@ -128,7 +129,7 @@ function* gUserUnBlockRequest(action: UserUnBlockRequestAction) {
   }, action.unBlockUserIds);
   if (res.blockUsers) {
     yield put(userUnBlockRequestSuccessActionCreator(res.blockUsers));
-    yield put(fetchUserRequestActionCreator());
+    yield put(fetchUserRequestActionCreator(false));
   } else {
     yield put(userUnBlockRequestFailureActionCreator(res.error!));
   }
