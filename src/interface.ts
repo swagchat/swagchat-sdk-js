@@ -229,7 +229,7 @@ export type BotAction = IBotActionPostback | IBotActionMessage | IBotActionUri |
 export interface IAsset {
   assetId: string;
   mime: string;
-  size: string;
+  size: number;
   extension: string;
   url: string;
   width?: number;
@@ -396,5 +396,12 @@ export interface ISetting {
 
 export interface IFetchSettingResponse {
   setting: ISetting | null;
+  error: IProblemDetail | null;
+}
+
+export interface IHeadAssetResponse {
+  size: number;
+  width: number;
+  height: number;
   error: IProblemDetail | null;
 }

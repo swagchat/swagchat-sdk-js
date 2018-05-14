@@ -1063,6 +1063,76 @@ export class Client {
     });
   }
 
+  /**
+   * Get asset info
+   */
+  public getAssetInfo(filename: string): Promise<I.IHeadAssetResponse> {
+    return fetch(this._apiEndpoint + '/assets/' + filename + '/info', {
+      method: 'GET',
+      headers: this._jsonHeaders(),
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.json().then((asset: I.IAsset) => {
+          return (
+            {
+              size: asset.size,
+              width: asset.width,
+              height: asset.height,
+              error: null,
+            } as I.IHeadAssetResponse
+          );
+        });
+      } else if (response.status === 404) {
+        return {} as I.IHeadAssetResponse;
+      } else {
+        return response.json().then((json) => {
+          return (
+            {
+              error: <I.IProblemDetail>json,
+            } as I.IHeadAssetResponse
+          );
+        });
+      }
+    }).catch((error) => {
+      return {
+        error: {
+          title: error.message,
+        } as I.IProblemDetail,
+      } as I.IHeadAssetResponse;
+    });
+  }
+
+
+  /**
+   * Get asset data url
+   */
+  public getAssetDataUrl(filename: string): Promise<string> {
+    return fetch(this._apiEndpoint + '/assets/' + filename, {
+      method: 'GET',
+      headers: this._jsonHeaders(),
+    }).then((response: Response) => {
+      if (response.status === 200) {
+        return response.arrayBuffer().then((buffer: ArrayBuffer) => {
+          const base64Flag = 'data:image/jpeg;base64,';
+          const imageStr = this.arrayBufferToBase64(buffer);
+          const dataUrl = base64Flag + imageStr;
+          return dataUrl;
+        });
+      } else {
+        return '';
+      }
+    }).catch(() => {
+      return '';
+    });
+  }
+
+  private arrayBufferToBase64(buffer: ArrayBuffer) {
+    let binary = '';
+    let bytes = [].slice.call(new Uint8Array(buffer));
+    bytes.forEach((b: number) => binary += String.fromCharCode(b));
+    return window.btoa(binary);
+  }
+
   public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
     if (this._conn && this.userId) {
       this._conn.subscribe(eventName, funcName, onMessage, this.userId);
