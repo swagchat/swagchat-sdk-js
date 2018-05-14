@@ -19,8 +19,20 @@ export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
   FILE = 'file',
+  OPERATOR_MESSAGE = 'operatorMessage',
   INDICATOR = 'indicator',
   UPDATE_ROOM_USER = 'updateRoomUser',
+  BUTTONS = 'buttons',
+  CONFIRM = 'confirm',
+  CAROUSEL = 'carousel',
+  IMAGE_CAROUSEL = 'image_carousel',
+}
+
+export enum MessageActionType {
+  POSTBACK = 'postback',
+  MESSAGE = 'message',
+  URI = 'uri',
+  DATETIME_PICKER = 'datetimepicker',
 }
 
 export enum RoleType {

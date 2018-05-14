@@ -1,11 +1,11 @@
-import { Room } from './';
+import { Room, MessageType, MessageActionType } from './';
+
 export interface IDevice {
   userId: string;
   platform: number;
   token: string;
   notificationDeviceId: string;
 }
-
 
 export interface IUser {
   userId: string;
@@ -121,7 +121,7 @@ export interface IMessage {
   messageId?: string;
   roomId: string;
   userId: string;
-  type: string;
+  type: MessageType;
   eventName?: string;
   payload: Object;
   created?: string;
@@ -133,11 +133,11 @@ export interface ISendMessagesResponse {
   error: IProblemDetail | null;
 }
 
-export interface ITextPayload {
+export interface IPayloadText {
   text: string;
 }
 
-export interface IImagePayload {
+export interface IPayloadImage {
   thumbnailUrl: string;
   sourceUrl: string;
   dataUrl?: string;
@@ -147,12 +147,84 @@ export interface IImagePayload {
   height?: number;
 }
 
-export interface IFilePayload {
+export interface IPayloadFile {
   sourceUrl: string;
   filename: string;
   mime: string;
   size: number;
 }
+
+export interface IPayloadButtons {
+  thumbnailImageUrl: string;
+  imageAspectRatio: 'rectangle' | 'square';
+  imageSize: 'cover' | 'contain';
+  imageBackgroundColor: string;
+  title: string;
+  text: string;
+  defaultAction: BotAction;
+  actions: BotAction[];
+}
+
+export interface IPayloadConfirm {
+  text: string;
+  actions: BotAction[];
+}
+
+export interface IPayloadCarousel {
+  columns: ICarousel[];
+  imageAspectRatio: 'rectangle' | 'square';
+  imageSize: 'cover' | 'contain';
+}
+
+export interface ICarousel {
+  thumbnailImageUrl: string;
+  imageBackgroundColor: string;
+  title: string;
+  text: string;
+  defaultAction: BotAction;
+  actions: BotAction[];
+}
+
+export interface IPayloadImageCarousel {
+  columns: IImageColumn[];
+}
+
+export interface IImageColumn {
+  imageUrl: string;
+  actions: BotAction[];
+}
+
+export interface IBotActionPostback {
+  type: MessageActionType.POSTBACK;
+  label: string;
+  data: string;
+  displayText: string;
+  text: string;
+}
+
+export interface IBotActionMessage {
+  type: MessageActionType.MESSAGE;
+  label: string;
+  text: string;
+}
+
+export interface IBotActionUri {
+  type: MessageActionType.URI;
+  label: string;
+  uri: string;
+}
+
+export interface IBotActionDatetime {
+  type: MessageActionType.DATETIME_PICKER;
+  label: string;
+  data: string;
+  mode: 'date' | 'time' | 'datetime';
+  initial: string;
+  max: string;
+  min: string;
+}
+
+export type BotAction = IBotActionPostback | IBotActionMessage | IBotActionUri | IBotActionDatetime;
 
 export interface IAsset {
   assetId: string;

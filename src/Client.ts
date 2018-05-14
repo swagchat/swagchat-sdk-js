@@ -676,7 +676,7 @@ export class Client {
       delete copyMessage.created;
       delete copyMessage.modified;
       if (copyMessage.payload.hasOwnProperty('dataUrl')) {
-        delete (copyMessage.payload as I.IImagePayload).dataUrl;
+        delete (copyMessage.payload as I.IPayloadImage).dataUrl;
       }
       sendMessages.push(copyMessage);
     });

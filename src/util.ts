@@ -1,4 +1,4 @@
-import { IUserForRoom, IMessage, Room, RoomType, RoleType } from './';
+import { IUserForRoom, IMessage, Room, RoomType, RoleType, MessageType } from './';
 import * as I from './interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -193,7 +193,7 @@ export function createQueryParams(params: {[key: string]: string | number}) {
     .join('&');
 }
 
-export function createMessage(messageId: string, roomId: string, userId: string, type: string, payload: Object): I.IMessage {
+export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): I.IMessage {
   if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
     throw Error('Creating message failure. Parameter invalid.');
   }
@@ -301,16 +301,19 @@ export function messageToString(message: IMessage): string {
   let str = '';
   switch (message.type) {
     case 'text':
-      str = (message.payload as I.ITextPayload).text;
+      str = (message.payload as I.IPayloadText).text;
       break;
     case 'image':
       str = '画像を受信しました';
       break;
     case 'file':
-      str = '[' + (message.payload as I.IFilePayload).filename + ']' + 'を受信しました';
+      str = '[' + (message.payload as I.IPayloadFile).filename + ']' + 'を受信しました';
       break;
     case 'operatorMessage':
-      str = (message.payload as I.ITextPayload).text;
+      str = (message.payload as I.IPayloadText).text;
+      break;
+    case 'confirm':
+      str = (message.payload as I.IPayloadConfirm).text;
       break;
     default:
       break;
