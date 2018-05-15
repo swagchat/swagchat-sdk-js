@@ -135,6 +135,7 @@ export interface ISendMessagesResponse {
 
 export interface IPayloadText {
   text: string;
+  replyMessageId?: string;
 }
 
 export interface IPayloadImage {
@@ -170,6 +171,11 @@ export interface IPayloadConfirm {
   actions: BotAction[];
 }
 
+export interface IPayloadList {
+  text: string;
+  actions: BotAction[];
+}
+
 export interface IPayloadCarousel {
   columns: ICarousel[];
   imageAspectRatio: 'rectangle' | 'square';
@@ -191,7 +197,7 @@ export interface IPayloadImageCarousel {
 
 export interface IImageColumn {
   imageUrl: string;
-  actions: BotAction[];
+  action: BotAction;
 }
 
 export interface IBotActionPostback {

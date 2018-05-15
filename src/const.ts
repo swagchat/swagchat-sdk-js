@@ -24,8 +24,9 @@ export enum MessageType {
   UPDATE_ROOM_USER = 'updateRoomUser',
   BUTTONS = 'buttons',
   CONFIRM = 'confirm',
+  LIST = 'list',
   CAROUSEL = 'carousel',
-  IMAGE_CAROUSEL = 'image_carousel',
+  IMAGE_CAROUSEL = 'imageCarousel',
 }
 
 export enum MessageActionType {

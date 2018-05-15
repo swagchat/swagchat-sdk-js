@@ -315,6 +315,15 @@ export function messageToString(message: IMessage): string {
     case 'confirm':
       str = (message.payload as I.IPayloadConfirm).text;
       break;
+    case 'confirm':
+      str = (message.payload as I.IPayloadList).text;
+      break;
+    case 'carousel':
+      str = (message.payload as I.IPayloadCarousel).columns[0].title;
+      break;
+    case 'imageCarousel':
+      str = '画像を受信しました';
+      break;
     default:
       break;
   }
