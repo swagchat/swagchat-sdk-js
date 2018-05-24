@@ -1,6 +1,6 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
-  IFetchMessagesResponse, ISendMessagesResponse,
+  IFetchMessagesResponse, ISendMessagesResponse, date2ISO3339String
 } from '../';
 import {
   FETCH_MESSAGES_REQUEST,
@@ -11,7 +11,6 @@ import {
   sendMessagesRequestFailureActionCreator,
 } from '../actions/message';
 import { State } from '../stores';
-import { date2ISO3339String } from '../util';
 
 function* gFetchMessagesRequest() {
   const state: State  = yield select();

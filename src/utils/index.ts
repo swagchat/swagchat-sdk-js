@@ -1,5 +1,5 @@
-import { IUserForRoom, IMessage, Room, RoomType, RoleType, MessageType } from './';
-import * as I from './interface';
+import { IUserForRoom, IMessage, Room, RoomType, RoleType, MessageType } from '../';
+import * as I from '../interface';
 
 export function dateHumanize(ISO3339: string): string {
   const nowDate = new Date();
@@ -308,21 +308,6 @@ export function messageToString(message: IMessage): string {
       break;
     case 'file':
       str = '[' + (message.payload as I.IPayloadFile).filename + ']' + 'を受信しました';
-      break;
-    case 'operatorMessage':
-      str = (message.payload as I.IPayloadText).text;
-      break;
-    case 'confirm':
-      str = (message.payload as I.IPayloadConfirm).text;
-      break;
-    case 'confirm':
-      str = (message.payload as I.IPayloadList).text;
-      break;
-    case 'carousel':
-      str = (message.payload as I.IPayloadCarousel).columns[0].title;
-      break;
-    case 'imageCarousel':
-      str = '画像を受信しました';
       break;
     default:
       break;

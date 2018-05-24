@@ -1,3 +1,5 @@
+
+import { IAddonMessage } from '../';
 import { AddonState } from '../stores/addon';
 import {
   AddonActions,
@@ -9,7 +11,7 @@ import {
 } from '../actions/addon';
 
 const getInitialState = (): AddonState => ({
-  messages: [],
+  messages: null,
   customMessages: [],
   currentMenuIndex: 0,
   roomListItems: {},
@@ -19,11 +21,16 @@ const getInitialState = (): AddonState => ({
 export function addon(state: AddonState = getInitialState(), action: AddonActions): AddonState {
   switch (action.type) {
     case SET_ADDON_MESSAGE:
+      const msgs = (action as SetAddonMessageAction).messages;
+      let messages: {[key: string]: IAddonMessage} = {};
+      msgs.forEach(msg => {
+        messages[msg.name] = msg;
+      });
       return Object.assign(
         {},
         state,
         {
-          messages: (action as SetAddonMessageAction).messages,
+          messages: messages,
         }
       );
     case SET_CUSTOM_ADDON_MESSAGE:

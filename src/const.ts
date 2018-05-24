@@ -19,14 +19,6 @@ export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
   FILE = 'file',
-  OPERATOR_MESSAGE = 'operatorMessage',
-  INDICATOR = 'indicator',
-  UPDATE_ROOM_USER = 'updateRoomUser',
-  BUTTONS = 'buttons',
-  CONFIRM = 'confirm',
-  LIST = 'list',
-  CAROUSEL = 'carousel',
-  IMAGE_CAROUSEL = 'imageCarousel',
 }
 
 export enum MessageActionType {
@@ -40,7 +32,8 @@ export enum RoleType {
 	General = 1,
 	Guest = 2,
 	Operator = 3,
-	External = 4,
+  External = 4,
+  Bot = 5,
 }
 
 export enum SpeechMode {

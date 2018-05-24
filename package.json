@@ -9,14 +9,15 @@
     "sdk",
     "typescript"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "libs/index.js",
+  "types": "libs/index.d.ts",
   "scripts": {
-    "build:lib": "rm -rf ./lib && ./node_modules/.bin/tsc --pretty --watch",
+    "build:lib": "./node_modules/.bin/tsc --pretty --watch",
+    "build:clear": "rm -rf ./build/dist && mkdir ./build/dist",
     "build:dev": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.js",
     "build:prod": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] -g [ envify --NODE_ENV production ] -g uglifyify -p bundle-collapser/plugin --verbose -o dist/swagchat-sdk.min.js",
     "build:doc": "./node_modules/.bin/typedoc --out ./doc/ ./src/",
-    "publish": "rm -rf doc && rm -rf dist && rm -rf lib && mkdir dist && ./node_modules/.bin/typedoc --out ./doc/ ./src/ && ./node_modules/.bin/tsc && ./node_modules/.bin/browserify src/index.ts -s SwagChat -p [tsify] -o dist/swagchat-sdk.min.js"
+    "publish": "rm -rf doc && rm -rf dist && rm -rf libs && mkdir dist && ./node_modules/.bin/typedoc --out ./doc/ ./src/ && ./node_modules/.bin/tsc && ./node_modules/.bin/browserify src/index.ts -s SwagChat -p [tsify] -o dist/swagchat-sdk.min.js"
   },
   "author": "Betchi <shinichi.minobe@gmail.com>",
   "contributors": [

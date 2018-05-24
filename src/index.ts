@@ -5,9 +5,11 @@ export * from './Client';
 export * from './Realtime';
 export * from './Room';
 export * from './const';
-export * from './util';
+export * from './utils';
+export * from './utils/cookie';
 export * from './interface';
 
+export * from './actions/addon';
 export * from './actions/asset';
 export * from './actions/client';
 export * from './actions/combined';
@@ -18,6 +20,7 @@ export * from './actions/room';
 // export * from './actions/style';
 export * from './actions/user';
 
+export * from './reducers/addon';
 export * from './reducers/asset';
 export * from './reducers/client';
 export * from './reducers/message';
@@ -34,6 +37,7 @@ export * from './sagas/room';
 export * from './sagas/user';
 export * from './sagas';
 
+export * from './stores/addon';
 export * from './stores/asset';
 export * from './stores/client';
 export * from './stores/message';

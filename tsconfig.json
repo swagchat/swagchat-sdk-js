@@ -5,7 +5,7 @@
     "lib": ["dom", "es6", "es7"],
     "target": "es5",
     "sourceMap": true,
-    "outDir": "lib",
+    "outDir": "libs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -29,7 +29,7 @@
   ],
   "exclude": [
     "dist",
-    "lib",
+    "libs",
     "node_modules"
   ]
 }

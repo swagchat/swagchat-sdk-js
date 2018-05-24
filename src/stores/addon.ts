@@ -1,7 +1,7 @@
 import { IAddonMessage, IAddonRoomListItem } from '../';
 
 export interface AddonState {
-  messages: IAddonMessage[];
+  messages: {[key: string]: IAddonMessage} | null;
   customMessages: IAddonMessage[];
   currentMenuIndex: number;
 

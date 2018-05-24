@@ -1,4 +1,4 @@
-import { Room, MessageType, MessageActionType } from './';
+import { Room, RoleType, MessageType, MessageActionType } from './';
 
 export interface IDevice {
   userId: string;
@@ -14,6 +14,7 @@ export interface IUser {
   informationUrl?: string;
   unreadCount?: number;
   metaData?: {[key: string]: string | number | boolean | Object};
+  isBot?: boolean;
   isPublic?: boolean;
   isCanBlock?: boolean;
   isShowUsers?: boolean;
@@ -26,6 +27,7 @@ export interface IUser {
   rooms?: IRoomForUser[];
   devices?: IDevice[];
   blocks?: string[];
+  roles?: number[];
   mutedRooms?: string[];
 }
 
@@ -119,11 +121,13 @@ export interface IMessages {
 
 export interface IMessage {
   messageId?: string;
+  suggestMessageId?: string;
   roomId: string;
   userId: string;
   type: MessageType;
   eventName?: string;
   payload: Object;
+  role?: RoleType;
   created?: string;
   modified?: string;
 }
@@ -135,6 +139,7 @@ export interface ISendMessagesResponse {
 
 export interface IPayloadText {
   text: string;
+  score?: number;
   replyMessageId?: string;
 }
 
@@ -324,12 +329,12 @@ export interface IErrorResponse {
 
 export interface IAddonMessage {
   name: string;
-  messageListMarginBottom: number;
-  // item: React.ComponentClass<IAddonMessageItemProps>;
-  // interaction: React.ComponentClass<IAddonMessageInteractionProps>;
+  // messageListMarginBottom: number;
+  item: React.ComponentClass<IAddonMessageItemProps> | null;
+  interaction: React.ComponentClass<IAddonMessageInteractionProps> | null;
   // menu: React.ComponentClass<IAddonMessageMenuProps>;
-  position: 'top' | 'bottom';
-  isAlwaysDisplay: boolean;
+  // position: 'top' | 'bottom';
+  // isAlwaysDisplay: boolean;
 }
 
 export interface IAddonMessageItemProps {
@@ -343,6 +348,8 @@ export interface IAddonMessageItemProps {
   calcHeight?: (height: number) => void;
   text?: string;
   animation?: boolean;
+  onSendListener?: (message: IMessage) => void;
+  suggest?: boolean;
 }
 
 export interface IAddonMessageInteractionProps {
