@@ -19,6 +19,8 @@ export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
   FILE = 'file',
+  INDICATOR = 'indicator',
+  UPDATE_ROOM_USER = 'updateRoomUser',
 }
 
 export enum MessageActionType {
