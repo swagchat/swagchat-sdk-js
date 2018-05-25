@@ -54,6 +54,7 @@ export interface IRoomForUser {
   created: string;
   modified: string;
   users: IUserMini[];
+  ruMainUserId: string;
   ruUnreadCount: number;
   ruMetaData: {[key: string]: string | number | boolean | Object};
   ruCreated: string;
