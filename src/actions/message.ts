@@ -11,6 +11,7 @@ export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
 export const FETCH_MESSAGES_REQUEST_FAILURE = 'FETCH_MESSAGES_REQUEST_FAILURE';
 export const PUSH_LOCAL_MESSAGE = 'PUSH_LOCAL_MESSAGE';
 export const BEFORE_SEND_MESSAGES_REQUEST = 'BEFORE_SEND_MESSAGES_REQUEST';
+export const SEND_DIRECT_MESSAGES_REQUEST = 'SEND_DIRECT_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST = 'SEND_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST_SUCCESS = 'SEND_MESSAGES_REQUEST_SUCCESS';
 export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
@@ -41,6 +42,7 @@ export type MessageActionTypes =
   typeof FETCH_MESSAGES_REQUEST_FAILURE |
   typeof PUSH_LOCAL_MESSAGE |
   typeof BEFORE_SEND_MESSAGES_REQUEST |
+  typeof SEND_DIRECT_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST_SUCCESS |
   typeof SEND_MESSAGES_REQUEST_FAILURE |
@@ -142,6 +144,14 @@ export interface BeforeSendMessagesRequestAction extends MessageBaseAction {
 }
 export const beforeSendMessagesRequestActionCreator = (): BeforeSendMessagesRequestAction => ({
   type: BEFORE_SEND_MESSAGES_REQUEST,
+});
+
+export interface SendDirectMessagesRequestAction extends MessageBaseAction {
+  messages: IMessage[];
+}
+export const sendDirectMessagesRequestActionCreator = (messages: IMessage[]): SendDirectMessagesRequestAction => ({
+  type: SEND_DIRECT_MESSAGES_REQUEST,
+  messages: messages,
 });
 
 export interface SendMessagesRequestAction extends MessageBaseAction {
@@ -289,6 +299,7 @@ export type MessageActions =
   FetchMessagesRequestAction |
   FetchMessagesRequestSuccessAction |
   FetchMessagesRequestFailureAction |
+  SendDirectMessagesRequestAction |
   SendMessagesRequestAction |
   SendMessagesRequestSuccessAction |
   SendMessagesRequestFailureAction |

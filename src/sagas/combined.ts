@@ -26,7 +26,7 @@ import {
   fetchUserRequestFailureActionCreator,
 } from '../actions/user';
 import { State } from '../stores';
-import Cookie from '../utils/cookie';
+import { Cookie } from '../utils/cookie';
 
 function* gCreateRoomAndFetchMessagesRequest() {
   const state: State = yield select();

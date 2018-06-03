@@ -1,6 +1,6 @@
 import { createLogger } from 'redux-logger';
 import { routerReducer, RouterState } from 'react-router-redux';
-import { Store, createStore, combineReducers, applyMiddleware, Middleware } from 'redux';
+import { Store, createStore, combineReducers, applyMiddleware, Middleware, ReducersMapObject } from 'redux';
 
 import { AddonState } from './addon';
 import { ClientState } from './client';
@@ -14,6 +14,8 @@ import { message } from '../reducers/message';
 import { room } from '../reducers/room';
 import { user } from '../reducers/user';
 
+const R = require('ramda');
+
 export function generateMiddleware(middleware: Middleware[]): Middleware[] {
   if (process.env.NODE_ENV !== 'production') {
     const logger = createLogger({
@@ -26,16 +28,23 @@ export function generateMiddleware(middleware: Middleware[]): Middleware[] {
   return middleware;
 }
 
-export function generateStore(middleware: Middleware[]): Store<State> {
+export function generateStore(middleware: Middleware[]): Store<any>;
+export function generateStore(middleware: Middleware[], addReducers: ReducersMapObject): Store<any>;
+export function generateStore(middleware: Middleware[], addReducers?: ReducersMapObject): Store<any> {
+  let reducers = {
+    addon,
+    client,
+    message,
+    room,
+    user,
+    router: routerReducer,
+  };
+  if (addReducers) {
+    reducers = R.merge(reducers, addReducers);
+  }
+
   return createStore(
-    combineReducers({
-      addon,
-      client,
-      message,
-      room,
-      user,
-      router: routerReducer,
-    }),
+    combineReducers(reducers),
     applyMiddleware(...middleware)
   );
 }

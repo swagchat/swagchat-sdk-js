@@ -1,4 +1,4 @@
-export default class Cookie {
+export class Cookie {
   read(name: string) {
     const result = new RegExp('(?:^|; )' + encodeURIComponent(name) + '=([^;]*)').exec(document.cookie);
     return result ? result[1] : null;

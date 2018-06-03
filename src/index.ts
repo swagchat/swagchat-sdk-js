@@ -48,4 +48,6 @@ export * from './stores/room';
 export * from './stores/user';
 export * from './stores/';
 
+export * from './utils/cookie';
+
 export const logColor = '#3F51B5';
