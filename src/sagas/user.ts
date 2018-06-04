@@ -43,9 +43,15 @@ import {
 
 function* gFetchUserRequest(action: FetchUserRequestAction) {
   const state: State = yield select();
+  const client = state.client.client;
+
+  if (!client) {
+    return;
+  }
+
   let userRooms: {[key: string]: IRoomForUser} = {};
   const userRes: IFetchUserResponse = yield call(() => {
-    return state.client.client!.getUser();
+    return client.getUser();
   });
   if (userRes.user !== null) {
     if (userRes.user.rooms !== undefined) {
@@ -62,6 +68,23 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
       });
     }
     yield put(fetchUserRequestSuccessActionCreator(userRes.user, userRooms, userRes.user.blocks!));
+
+    if (location) {
+      let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
+      if (messagesPathRegExp !== null) {
+        const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
+        if (roomIds !== null) {
+          const currentRoomId = roomIds[1];
+          let state: State = yield select();
+          if (state.user.userRooms![currentRoomId] !== undefined) {
+            yield put(setCurrentRoomIdActionCreator(currentRoomId));
+            yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
+          }
+          return;
+        }
+      }
+    }
+
     if (action.updateLastAccessRoomId && userRes.user.lastAccessRoomId) {
       yield put(setCurrentRoomIdActionCreator(userRes.user.lastAccessRoomId));
       yield put(setCurrentRoomNameActionCreator(userRooms[userRes.user.lastAccessRoomId].name));
