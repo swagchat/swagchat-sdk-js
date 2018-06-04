@@ -310,6 +310,9 @@ export function messageToString(message: IMessage): string {
       str = '[' + (message.payload as I.IPayloadFile).filename + ']' + 'を受信しました';
       break;
     default:
+      if (message.payload.hasOwnProperty('text')) {
+        str = (message.payload as I.IPayloadText).text;
+      }
       break;
   }
   return str;
