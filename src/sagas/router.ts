@@ -68,7 +68,6 @@ function* gLocationChange() {
     }
   }
 
-
   let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
   if (messagesPathRegExp !== null) {
     // messages page

@@ -151,6 +151,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
   const userId = cookie.read(cookieUserIdKey);
   const roomId = cookie.read(cookieRoomIdKey);
 
+  let wasCreatedNow = false;
   let client = Object.assign(state.client.client!);
   if (userId === '' || userId === null) {
     const userRes = yield call(() => {
@@ -164,6 +165,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
       yield put(setClientActionCreator(client));
       yield put(fetchUserRequestActionCreator(false));
       cookie.write(cookieUserIdKey, userRes.user.userId);
+      wasCreatedNow = true;
     } else {
       return;
     }
@@ -184,7 +186,7 @@ function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
     }
   }
 
-  if (roomId === '' || roomId === null) {
+  if (wasCreatedNow || roomId === '' || roomId === null) {
     cookie.remove(cookieRoomIdKey);
     let room = {
       name: client.guestChatRoomName,
