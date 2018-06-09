@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
   IUser, IRoom, IPostAssetResponse, IFetchUserResponse, IFetchRoomResponse, RoomType,
-  generateRoomName, isUrl,
+  generateRoomName, isUrl, cookieUserIdKey, cookieRoomIdKey,
 } from '../';
 import { setClientActionCreator } from '../actions/client';
 import {
@@ -144,10 +144,8 @@ function* gUploadAssetAndUpdateRoomRequest(action: UploadAssetAndUpdateRoomReque
 
 function* gCreateGuestuserAndCreateRoomAndFetchMessagesRequest() {
   const state: State = yield select();
-  const cookieUserIdKey = 'sc_user_id';
-  const cookieRoomIdKey = 'sc_room_id';
-  const cookie = new Cookie();
 
+  const cookie = new Cookie();
   const userId = cookie.read(cookieUserIdKey);
   const roomId = cookie.read(cookieRoomIdKey);
 

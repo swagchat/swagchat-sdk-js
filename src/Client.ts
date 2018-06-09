@@ -40,6 +40,7 @@ export class Client {
   public username?: string;
   public updateLastAccessRoomId: boolean;
   public singlePaneView: boolean;
+  public refreshAccessToken: () => void;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
@@ -165,7 +166,7 @@ export class Client {
    * Create websocket connection for speech
    */
   public createSpeechRt() {
-    const speechRt = new Realtime(this._wsEndpoint + '/speech', undefined);
+    const speechRt = new Realtime(this._wsEndpoint + '/speech');
     speechRt.conn.binaryType = 'arraybuffer';
     this._speechRt = speechRt;
   }
@@ -231,8 +232,6 @@ export class Client {
           );
         });
       } else if (response.status === 404) {
-        return this.createUser();
-      } else if (response.status === 401) {
         return this.createUser();
       } else {
         return response.json().then((json) => {
@@ -1133,15 +1132,15 @@ export class Client {
     return window.btoa(binary);
   }
 
-  public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
+  public subscribe(eventName: EventName, funcName: string, onMessage: Function, roomId: string): void {
     if (this._conn && this.userId) {
-      this._conn.subscribe(eventName, funcName, onMessage, this.userId);
+      this._conn.subscribe(eventName, funcName, onMessage, roomId);
     }
   }
 
   public unsubscribe(eventName: EventName, funcName: string): void {
     if (this._conn && this.userId) {
-      this._conn.unsubscribe(eventName, funcName, this.userId);
+      this._conn.unsubscribe(eventName, funcName);
     }
   }
 }

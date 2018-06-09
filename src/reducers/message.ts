@@ -180,7 +180,10 @@ export function message(state: MessageState = getInitialState(), action: Message
       // mergedList = Array.from(new Set([...state.messageList]));
       // mergedList = R.concat(state.messageList);
       mergedList = state.messageList.filter((v: IMessage) => {
-        return v.messageId!.indexOf('local-') < 0;
+        if (!v.messageId) {
+          return false;
+        }
+        return v.messageId.indexOf('local-') < 0;
       });
       const sendMessagesRequestSuccessAction = action as SendMessagesRequestSuccessAction;
       // mergedList = Array.from(new Set([...mergedList, ...sendMessagesRequestSuccessAction.messageList]));

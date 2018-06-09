@@ -52,3 +52,6 @@ export enum Speech2Text {
   WATSON = 2,
   GOOGLE = 3,
 }
+
+export const cookieUserIdKey = 'sc_user_id';
+export const cookieRoomIdKey = 'sc_room_id';
