@@ -143,20 +143,12 @@ export class Room {
     return this._data.messageCount ? this._data.messageCount : 0;
   }
 
-  get isCanLeft(): boolean {
-    return this._data.isCanLeft ? this._data.isCanLeft : true;
+  get canLeft(): boolean {
+    return this._data.canLeft ? this._data.canLeft : true;
   }
 
-  set isCanLeft(isCanLeft: boolean) {
-    this._data.isCanLeft = isCanLeft;
-  }
-
-  get isShowUsers(): boolean {
-    return this._data.isShowUsers ? this._data.isShowUsers : true;
-  }
-
-  set isShowUsers(isShowUsers: boolean) {
-    this._data.isShowUsers = isShowUsers;
+  set canLeft(canLeft: boolean) {
+    this._data.canLeft = canLeft;
   }
 
   get speechMode(): number {

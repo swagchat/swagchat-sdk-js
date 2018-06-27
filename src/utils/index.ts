@@ -1,4 +1,4 @@
-import { IUserForRoom, IMessage, Room, RoomType, RoleType, MessageType } from '../';
+import { IUserForRoom, IMessage, Room, MessageType } from '../';
 import * as I from '../interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -87,32 +87,17 @@ export function generateUUID() {
 //   return chars.join('');
 // }
 
-export function generateRoomName(users: IUserForRoom[], myUserId: string, type: number): string {
+export function generateRoomName(users: IUserForRoom[], myUserId: string): string {
   const separator = ', ';
   let roomName = '';
 
-  if (type === RoomType.CUSTOMER_ROOM) {
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].role === RoleType.Guest) {
-        return users[i].name;
-      }
-    }
-  }
-
   for (let i = 0; i < users.length; i++) {
-    let isLast = i === users.length - 1;
-
-    if (users[i].userId === myUserId) {
-      if (isLast) {
-        roomName = roomName.slice(0, -1 * separator.length);
-      }
-    } else {
+    if (users[i].userId !== myUserId && users[i].ruDisplay) {
       roomName += users[i].name;
-      if (!isLast) {
-        roomName += separator;
-      }
+      roomName += separator;
     }
   }
+  roomName = roomName.slice(0, -1 * separator.length);
 
   return roomName;
 }
@@ -219,6 +204,10 @@ const infoLogColor = '#03A9F4';
 const errorLogColor = '#F44336';
 
 export function logger(label: string, level: string, message: string) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+
   let labelName = 'SwagChatSDK';
   let logColor = apiLogColor;
   if (label === 'realtime') {

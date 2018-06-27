@@ -60,7 +60,7 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
         if (users) {
           if (roomForUser.name === '') {
             roomForUser.name = roomForUser.name === '' ?
-              generateRoomName(roomForUser.users, userRes.user!.userId, roomForUser.type) : roomForUser.name;
+              generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
           }
           roomForUser.pictureUrl = users[0].pictureUrl;
         }

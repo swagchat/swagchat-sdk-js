@@ -14,10 +14,8 @@ export interface IUser {
   informationUrl?: string;
   unreadCount?: number;
   metaData?: {[key: string]: string | number | boolean | Object};
-  isBot?: boolean;
-  isPublic?: boolean;
-  isCanBlock?: boolean;
-  isShowUsers?: boolean;
+  public?: boolean;
+  canBlock?: boolean;
   lang?: string;
   accessToken?: string;
   lastAccessRoomId?: string;
@@ -31,15 +29,6 @@ export interface IUser {
   mutedRooms?: string[];
 }
 
-export interface IUserMini {
-  roomId: string;
-  userId: string;
-  name: string;
-  pictureUrl: string;
-  role: number;
-  lastAccessed: string;
-}
-
 export interface IRoomForUser {
   roomId: string;
   userId: string;
@@ -50,15 +39,11 @@ export interface IRoomForUser {
   type: number;
   lastMessage: string;
   lastMessageUpdated: string;
-  isCanLeft: boolean;
+  canLeft: boolean;
   created: string;
   modified: string;
-  users: IUserMini[];
-  ruMainUserId: string;
+  users: IUserForRoom[];
   ruUnreadCount: number;
-  ruMetaData: {[key: string]: string | number | boolean | Object};
-  ruCreated: string;
-  ruModified: string;
 }
 
 export interface IRoom {
@@ -73,8 +58,7 @@ export interface IRoom {
   lastMessage?: string;
   lastMessageUpdated?: string;
   messageCount?: number;
-  isCanLeft?: boolean;
-  isShowUsers?: boolean;
+  canLeft?: boolean;
   speechMode?: number;
   created?: string;
   modified?: string;
@@ -88,16 +72,11 @@ export interface IUserForRoom {
   pictureUrl: string;
   informationUrl?: string;
   metaData?: {[key: string]: string | number | boolean | Object};
-  role: number;
   isCanBlock?: boolean;
-  isShowUsers?: boolean;
   lastAccessed?: string;
   created?: string;
   modified?: string;
-  ruUnreadCount?: number;
-  ruMetaData?: {[key: string]: string | number | boolean | Object};
-  ruCreated?: string;
-  ruModified?: string;
+  ruDisplay?: boolean;
 }
 
 export interface IRoomUser {

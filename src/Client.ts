@@ -319,14 +319,14 @@ export class Client {
           );
         });
       } else {
-      return response.json().then((json) => {
-        return (
-          {
-            room: null,
-            error: <I.IProblemDetail>json,
-          } as I.IFetchRoomResponse
-        );
-      });
+        return response.json().then((json) => {
+          return (
+            {
+              room: null,
+              error: <I.IProblemDetail>json,
+            } as I.IFetchRoomResponse
+          );
+        });
       }
     }).catch((error) => {
       return {

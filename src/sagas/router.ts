@@ -1,6 +1,6 @@
 import { takeLatest, ForkEffect, put, select, call } from 'redux-saga/effects';
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator } from '../actions/combined';
+// import { createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator } from '../actions/combined';
 import {
   setCurrentRoomIdActionCreator,
   setCurrentRoomNameActionCreator,
@@ -35,7 +35,7 @@ function* gLocationChange() {
   let guestMessagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.guestMessageListPath));
   if (guestMessagesPathRegExp !== null) {
     // guest messages page
-    yield put(createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator());
+    // yield put(createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator());
     return;
   }
 
@@ -55,7 +55,7 @@ function* gLocationChange() {
           const users = opponentUser(roomForUser.users, userRes.user!.userId);
           if (users) {
             roomForUser.name = roomForUser.name === '' ?
-              generateRoomName(roomForUser.users, userRes.user!.userId, roomForUser.type) : roomForUser.name;
+              generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
             roomForUser.pictureUrl = users[0].pictureUrl;
           }
           userRooms[roomForUser.roomId] = roomForUser;
