@@ -224,7 +224,7 @@ export function message(state: MessageState = getInitialState(), action: Message
       );
     case UPDATE_MESSAGES:
       const ams = (action as UpdateMessagesAction).messages;
-      mergedMap = R.clone(state.messageMap, messageList2map(ams));
+      mergedMap = R.merge(state.messageMap, messageList2map(ams));
 
       return Object.assign(
         {},
