@@ -108,8 +108,8 @@ export interface IMessage {
   eventName?: string;
   payload: Object;
   role?: RoleType;
-  created?: string;
-  modified?: string;
+  created?: string | number;
+  modified?: string | number;
 }
 
 export interface ISendMessagesResponse {

@@ -13,9 +13,8 @@ export interface MessageState {
   messagesAllCount: number;
   messagesLimit: number;
   messagesOffset: number;
-  messagesBeforeSending: IMessage[];
-  messagesSending: IMessage[];
-  messageList: IMessage[];
+  localMessageList: IMessage[];
+  localMessageMap: {[key: string]: IMessage};
   messageMap: {[key: string]: IMessage};
 
   // text

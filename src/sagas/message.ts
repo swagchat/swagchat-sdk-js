@@ -1,6 +1,6 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
-  IFetchMessagesResponse, ISendMessagesResponse, date2ISO3339String
+  IFetchMessagesResponse, ISendMessagesResponse,
 } from '../';
 import {
   FETCH_MESSAGES_REQUEST,
@@ -8,8 +8,8 @@ import {
   fetchMessagesRequestFailureActionCreator,
   SEND_MESSAGES_REQUEST,
   SEND_DIRECT_MESSAGES_REQUEST, SendDirectMessagesRequestAction,
-  sendMessagesRequestSuccessActionCreator,
   sendMessagesRequestFailureActionCreator,
+  sendMessagesRequestSuccessActionCreator,
 } from '../actions/message';
 import { State } from '../stores';
 
@@ -34,17 +34,12 @@ function* gFetchMessagesRequest() {
 function* gSendMessagesRequest() {
   let state: State = yield select();
   const {messageIds, error}: ISendMessagesResponse = yield call(() => {
-    return state.client.client!.sendMessages(...state.message.messagesSending);
+    return state.client.client!.sendMessages(...state.message.localMessageList);
   });
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
   } else if (messageIds) {
-    let messages = state.message.messagesSending.slice();
-    for (let i = 0; i < messages.length; i++) {
-      messages[i].messageId = messageIds[i];
-      messages[i].created = date2ISO3339String(new Date());
-    }
-    yield put(sendMessagesRequestSuccessActionCreator(messages));
+    yield put(sendMessagesRequestSuccessActionCreator([]));
   }
 }
 
@@ -56,15 +51,9 @@ function* gSendDirectMessagesRequest(action: SendDirectMessagesRequestAction) {
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
   } else if (messageIds) {
-    let messages = state.message.messagesSending.slice();
-    for (let i = 0; i < messages.length; i++) {
-      messages[i].messageId = messageIds[i];
-      messages[i].created = date2ISO3339String(new Date());
-    }
-    yield put(sendMessagesRequestSuccessActionCreator(messages));
+    yield put(sendMessagesRequestSuccessActionCreator(action.messages));
   }
 }
-
 
 export function* messageSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(FETCH_MESSAGES_REQUEST, gFetchMessagesRequest);

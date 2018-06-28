@@ -38,16 +38,9 @@ export function dateFormateMMDD(ISO3339: string): string {
   return (itemDate.getMonth() + 1) + '/' + itemDate.getDate();
 }
 
-export function date2ISO3339String(date: Date) {
-  function pad(n: any) {
-    return n < 10 ? '0' + n : n;
-  }
-  return date.getUTCFullYear() + '-'
-    + pad(date.getUTCMonth() + 1) + '-'
-    + pad(date.getUTCDate()) + 'T'
-    + pad(date.getUTCHours()) + ':'
-    + pad(date.getUTCMinutes()) + ':'
-    + pad(date.getUTCSeconds()) + 'Z';
+export function ISO3339String2Number(iso3339: string) {
+  const date = new Date(iso3339);
+  return Math.floor(date.getTime() / 1000);
 }
 
 export function opponentUser(users: IUserForRoom[], myUserId: string): (IUserForRoom[] | null) {
@@ -185,6 +178,7 @@ export function createMessage(messageId: string, roomId: string, userId: string,
   if (Object.keys(payload).length === 0) {
     throw Error('Creating message failure. Parameter invalid.');
   }
+  const iso3339 = new Date().toISOString();
   return {
     messageId: messageId,
     roomId: roomId,
@@ -192,6 +186,8 @@ export function createMessage(messageId: string, roomId: string, userId: string,
     type: type,
     eventName: 'message',
     payload: payload,
+    created: iso3339,
+    modified: iso3339,
   };
 }
 

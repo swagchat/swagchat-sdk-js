@@ -41,9 +41,8 @@ const getInitialState = (): MessageState => ({
   messagesAllCount: 0,
   messagesLimit: 0,
   messagesOffset: 0,
-  messagesBeforeSending: [],
-  messagesSending: [],
-  messageList: [],
+  localMessageList: [],
+  localMessageMap: {},
   messageMap: {},
 
   // text
@@ -66,7 +65,9 @@ const getInitialState = (): MessageState => ({
 });
 
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
-  let mergedList: IMessage[];
+  let mergedMap: {[key: string]: IMessage};
+  let mergedLocalMap: {[key: string]: IMessage};
+
   switch (action.type) {
     case SET_IS_FIRST_FETCH:
       return Object.assign(
@@ -101,18 +102,18 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case BEFORE_FETCH_MESSAGES_REQUEST:
-      const beforeMessagesFetchAction = action as BeforeFetchMessagesRequestAction;
-      let beforeLimit = beforeMessagesFetchAction.messagesLimit;
-      let beforeOffset = beforeMessagesFetchAction.messagesAllCount - beforeMessagesFetchAction.messagesLimit;
+      const bfmra = action as BeforeFetchMessagesRequestAction;
+      let beforeLimit = bfmra.messagesLimit;
+      let beforeOffset = bfmra.messagesAllCount - bfmra.messagesLimit;
       if (beforeOffset < 0) {
-        beforeLimit = beforeMessagesFetchAction.messagesAllCount;
+        beforeLimit = bfmra.messagesAllCount;
         beforeOffset = 0;
       }
       return Object.assign(
         {},
         state,
         {
-          messagesAllCount: beforeMessagesFetchAction.messagesAllCount,
+          messagesAllCount: bfmra.messagesAllCount,
           messagesLimit: beforeLimit,
           messagesOffset: beforeOffset,
         }
@@ -127,15 +128,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         newLimit = state.messagesOffset;
         newOffset = 0;
       }
-      const messagesFetchAction = action as FetchMessagesRequestSuccessAction;
-      // mergedList = Array.from(new Set([...messagesFetchAction.messages.messages, ...state.messageList]));
-      mergedList = R.concat(messagesFetchAction.messages.messages, state.messageList);
+      const mfa = action as FetchMessagesRequestSuccessAction;
+      mergedMap = R.merge(messageList2map(mfa.messages.messages), state.messageMap);
+
       return Object.assign(
         {},
         state,
         {
-          messageMap: messageList2map(mergedList),
-          messageList: mergedList,
+          messageMap: mergedMap,
           messagesLimit: newLimit,
           messagesOffset: newOffset,
         }
@@ -149,54 +149,59 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case PUSH_LOCAL_MESSAGE:
-      const createMessageAction = action as PushLocalMessageAction;
-      const message = Object.assign({}, createMessageAction.message);
-      message.created = new Date().toISOString();
-      // mergedList = Array.from(new Set([...state.messagesBeforeSending, message]));
-      mergedList = R.concat(state.messagesBeforeSending, [message]);
+      // map
+      const am = (action as PushLocalMessageAction).message;
+      mergedLocalMap = R.clone(state.localMessageMap);
+      mergedLocalMap[am.messageId!] = am;
+
+      // list
+      let localMessageList: IMessage[] = [];
+      if (state.localMessageList.length === 0) {
+        localMessageList = [am];
+      } else {
+        state.localMessageList.forEach((sm: IMessage) => {
+          if (sm.messageId === am.messageId) {
+            localMessageList = R.concat(localMessageList, [am]);
+          } else {
+            localMessageList = R.concat(localMessageList, [sm]);
+          }
+        });
+      }
 
       return Object.assign(
         {},
         state,
         {
-          messagesBeforeSending: mergedList,
+          localMessageMap: mergedLocalMap,
+          localMessageList:  localMessageList,
         }
       );
     case BEFORE_SEND_MESSAGES_REQUEST:
-      // mergedList = Array.from(new Set([...state.messageList, ...state.messagesBeforeSending]));
-      mergedList = R.concat(state.messageList, state.messagesBeforeSending);
+      mergedMap = R.merge(state.messageMap, state.localMessageMap);
+
       return Object.assign(
         {},
         state,
         {
           sending: true,
-          messagesBeforeSending: [],
-          messagesSending: state.messagesBeforeSending,
-          messageMap: messageList2map(mergedList),
-          messageList: mergedList,
+          messageMap: mergedMap,
         }
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
-      // mergedList = Array.from(new Set([...state.messageList]));
-      // mergedList = R.concat(state.messageList);
-      mergedList = state.messageList.filter((v: IMessage) => {
-        if (!v.messageId) {
-          return false;
-        }
-        return v.messageId.indexOf('local-') < 0;
+      mergedMap = R.clone(state.messageMap);
+      const messageList = (action as SendMessagesRequestSuccessAction).messageList;
+      messageList.forEach((m: IMessage) => {
+        mergedMap[m.messageId!] = m;
       });
-      const sendMessagesRequestSuccessAction = action as SendMessagesRequestSuccessAction;
-      // mergedList = Array.from(new Set([...mergedList, ...sendMessagesRequestSuccessAction.messageList]));
-      mergedList = R.concat(mergedList, sendMessagesRequestSuccessAction.messageList);
+
       return Object.assign(
         {},
         state,
         {
           sending: false,
-          messagesBeforeSending: [],
-          messagesSending: [],
-          messageMap: messageList2map(mergedList),
-          messageList: mergedList,
+          localMessageMap: {},
+          localMessageList: [],
+          messageMap: mergedMap,
           scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
@@ -209,31 +214,23 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case DELETE_LOCAL_MESSAGES:
-      mergedList = state.messageList.slice(0, state.messageList.length - state.messagesSending.length);
       return Object.assign(
         {},
         state,
         {
-          messagesBeforeSending: [],
-          messagesSending: [],
-          messageMap: messageList2map(mergedList),
-          messageList: mergedList,
+          localMessageMap: {},
+          localMessageList: [],
         }
       );
     case UPDATE_MESSAGES:
-      const updateMessageAction = action as UpdateMessagesAction;
-      if (state.messageMap) {
-        // mergedList = Array.from(new Set([...state.messageList, ...updateMessageAction.messages]));
-        mergedList = R.concat(state.messageList, updateMessageAction.messages);
-      } else {
-        mergedList = updateMessageAction.messages;
-      }
+      const ams = (action as UpdateMessagesAction).messages;
+      mergedMap = R.clone(state.messageMap, messageList2map(ams));
+
       return Object.assign(
         {},
         state,
         {
-          messageMap: messageList2map(mergedList),
-          messageList: mergedList,
+          messageMap: mergedMap,
           scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
         }
       );
@@ -327,7 +324,7 @@ export function message(state: MessageState = getInitialState(), action: Message
       );
     case REFRESH_INDICATORS:
       const refreshIndicators = R.filter((v: IMessage) => {
-        return ((new Date().getTime() - new Date(v.created!).getTime()) / 1000 - 5 < 0);
+        return ((new Date().getTime() - new Date(v.created as string).getTime()) / 1000 - 5 < 0);
       }, state.indicators);
       return Object.assign(
         {},

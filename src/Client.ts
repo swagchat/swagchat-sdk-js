@@ -1,5 +1,5 @@
 import { History } from 'history';
-import { Realtime, Room, Platform, logger, EventName } from './';
+import { Realtime, Room, Platform, logger, EventName, ISO3339String2Number } from './';
 import * as I from './interface';
 import 'isomorphic-fetch';
 
@@ -671,9 +671,19 @@ export class Client {
     let copyMessage: I.IMessage;
     messages.forEach(message => {
       copyMessage = Object.assign({}, message);
-      delete copyMessage.messageId;
-      delete copyMessage.created;
-      delete copyMessage.modified;
+
+      if (copyMessage.created) {
+        copyMessage.created = (ISO3339String2Number(copyMessage.created as string));
+      } else {
+        delete copyMessage.created;
+      }
+
+      if (copyMessage.modified) {
+        copyMessage.modified = (ISO3339String2Number(copyMessage.modified as string));
+      } else {
+        delete copyMessage.modified;
+      }
+
       if (copyMessage.payload.hasOwnProperty('dataUrl')) {
         delete (copyMessage.payload as I.IPayloadImage).dataUrl;
       }
