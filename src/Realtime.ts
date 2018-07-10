@@ -78,6 +78,9 @@ export class Realtime {
     });
 
     this.conn.addEventListener('message', (e: I.IMessageEvent) => {
+      if (!e.data) {
+        return;
+      }
       let message = <I.IMessage>JSON.parse(<string>e.data);
       if (message.eventName) {
         const eventHandlers = this.onEventHandlers[message.eventName];
