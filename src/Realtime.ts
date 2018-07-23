@@ -95,7 +95,6 @@ export class Realtime {
 
     Object.keys(this.onEventHandlers).forEach((eventName: string) => {
       Object.keys(this.onEventHandlers[eventName]).forEach((funcName) => {
-        alert(this.userId + ' ' + eventName + ' ' + funcName + ' subscribe' + this.onEventHandlers[eventName][funcName]);
         setTimeout(() => {
           this.sendEvent(eventName, funcName, 'subscribe', '');
         }, 2000);

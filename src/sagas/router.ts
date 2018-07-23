@@ -56,7 +56,7 @@ function* gLocationChange() {
           if (users) {
             roomForUser.name = roomForUser.name === '' ?
               generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
-            roomForUser.pictureUrl = users[0].pictureUrl;
+            roomForUser.pictureUrl = users[0].pictureUrl ? users[0].pictureUrl : '';
           }
           userRooms[roomForUser.roomId] = roomForUser;
         });

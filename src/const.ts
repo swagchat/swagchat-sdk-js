@@ -19,8 +19,8 @@ export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
   FILE = 'file',
-  INDICATOR_START = 'indicatorStart',
-  INDICATOR_END = 'indicatorEnd',
+  INDICATOR_START = 'indicator-start',
+  INDICATOR_END = 'indicator-end',
   UPDATE_ROOM_USER = 'updateRoomUser',
 }
 

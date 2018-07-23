@@ -62,12 +62,12 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
             roomForUser.name = roomForUser.name === '' ?
               generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
           }
-          roomForUser.pictureUrl = users[0].pictureUrl;
+          roomForUser.pictureUrl = users[0].pictureUrl ? users[0].pictureUrl : '';
         }
         userRooms[roomForUser.roomId] = roomForUser;
       });
+      yield put(fetchUserRequestSuccessActionCreator(userRes.user, userRooms, userRes.user.blocks!));
     }
-    yield put(fetchUserRequestSuccessActionCreator(userRes.user, userRooms, userRes.user.blocks!));
 
     if (location) {
       let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));

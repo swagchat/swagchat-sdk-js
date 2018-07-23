@@ -17,7 +17,7 @@ import { user } from '../reducers/user';
 const R = require('ramda');
 
 export function generateMiddleware(middleware: Middleware[]): Middleware[] {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.REACT_APP_ENV !== 'production') {
     const logger = createLogger({
       level: 'info',
       duration: true,
