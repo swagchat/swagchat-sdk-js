@@ -41,7 +41,6 @@ function* gCreateRoomAndFetchMessagesRequest() {
     roomType = RoomType.ONE_ON_ONE;
   }
 
-  let existRoomId = '';
   if (roomType === RoomType.ONE_ON_ONE && Object.keys(state.user.userRooms!).length > 0) {
     // exist check
     for (let roomId of Object.keys(state.user.userRooms!)) {
@@ -50,7 +49,6 @@ function* gCreateRoomAndFetchMessagesRequest() {
         for (let user of userRoom.users) {
           const targetUserId = selectedContactUserIds[0];
           if (user.userId === targetUserId) {
-            existRoomId = userRoom.roomId;
             yield put(setCurrentRoomIdActionCreator(userRoom.roomId));
             yield put(setCurrentRoomNameActionCreator(userRoom.name));
             return;

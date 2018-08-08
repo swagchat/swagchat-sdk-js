@@ -1,6 +1,8 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
-import { Realtime, createQueryParams, logger, SpeechMode } from './';
+import { Realtime } from './Realtime';
+import { logger, createQueryParams } from './utils';
+import { SpeechMode } from './const';
 
 export interface IRoomParams {
   apiEndpoint: string;

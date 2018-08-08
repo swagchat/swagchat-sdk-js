@@ -1,4 +1,5 @@
-import { logger, EventName } from './';
+import { logger } from './utils';
+import { EventName } from './const';
 import * as I from './interface';
 
 export class Realtime {

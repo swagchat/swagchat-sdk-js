@@ -1,4 +1,5 @@
-import { Room, RoleType, MessageType, MessageActionType } from './';
+import { Room } from './Room';
+import { RoleType, MessageActionType, MessageType } from './const';
 
 export interface IDevice {
   userId: string;

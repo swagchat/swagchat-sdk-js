@@ -1,5 +1,8 @@
 import { History } from 'history';
-import { Realtime, Room, Platform, logger, EventName, ISO3339String2Number } from './';
+import { Realtime } from './Realtime';
+import { Room } from './Room';
+import { Platform, EventName } from './const';
+import { logger, ISO3339String2Number } from './utils';
 import * as I from './interface';
 import 'isomorphic-fetch';
 
@@ -30,10 +33,10 @@ export class Client {
   private _apiEndpoint: string;
   private _wsEndpoint: string;
   private _conn: Realtime;
-  private _speechRt: Realtime;
+  // private _speechRt: Realtime;
   private _paths: IPaths;
   private _history: History;
-  private _realm: string;
+  // private _realm: string;
 
   public accessToken?: string;
   public userId?: string;
@@ -133,9 +136,9 @@ export class Client {
       this._history = params.history;
     }
 
-    if (params.realm !== undefined) {
-      this._realm = params.realm;
-    }
+    // if (params.realm !== undefined) {
+    //   this._realm = params.realm;
+    // }
 
     if (params.updateLastAccessRoomId === undefined) {
       this.updateLastAccessRoomId = false;
@@ -165,11 +168,11 @@ export class Client {
   /**
    * Create websocket connection for speech
    */
-  public createSpeechRt() {
-    const speechRt = new Realtime(this._wsEndpoint + '/speech');
-    speechRt.conn.binaryType = 'arraybuffer';
-    this._speechRt = speechRt;
-  }
+  // public createSpeechRt() {
+  //   const speechRt = new Realtime(this._wsEndpoint + '/speech');
+  //   speechRt.conn.binaryType = 'arraybuffer';
+  //   this._speechRt = speechRt;
+  // }
 
   /**
    * Create a user

@@ -2,3 +2,4 @@ node_modules
 libs
 dist
 yarn-error.log
+coverage

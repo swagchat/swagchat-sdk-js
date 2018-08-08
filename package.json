@@ -12,6 +12,8 @@
   "main": "libs/index.js",
   "types": "libs/index.d.ts",
   "scripts": {
+    "test": "./node_modules/.bin/mocha ./libs/test/*.js",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- libs/test/*.js && ./node_modules/.bin/remap-istanbul -i ./coverage/coverage.json -o ./coverage/ts-report -t html && open ./coverage/ts-report/index.html",
     "build:lib": "./node_modules/.bin/tsc --pretty --watch",
     "build:clear": "rm -rf ./build/dist && mkdir ./build/dist",
     "build:dev": "./node_modules/.bin/watchify src/index.ts -s SwagChat -p [tsify] --verbose -o dist/swagchat-sdk.js",
@@ -49,14 +51,23 @@
   "devDependencies": {
     "@types/history": "4.6.2",
     "@types/isomorphic-fetch": "0.0.34",
+    "@types/mocha": "5.2.5",
+    "@types/power-assert": "1.5.0",
+    "@types/sinon": "5.0.1",
     "bundle-collapser": "1.3.0",
     "envify": "4.1.0",
+    "espower-typescript": "9.0.0",
+    "istanbul": "0.4.5",
+    "mocha": "5.2.0",
+    "power-assert": "1.6.0",
+    "remap-istanbul": "0.11.1",
+    "sinon": "6.1.4",
     "ts-loader": "2.3.4",
     "tsify": "3.0.1",
     "tslint": "5.7.0",
     "tslint-loader": "3.5.3",
     "typedoc": "0.8.0",
-    "typescript": "2.4.2",
+    "typescript": "2.9.2",
     "utf-8-validate": "^4.0.0",
     "watchify": "3.9.0"
   }
