@@ -1,9 +1,8 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
 import {
-  IFetchRoomResponse, IFetchRoomUsersResponse,
+  IRetrieveRoomRequest, IFetchRoomResponse, IFetchRoomUsersResponse, IAddRoomUsersRequest, IDeleteRoomUsersRequest,
   generateRoomName,
-} from '../';
+} from '..';
 import {
   setCurrentRoomIdActionCreator,
   setCurrentRoomNameActionCreator,
@@ -23,8 +22,12 @@ import { State } from '../stores';
 function* gFetchRoomRequest(action: FetchRoomRequestAction) {
   const state: State = yield select();
   const client = state.client.client;
+  const user = state.user.user;
   const roomRes: IFetchRoomResponse = yield call((roomId: string) => {
-    return client!.getRoom(roomId);
+    const req = {
+      roomId
+    } as IRetrieveRoomRequest;
+    return user!.retrieveRoom(req);
   }, action.roomId);
   if (roomRes.room !== null) {
     yield put(fetchRoomRequestSuccessActionCreator(roomRes.room));
@@ -34,7 +37,7 @@ function* gFetchRoomRequest(action: FetchRoomRequestAction) {
   } else {
     yield put(fetchRoomRequestFailureActionCreator(roomRes.error!));
     if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {
-      yield put(push(client!.paths.roomListPath!));
+      // yield put(push(client!.paths.roomListPath!));
     }
   }
 }
@@ -50,8 +53,11 @@ function* gAddRoomUserRequest(action: AddRoomUserRequestAction) {
   } else {
     roomId = state.room.room.roomId;
   }
-  const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.room.room!.addUsers(userIds);
+  const res: IFetchRoomUsersResponse = yield call((userIdsList: string[]) => {
+    const req = {
+      userIdsList
+    } as IAddRoomUsersRequest;
+    return state.room.room!.addUsers(req);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(addRoomUserRequestSuccessActionCreator(res.roomUsers));
@@ -72,16 +78,19 @@ function* gRemoveRoomUserRequest(action: RemoveRoomUserRequestAction) {
   } else {
     roomId = state.room.room.roomId;
   }
-  const res: IFetchRoomUsersResponse = yield call((userIds: string[]) => {
-    return state.room.room!.removeUsers(userIds);
+  const res: IFetchRoomUsersResponse = yield call((userIdsList: string[]) => {
+    const req = {
+      userIdsList
+    } as IDeleteRoomUsersRequest;
+    return state.room.room!.deleteUsers(req);
   }, action.userIds);
   if (res.roomUsers) {
     yield put(removeRoomUserRequestSuccessActionCreator(res.roomUsers));
-    yield put(fetchUserRequestActionCreator(false));
+    yield put(fetchUserRequestActionCreator(state.user.user!.userId, false));
     if (action.userIds.indexOf(state.user.user!.userId) >= 0) {
       const client = state.client.client;
       if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {
-        yield put(push(client!.paths.roomListPath!));
+        // yield put(push(client!.paths.roomListPath!));
       }
     } else {
       yield put(fetchRoomRequestActionCreator(roomId));

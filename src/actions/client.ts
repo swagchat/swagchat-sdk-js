@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Client } from '../';
+import { Client } from '..';
 
 export const SET_CLIENT = 'SET_CLIENT';
 

@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IAsset, IProblemDetail } from '../';
+import { IAsset, IErrorResponse } from '..';
 
 export const UPLOAD_ASSET_REQUEST = 'UPLOAD_ASSET_REQUEST';
 export const UPLOAD_ASSET_REQUEST_SUCCESS = 'UPLOAD_ASSET_REQUEST_SUCCESS';
@@ -34,11 +34,11 @@ export const uploadAssetRequestSuccessActionCreator = (asset: IAsset): UploadAss
 });
 
 export interface UploadAssetRequestFailureAction extends AssetBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const uploadAssetRequestFailureActionCreator = (problemDetail: IProblemDetail): UploadAssetRequestFailureAction => ({
+export const uploadAssetRequestFailureActionCreator = (errorResponse: IErrorResponse): UploadAssetRequestFailureAction => ({
   type: UPLOAD_ASSET_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export type AssetActions =

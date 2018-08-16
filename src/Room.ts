@@ -1,16 +1,16 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
-import { Realtime } from './Realtime';
+import { User } from './User';
 import { logger, createQueryParams } from './utils';
-import { SpeechMode } from './const';
+import { SpeechMode, EventName } from './const';
 
 export interface IRoomParams {
   apiEndpoint: string;
   userId: string;
-  accessToken: string;
   room: I.IRoom;
-  conn?: Realtime;
+  user: User;
 }
+
 /**
  * Room class has API client, own data and the behaivor for itself.
  * Please use accessor to get or set although data is stored in variable <code>_data</code>.
@@ -21,30 +21,8 @@ export interface IRoomParams {
  */
 export class Room {
   private _apiEndpoint: string;
-  private _accessToken: string;
-  private _userId: string;
   private _data: I.IRoom;
-  private _conn: Realtime;
-
-  private _baseHeaders(): Object {
-    let baseHeaders = {
-      'X-Sub': this._userId,
-    };
-    if (this._accessToken !== undefined) {
-      baseHeaders = Object.assign(
-        baseHeaders,
-        {'Authorization': 'Bearer ' + this._accessToken},
-      );
-    }
-    return baseHeaders;
-  }
-
-  private _jsonHeaders(): {} {
-    return Object.assign(
-      this._baseHeaders(),
-      {'Content-Type': 'application/json'},
-    );
-  }
+  private _user: User;
 
   constructor(params: IRoomParams) {
     if (!params.apiEndpoint || params.apiEndpoint === '' || typeof(params.apiEndpoint) !== 'string') {
@@ -57,20 +35,15 @@ export class Room {
     }
 
     this._apiEndpoint = params.apiEndpoint;
-    this._userId = params.userId;
     this._data = params.room;
 
-    if (params.accessToken !== undefined) {
-      this._accessToken = params.accessToken;
-    }
-
-    if (params.conn) {
-      this._conn = params.conn;
+    if (params.user) {
+      this._user = params.user;
     }
   }
 
-  get data(): I.IRoom {
-    return this._data;
+  set data(room: I.IRoom) {
+    this._data = room;
   }
 
   get roomId(): string {
@@ -81,56 +54,36 @@ export class Room {
     return this._data.userId ? this._data.userId : '';
   }
 
-  set userId(userId: string) {
-    this._data.roomId = userId;
-  }
-
   get name(): string {
     return this._data.name ? this._data.name : '';
-  }
-
-  set name(name: string) {
-    this._data.name = name;
   }
 
   get pictureUrl(): string {
     return this._data.pictureUrl ? this._data.pictureUrl : '';
   }
 
-  set pictureUrl(pictureUrl: string) {
-    this._data.pictureUrl = pictureUrl;
-  }
-
   get informationUrl(): string {
     return this._data.informationUrl ? this._data.informationUrl : '';
-  }
-
-  set informationUrl(informationUrl: string) {
-    this._data.informationUrl = informationUrl;
-  }
-
-  get metaData(): {[key: string]: string | number | boolean | Object} {
-    return this._data.metaData ? this._data.metaData : {};
-  }
-
-  set metaData(metaData: {[key: string]: string | number | boolean | Object}) {
-    if (!metaData || typeof(metaData) !== 'object') {
-      logger('api', 'error', 'Set metaData failure. metaData is not setting.');
-    } else {
-      this._data.metaData = metaData;
-    }
-  }
-
-  get availableMessageTypes(): string[] | null {
-    return this._data.availableMessageTypes ? this._data.availableMessageTypes : null;
   }
 
   get type(): number {
     return this._data.type ? this._data.type : 0;
   }
 
-  set type(type: number) {
-    this._data.type = type;
+  get canLeft(): boolean {
+    return this._data.canLeft ? this._data.canLeft : true;
+  }
+
+  get speechMode(): number {
+    return this._data.speechMode ? this._data.speechMode : SpeechMode.MANUAL;
+  }
+
+  get metaData(): Object {
+    return this._data.metaData ? this._data.metaData : {};
+  }
+
+  get availableMessageTypes(): Array<string> {
+    return this._data.availableMessageTypes ? this._data.availableMessageTypes.split(',') : new Array<string>(0);
   }
 
   get lastMessage(): string {
@@ -145,22 +98,6 @@ export class Room {
     return this._data.messageCount ? this._data.messageCount : 0;
   }
 
-  get canLeft(): boolean {
-    return this._data.canLeft ? this._data.canLeft : true;
-  }
-
-  set canLeft(canLeft: boolean) {
-    this._data.canLeft = canLeft;
-  }
-
-  get speechMode(): number {
-    return this._data.speechMode ? this._data.speechMode : SpeechMode.MANUAL;
-  }
-
-  set speechMode(speechMode: number) {
-    this._data.speechMode = speechMode;
-  }
-
   get created(): string {
     return this._data.created ? this._data.created : '';
   }
@@ -169,12 +106,8 @@ export class Room {
     return this._data.modified ? this._data.modified : '';
   }
 
-  get users(): I.IUserForRoom[] | null {
-    return this._data.users || null;
-  }
-
-  get userIds(): string[] {
-    return this._data.userIds ? this._data.userIds : [];
+  get users(): Array<I.IMiniUser> {
+    return this._data.users ? this._data.users : new Array<I.IMiniUser>(0);
   }
 
   /**
@@ -187,214 +120,212 @@ export class Room {
    * @param key Key for register.
    * @param value A value for key.
    */
-  public setMetaData(key: string, value: string | number | boolean | Object): void {
-    if (!key || typeof(key) !== 'string') {
-      logger('api', 'error', 'set metaData failure. Parameter invalid.');
-    } else {
-      if (this._data.metaData === undefined) {
-        let metaData = {key: value};
-        this._data.metaData = metaData;
-      } else {
-        this._data.metaData[key] = value;
-      }
-    }
-  }
+  // public setMetaData(key: string, value: string | number | boolean | Object): void {
+  //   if (!key || typeof(key) !== 'string') {
+  //     logger('api', 'error', 'set metaData failure. Parameter invalid.');
+  //   } else {
+  //     if (this._data.metaData === undefined) {
+  //       let metaData = {key: value};
+  //       this._data.metaData = metaData;
+  //     } else {
+  //       this._data.metaData[key] = value;
+  //     }
+  //   }
+  // }
 
   /**
    * Update room information.
    * Please set the data of this object beforehand.
    */
-  public update(putRoom: I.IRoom): Promise<I.IFetchRoomResponse> {
+  public update(req: I.IUpdateRoomRequest): Promise<I.IUpdateRoomResponse> {
+    const UpdateRoomRequest = require('swagchat-protobuf/roomMessage_pb').UpdateRoomRequest;
+    const pbReq = new UpdateRoomRequest();
+    pbReq.setName(req.name!);
+    const body = pbReq.toObject();
+    body['metaData'] = req.metaDataObj;
+
+    const res = {
+      error: null,
+    } as I.IUpdateRoomResponse;
+
     return fetch(this._apiEndpoint + '/rooms/' + this.roomId, {
       method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify(putRoom)
+      headers: this._user.client.setHeaders(this._user.userId),
+      body: JSON.stringify(body)
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((room) => {
-          return (
-            {
-              room: new Room({
-                apiEndpoint: this._apiEndpoint,
-                userId: this._userId,
-                accessToken: this._accessToken,
-                room: room,
-                conn: this._conn ? this._conn : undefined,
-              }),
-              error: null,
-            } as I.IFetchRoomResponse
-          );
+          this._data = room;
+          return res;
         });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              room: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
     }).catch((error) => {
-      return {
-        room: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomResponse;
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParamsList = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
-  public addUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-    let fetchParam = {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({
-        userIds: userIds
-      })
-    };
-    if (!(userIds instanceof Array) || userIds.length === 0) {
-      fetchParam.body = JSON.stringify({});
+  public addUsers(req: I.IAddRoomUsersRequest): Promise<I.IAddRoomUsersResponse> {
+    const AddRoomUsersRequest = require('swagchat-protobuf/roomUserMessage_pb').AddRoomUsersRequest;
+    const pbReq = new AddRoomUsersRequest();
+    pbReq.setRoomId(this.roomId);
+    if (req.display) {
+      pbReq.setDisplay(req.display);
+    } else {
+      pbReq.setDisplay(true);
     }
-    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users',
-      fetchParam
-    ).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((addUsersRes) => {
-          return (
-            {
-              roomUsers: addUsersRes.roomUsers,
-              error: null,
-            } as I.IFetchRoomUsersResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          roomUsers: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchRoomUsersResponse;
+    const body = pbReq.toObject();
+    body['userIds'] = req.userIdsList;
+    delete(body.userIdsList);
+    delete(body.roomId);
+
+    const res = {
+      error: null,
+    } as I.IAddRoomUsersResponse;
+
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users', {
+      method: 'POST',
+      headers: this._user.client.setHeaders(this._user.userId),
+      body: JSON.stringify(body)
+    }).then((response: Response) => {
+      if (response.status === 201) {
+        const req = {
+          roomId: this.roomId
+        } as I.IRetrieveRoomRequest;
+        return this._user.retrieveRoom(req);
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              roomUsers: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomUsersResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        roomUsers: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomUsersResponse;
+    }).then(res => {
+      if (res.error) {
+        throw res.error!;
+      }
+
+      this._data = res.room!._data;
+      return res;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
-  public removeUsers(userIds: string[]): Promise<I.IFetchRoomUsersResponse> {
-    let fetchParam = {
+  public deleteUsers(req: I.IDeleteRoomUsersRequest): Promise<I.IDeleteRoomUsersResponse> {
+    const DeleteRoomUsersRequest = require('swagchat-protobuf/roomUserMessage_pb').DeleteRoomUsersRequest;
+    const pbReq = new DeleteRoomUsersRequest();
+    pbReq.setRoomId(this.roomId);
+    const body = pbReq.toObject();
+    body['userIds'] = req.userIdsList;
+    delete(body.userIdsList);
+    delete(body.roomId);
+
+    const res = {
+      error: null,
+    } as I.IDeleteRoomUsersResponse;
+
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users', {
       method: 'DELETE',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({
-        userIds: userIds
-      })
-    };
-    if (!(userIds instanceof Array) || userIds.length === 0) {
-      fetchParam.body = JSON.stringify({});
-    }
-    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users',
-      fetchParam
-    ).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((removeUsersRes) => {
-          return (
-            {
-              roomUsers: removeUsersRes.roomUsers,
-              error: null,
-            } as I.IFetchRoomUsersResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          roomUsers: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchRoomUsersResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              roomUsers: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomUsersResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        roomUsers: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomUsersResponse;
-    });
-  }
-
-  public reflesh(): Promise<I.IFetchRoomResponse> {
-    return fetch(this._apiEndpoint + '/rooms/' + this.roomId, {
-      method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this._user.client.setHeaders(this._user.userId),
+      body: JSON.stringify(body)
     }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((room) => {
-          this._data = <I.IRoom>room;
-          return (
-            {
-              room: this,
-              error: null,
-            } as I.IFetchRoomResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          room: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchRoomResponse;
+      if (response.status === 204) {
+        const req = {
+          roomId: this.roomId
+        } as I.IRetrieveRoomRequest;
+        return this._user.retrieveRoom(req);
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              room: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        room: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomResponse;
+    }).then(res => {
+      if (res.error) {
+        throw res.error!;
+      }
+
+      this._data = res.room!._data;
+      return res;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
-  public getMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
+  /**
+   * Reset the number of unread for room specified by parameters.
+   * @param roomId Room ID
+   */
+  public markAsRead(): Promise<I.IMarkAsReadResponse> {
+    const res = {
+      error: null,
+    } as I.IMarkAsReadResponse;
+
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/users/' + this.userId, {
+      method: 'PUT',
+      headers: this._user.client.setHeaders(this._user.userId),
+      body: JSON.stringify({unreadCount: 0})
+    }).then((response: Response) => {
+      if (response.status === 204) {
+        return response.json().then(() => {
+          return res;
+        });
+      } else {
+        return response.json().then(error => {
+          throw error;
+        });
+      }
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
+    });
+  }
+
+  public retrieveMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
+    const res = {
+      messages: null,
+      error: null,
+    } as I.IFetchMessagesResponse;
+
     let queryParamsString = '';
     if (queryParams !== undefined) {
       queryParamsString = createQueryParams(queryParams);
     }
     return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/messages?' + queryParamsString, {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this._user.client.setHeaders(this._user.userId),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((messages) => {
@@ -410,18 +341,69 @@ export class Room {
           return (
             {
               messages: null,
-              error: <I.IProblemDetail>json,
+              error: <I.IErrorResponse>json,
             } as I.IFetchMessagesResponse
           );
         });
       }
-    }).catch((error) => {
-      return {
-        messages: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchMessagesResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParamsList = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
+    });
+  }
+
+  /**
+   * Send Message.
+   * Please create message objects beforehand by using such as client.createTextMessage().
+   * @param messages An array for message objects to send.
+   */
+  public sendMessage(req: I.ISendMessageRequest): Promise<I.ISendMessageResponse> {
+    const SendMessageRequest = require('swagchat-protobuf/messageMessage_pb').SendMessageRequest;
+    const pbReq = new SendMessageRequest();
+    pbReq.setMessageId(req.messageId);
+    pbReq.setRoomId(this.roomId);
+    pbReq.setUserId(this._user.userId);
+    pbReq.setType(req.type);
+    pbReq.setRole(req.role);
+    pbReq.setEventName(EventName.MESSAGE);
+    const body = pbReq.toObject();
+    body['payload'] = req.payloadObj;
+
+    const res = {
+      error: null,
+    } as I.ISendMessageResponse;
+
+    return fetch(this._apiEndpoint + '/messages', {
+      method: 'POST',
+      headers: this._user.client.setHeaders(this._user.userId),
+      body: JSON.stringify(body)
+    }).then((response: Response) => {
+      if (response.status === 201) {
+        return response.json().then(() => {
+          return res;
+        });
+      } else {
+        return response.json().then(error => {
+          throw error;
+        });
+      }
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParamsList = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 }

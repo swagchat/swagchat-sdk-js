@@ -1,4 +1,4 @@
-import { Client } from '../';
+import { Client } from '..';
 
 export interface ClientState {
   client: Client | null;

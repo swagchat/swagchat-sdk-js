@@ -1,5 +1,5 @@
 
-import { IAddonMessage } from '../';
+import { IAddonMessage } from '..';
 import { AddonState } from '../stores/addon';
 import {
   AddonActions,

@@ -1,5 +1,6 @@
+
 import { Action } from 'redux';
-import { IAddonMessage, IAddonRoomListItem } from '../';
+import { IAddonMessage, IAddonRoomListItem } from '..';
 
 export const SET_ADDON_MESSAGE = 'SET_ADDON_MESSAGE';
 export const SET_CUSTOM_ADDON_MESSAGE = 'SET_CUSTOM_ADDON_MESSAGE';

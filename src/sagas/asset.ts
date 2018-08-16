@@ -1,5 +1,5 @@
 import { takeLatest, call, put, ForkEffect, select } from 'redux-saga/effects';
-import { IPostAssetResponse } from '../';
+import { IPostAssetResponse } from '..';
 import {
   UPLOAD_ASSET_REQUEST,
   UploadAssetRequestAction,

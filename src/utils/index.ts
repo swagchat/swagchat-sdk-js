@@ -1,5 +1,5 @@
-import { IUserForRoom, IMessage, Room, MessageType } from '../';
-import * as I from '../interface';
+import { IMiniUser, IMessage, IMiniRoom, Room } from '..';
+// import * as I from '../interface';
 
 export function dateHumanize(ISO3339: string): string {
   const nowDate = new Date();
@@ -43,9 +43,9 @@ export function ISO3339String2Number(iso3339: string) {
   return Math.floor(date.getTime() / 1000);
 }
 
-export function opponentUser(users: IUserForRoom[], myUserId: string): (IUserForRoom[] | null) {
+export function opponentUser(users: IMiniUser[], myUserId: string): (IMiniUser[] | null) {
   let userForRooms = new Array;
-  (users as IUserForRoom[]).forEach((user) => {
+  (users as IMiniUser[]).forEach((user) => {
     if (user.userId !== myUserId) {
       userForRooms.push(user);
     }
@@ -80,7 +80,7 @@ export function generateUUID() {
 //   return chars.join('');
 // }
 
-export function generateRoomName(users: IUserForRoom[], myUserId: string): string {
+export function generateRoomName(users: IMiniUser[], myUserId: string): string {
   const separator = ', ';
   let roomName = '';
 
@@ -105,7 +105,7 @@ export function generateRoomPictureUrl(room: Room, myUserId: string): string {
   if (roomPictureUrl === '') {
     const user = opponentUser(room.users, myUserId);
     if (user !== null && user.length !== 0) {
-      roomPictureUrl = user[0].pictureUrl;
+      roomPictureUrl = user[0].pictureUrl!;
     }
   }
 
@@ -171,25 +171,25 @@ export function createQueryParams(params: {[key: string]: string | number}) {
     .join('&');
 }
 
-export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): I.IMessage {
-  if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
-    throw Error('Creating message failure. Parameter invalid.');
-  }
-  if (Object.keys(payload).length === 0) {
-    throw Error('Creating message failure. Parameter invalid.');
-  }
-  const iso3339 = new Date().toISOString();
-  return {
-    messageId: messageId,
-    roomId: roomId,
-    userId: userId,
-    type: type,
-    eventName: 'message',
-    payload: payload,
-    created: iso3339,
-    modified: iso3339,
-  };
-}
+// export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): I.IMessage {
+//   if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
+//     throw Error('Creating message failure. Parameter invalid.');
+//   }
+//   if (Object.keys(payload).length === 0) {
+//     throw Error('Creating message failure. Parameter invalid.');
+//   }
+//   const iso3339 = new Date().toISOString();
+//   return {
+//     messageId: messageId,
+//     roomId: roomId,
+//     userId: userId,
+//     type: type,
+//     eventName: 'message',
+//     payload: payload,
+//     created: iso3339,
+//     modified: iso3339,
+//   };
+// }
 
 const apiLogColor = '#039BE5';
 const realtimeLogColor = '#304FFE';
@@ -200,7 +200,7 @@ const infoLogColor = '#03A9F4';
 const errorLogColor = '#F44336';
 
 export function logger(label: string, level: string, message: string) {
-  if (process.env.REACT_APP_ENV === 'production') {
+  if (process.env.REACT_APP_ENV === 'production' || process.env.NODE_ENV === 'production') {
     return;
   }
 
@@ -258,6 +258,14 @@ export function messageList2map(messageList: IMessage[]): {[key: string]: IMessa
   return messages;
 }
 
+export function userRoomList2map(userRoomList: IMiniRoom[]): {[key: string]: IMiniRoom} {
+  let userRooms: {[key: string]: IMiniRoom} = {};
+  userRoomList.forEach(userRoom => {
+    userRooms[userRoom.roomId!] = userRoom;
+  });
+  return userRooms;
+}
+
 export function isUrl(str: string): boolean {
   if (str === '' || str === undefined) {
     return false;
@@ -282,26 +290,26 @@ export function isDataUrl(str: string): boolean {
   }
 }
 
-export function messageToString(message: IMessage): string {
-  let str = '';
-  switch (message.type) {
-    case 'text':
-      str = (message.payload as I.IPayloadText).text;
-      break;
-    case 'image':
-      str = '画像を受信しました';
-      break;
-    case 'file':
-      str = '[' + (message.payload as I.IPayloadFile).filename + ']' + 'を受信しました';
-      break;
-    default:
-      if (message.payload.hasOwnProperty('text')) {
-        str = (message.payload as I.IPayloadText).text;
-      }
-      break;
-  }
-  return str;
-}
+// export function messageToString(message: IMessage): string {
+//   let str = '';
+//   switch (message.type) {
+//     case 'text':
+//       str = (message.payload as I.IPayloadText).text;
+//       break;
+//     case 'image':
+//       str = '画像を受信しました';
+//       break;
+//     case 'file':
+//       str = '[' + (message.payload as I.IPayloadFile).filename + ']' + 'を受信しました';
+//       break;
+//     default:
+//       if (message.payload.hasOwnProperty('text')) {
+//         str = (message.payload as I.IPayloadText).text;
+//       }
+//       break;
+//   }
+//   return str;
+// }
 
 export function replaceUrlToLink(str: string, targetBlank: boolean) {
   const regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
@@ -341,4 +349,18 @@ export function getExtention(fileName: string) {
   }
   ret = fileTypes[len - 1];
   return ret;
+}
+
+export function convertObjectToUint8Array(obj: Object): Uint8Array {
+  const str = JSON.stringify(obj);
+  const buf = new ArrayBuffer(str.length);
+  const bufView = new Uint8Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return bufView;
+
+  // const enc = new TextEncoder(); // utf-8
+  // const uint8 = enc.encode(str);
+  // return uint8;
 }

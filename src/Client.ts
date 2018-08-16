@@ -1,23 +1,28 @@
+import 'isomorphic-fetch';
 import { History } from 'history';
 import { Realtime } from './Realtime';
-import { Room } from './Room';
-import { Platform, EventName } from './const';
-import { logger, ISO3339String2Number } from './utils';
+import { EventName } from './const';
+import { logger } from './utils';
 import * as I from './interface';
-import 'isomorphic-fetch';
+import { User, IUserParams } from './User';
 
 export interface IClientParams {
   apiEndpoint: string;
   wsEndpoint?: string;
-  accessToken?: string;
+  clientId?: string;
   userId?: string;
-  username?: string;
+  accessToken?: string;
   paths?: IPaths;
   history: History;
   isGuest?: boolean;
   realm?: string;
   updateLastAccessRoomId?: boolean;
   singlePaneView?: boolean;
+  settings?: ISettings;
+}
+
+export interface ISettings {
+  roomListPagingCount?: number;
 }
 
 export interface IPaths {
@@ -32,21 +37,31 @@ export interface IPaths {
 export class Client {
   private _apiEndpoint: string;
   private _wsEndpoint: string;
+  private _clientId: string;
+  private _userId: string;
+  private _accessToken: string;
   private _conn: Realtime;
   // private _speechRt: Realtime;
   private _paths: IPaths;
   private _history: History;
   // private _realm: string;
+  private _settings: ISettings;
 
-  public accessToken?: string;
-  public userId?: string;
-  public username?: string;
+
   public updateLastAccessRoomId: boolean;
   public singlePaneView: boolean;
   public refreshAccessToken: () => void;
 
   get apiEndpoint(): string {
     return this._apiEndpoint;
+  }
+
+  get userId(): string {
+    return this._userId;
+  }
+
+  get accessToken(): string {
+    return this._accessToken;
   }
 
   set onConnected(callback: Function) {
@@ -71,24 +86,35 @@ export class Client {
     return this._history;
   }
 
-  private _baseHeaders(): {} {
-    let baseHeaders = {
-      'X-Sub': this.userId,
-    };
-    if (this.accessToken !== undefined) {
-      baseHeaders = Object.assign(
-        baseHeaders,
-        {'Authorization': 'Bearer ' + this.accessToken},
-      );
-    }
-    return baseHeaders;
+  get settings(): ISettings {
+    return this._settings;
   }
 
-  private _jsonHeaders(): {} {
-    return Object.assign(
-      this._baseHeaders(),
-      {'Content-Type': 'application/json'},
-    );
+  public setHeaders(userId?: string): { [key: string]: string } {
+    let baseHeaders = {'Content-Type': 'application/json'};
+
+    if (this._clientId !== undefined) {
+      baseHeaders = Object.assign(
+        baseHeaders,
+        {'X-ClientId': this._clientId}
+      );
+    }
+
+    if (this._accessToken !== undefined) {
+      baseHeaders = Object.assign(
+        baseHeaders,
+        {'Authorization': 'Bearer ' + this._accessToken},
+      );
+    }
+
+    if (userId !== undefined) {
+      baseHeaders = Object.assign(
+        baseHeaders,
+        {'X-Sub': userId},
+      );
+    }
+
+    return baseHeaders;
   }
 
   constructor(params: IClientParams) {
@@ -103,21 +129,28 @@ export class Client {
       params.isGuest = false;
     }
 
-    if (!params.isGuest) {
+    if (params.clientId !== undefined) {
+      if (!params.clientId || params.clientId === '' || typeof(params.clientId) !== 'string') {
+        logger('api', 'error', 'Initialize error. clientId is invalid.');
+        return;
+      }
+      this._clientId = params.clientId!;
+    }
+
+    if (params.userId !== undefined) {
       if (!params.userId || params.userId === '' || typeof(params.userId) !== 'string') {
         logger('api', 'error', 'Initialize error. userId is invalid.');
         return;
       }
-      if (!params.username || params.username === '' || typeof(params.username) !== 'string') {
-        logger('api', 'error', 'Initialize error. username is invalid.');
+      this._userId = params.userId!;
+    }
+
+    if (params.accessToken !== undefined) {
+      if (!params.accessToken || params.accessToken === '' || typeof(params.accessToken) !== 'string') {
+        logger('api', 'error', 'Initialize error. accessToken is invalid.');
         return;
       }
-      this.userId = params.userId;
-      this.username = params.username;
-
-      if (params.accessToken !== undefined) {
-        this.accessToken = params.accessToken;
-      }
+      this._accessToken = params.accessToken!;
     }
 
     if (params.wsEndpoint !== undefined) {
@@ -130,6 +163,14 @@ export class Client {
 
     if (params.paths !== undefined) {
       this._paths = params.paths;
+    } else {
+      this._paths = {
+        accountPath: '/account',
+        messageListPath: '/messages',
+        profilePath: '/profile',
+        roomListPath: '/rooms',
+        roomSettingPath: '/roomSetting'
+      } as IPaths;
     }
 
     if (params.history !== undefined) {
@@ -152,12 +193,26 @@ export class Client {
       this.singlePaneView = params.singlePaneView;
     }
 
+    if (params.settings !== undefined) {
+      this._settings = params.settings;
+    } else {
+      this._settings = {} as ISettings;
+    }
+
+    this.defaultSettings();
+
     logger('api', 'info', 'Initialized API Client OK');
   }
 
-  public socketOpen() {
-    if (this._wsEndpoint && this.userId) {
-      this._conn = new Realtime(this._wsEndpoint, this.userId);
+  private defaultSettings() {
+    if (!this._settings.roomListPagingCount) {
+      this._settings.roomListPagingCount = 20;
+    }
+  }
+
+  public socketOpen(userId: string) {
+    if (this._wsEndpoint && userId) {
+      this._conn = new Realtime(this._wsEndpoint, userId);
     }
   }
 
@@ -177,304 +232,154 @@ export class Client {
   /**
    * Create a user
    */
-  public createUser(): Promise<I.IFetchUserResponse> {
-    const user = {
-      userId: this.userId,
-      name: this.username,
-    };
+  public createUser(req: I.ICreateUserRequest): Promise<I.ICreateUserResponse> {
+    const CreateUserRequest = require('swagchat-protobuf/userMessage_pb').CreateUserRequest;
+    const pbReq = new CreateUserRequest();
+    pbReq.setUserId(req.userId);
+    pbReq.setName(req.name!);
+    pbReq.setRolesList(req.rolesList);
+    const body = pbReq.toObject();
+    body['metaData'] = req.metaDataObj;
+    body['roles'] = req.rolesList;
+
+    const res = {
+      user: null,
+      error: null,
+    } as I.ICreateUserResponse;
 
     return fetch(this._apiEndpoint + '/users', {
       method: 'POST',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify(user)
+      headers: this.setHeaders(),
+      body: JSON.stringify(body)
     }).then((response: Response) => {
       if (response.status === 201) {
-        return response.json().then((user) => {
-          return (
-            {
-              user: user,
-              error: null,
-            } as I.IFetchUserResponse
-          );
+        return response.json().then(user => {
+          const params = {
+            apiEndpoint: this.apiEndpoint,
+            accessToken: this.accessToken,
+            user,
+            client: this
+          } as IUserParams;
+          res.user = new User(params);
+          return res;
         });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              user: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchUserResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        user: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUserResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
   /**
-   * Get my user infomation
+   * Retrieves a user
    */
-  public getUser(): Promise<I.IFetchUserResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId, {
+  public retrieveUser(req: I.IRetrieveUserRequest): Promise<I.IFetchUserResponse> {
+    const res = {
+      user: null,
+      error: null,
+    } as I.IFetchUserResponse;
+
+    return fetch(this._apiEndpoint + '/users/' + req.userId, {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this.setHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
-        return response.json().then((user) => {
-          return (
-            {
-              user: user,
-              error: null,
-            } as I.IFetchUserResponse
-          );
+        return response.json().then(user => {
+          const params = {
+            apiEndpoint: this.apiEndpoint,
+            accessToken: this.accessToken,
+            user,
+            client: this
+          } as IUserParams;
+          res.user = new User(params);
+          return res;
         });
       } else if (response.status === 404) {
-        return this.createUser();
+        res.error = {
+          message: 'User not found.'
+        } as I.IErrorResponse;
+        return res;
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              user: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchUserResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        user: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUserResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
   /**
-   * Get a profile user infomation
+   * Retrieve room list
    */
-  public getProfileUser(userId: string): Promise<I.IFetchUserResponse> {
-    return fetch(this._apiEndpoint + '/profiles/' + userId, {
-      method: 'GET',
-      headers: this._jsonHeaders(),
-    }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((user) => {
-          return (
-            {
-              user: user,
-              error: null,
-            } as I.IFetchUserResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return this.createUser();
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              user: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchUserResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        user: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUserResponse;
-    });
-  }
+  public retrieveRooms(): Promise<I.IFetchRoomsResponse> {
+    const res = {
+      rooms: [],
+      error: null,
+    } as I.IFetchRoomsResponse;
 
-  /**
-   * Create a room
-   *
-   * @param room
-   */
-  public createRoom(room: I.IRoom): Promise<I.IFetchRoomResponse> {
-    return fetch(this._apiEndpoint + '/rooms', {
-      method: 'POST',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify(room)
-    }).then((response: Response) => {
-      if (response.status === 201) {
-        return response.json().then((room) => {
-          return (
-            {
-              room: new Room({
-                apiEndpoint: this._apiEndpoint,
-                userId: this.userId!,
-                accessToken: this.accessToken!,
-                room: room,
-                conn: this._conn,
-              }),
-              error: null,
-            } as I.IFetchRoomResponse
-          );
-        });
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              room: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchRoomResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        room: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomResponse;
-    });
-  }
-
-  /**
-   * Get my room list
-   */
-  public getRooms(): Promise<I.IFetchRoomsResponse> {
     return fetch(this._apiEndpoint + '/rooms', {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this.setHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
-      return response.json().then((rooms) => {
-        return (
-        {
-          rooms: <I.IRoom[]>rooms,
-          error: null,
-        } as I.IFetchRoomsResponse
-        );
-      });
-      } else {
-      return response.json().then((json) => {
-        return (
-        {
-          rooms: null,
-          error: <I.IProblemDetail>json,
-        } as I.IFetchRoomsResponse
-        );
-      });
-      }
-    }).catch((error) => {
-      return {
-      rooms: null,
-      error: {
-        title: error.message,
-      } as I.IProblemDetail,
-      } as I.IFetchRoomsResponse;
-    });
-  }
-
-  /**
-   * Get a room infromation
-   *
-   * @param roomId
-   */
-  public getRoom(roomId: string): Promise<I.IFetchRoomResponse> {
-    return fetch(this._apiEndpoint + '/rooms/' + roomId, {
-      method: 'GET',
-      headers: this._jsonHeaders(),
-    }).then((response: Response) => {
-      if (response.status === 200) {
-      return response.json().then((room) => {
-        return (
+        return response.json().then((rooms) => {
+          return (
           {
-            room: new Room({
-              apiEndpoint: this._apiEndpoint,
-              userId: this.userId!,
-              accessToken: this.accessToken!,
-              room: room,
-              conn: this._conn ? this._conn : undefined,
-            }),
+            rooms: <I.IRoom[]>rooms,
             error: null,
-          } as I.IFetchRoomResponse
-        );
-      });
-      } else if (response.status === 404) {
-        return {
-          room: null,
-          error: {
-          title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchRoomResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-          {
-            room: null,
-            error: <I.IProblemDetail>json,
-          } as I.IFetchRoomResponse
+          } as I.IFetchRoomsResponse
           );
         });
+      } else {
+        return response.json().then(error => {
+          throw error;
+        });
       }
-    }).catch((error) => {
-      return {
-        room: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchRoomResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
   /**
-   * Remove a room
-   *
-   * @param roomId
+   * Retrieve settings
    */
-  public removeRoom(roomId: string): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/rooms/' + roomId, {
-      method: 'DELETE',
-      headers: this._jsonHeaders(),
-    }).then((response: Response) => {
-      if (response.status === 204) {
-        return {
-          error: null,
-        } as I.IErrorResponse;
-      } else if (response.status === 404) {
-        return {
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IErrorResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              error: <I.IProblemDetail>json,
-            } as I.IErrorResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IErrorResponse;
-    });
-  }
+  public retrieveSetting(): Promise<I.IFetchSettingResponse> {
+    const res = {
+      setting: null,
+      error: null,
+    } as I.IFetchSettingResponse;
 
-  /**
-   * Get settings
-   */
-  public getSetting(): Promise<I.IFetchSettingResponse> {
     return fetch(this._apiEndpoint + '/setting', {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this.setHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((setting) => {
@@ -486,314 +391,25 @@ export class Client {
           );
         });
       } else if (response.status === 404) {
-        return {
-            setting: null,
-            error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchSettingResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              setting: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchSettingResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        setting: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchSettingResponse;
-    });
-  }
-
-  /**
-   * Register a new device token.
-   *
-   * @param platform platform
-   * @param token device token.
-   */
-  public setDevice(platform: Platform, token: string): Promise<I.IFetchUserDeviceResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId + '/devices/' + String(platform), {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({
-        token: token,
-      })
-    }).then((response: Response) => {
-      if (response.status === 200 || response.status === 201) {
-        return response.json().then((device) => {
-          return (
-            {
-              device: device,
-              error: null,
-            } as I.IFetchUserDeviceResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          device: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchUserDeviceResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              device: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchUserDeviceResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        device: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUserDeviceResponse;
-    });
-  }
-
-  /**
-   * Delete device token.
-   */
-  public removeDevice(platform: Platform): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId + '/devices/' + String(platform), {
-      method: 'DELETE',
-      headers: this._jsonHeaders(),
-    }).then((response: Response) => {
-      if (response.status === 204) {
-        return response.json().then(() => {
-          return (
-            {
-              error: null,
-            } as I.IErrorResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
+        res.error = {
+          message: 'Setting not found.'
         } as I.IErrorResponse;
+        return res;
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              error: <I.IProblemDetail>json,
-            } as I.IErrorResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IErrorResponse;
-    });
-  }
-
-  /**
-   * Register metadata in separate.
-   * An applied key will be added if metadata already exists. A value will be overwritten if an equivalent key exists.
-   * Please use accessor if you will register by multiple keys in a lump. In this case, existing metadata will be overwritten.
-   *
-   * ex)<br />
-   * <code>user.metaData = {'key1': 'value1', 'key2': 2, 'key3': true, 'key4': {'key5': 'value5'}};</code>
-   * @param key Key for register.
-   * @param value A value for key.
-   */
-  // public setUserMetaData(key: string, value: string | number | boolean | Object): void {
-  //   if (!key || typeof(key) !== 'string') {
-  //     logger('api', 'error', 'set metaData failure. Parameter invalid.');
-  //     return;
-  //   }
-  //   if (this.metaData === undefined) {
-  //     let metaData = {key: value};
-  //     this.metaData = metaData;
-  //   } else {
-  //     this.metaData[key] = value;
-  //   }
-  // }
-
-  /**
-   * Update user information.
-   * @param user
-   */
-  public update(putUser: I.IUser): Promise<I.IFetchUserResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId, {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify(putUser)
-    }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((user) => {
-          return (
-            {
-              user: user,
-              error: null,
-              } as I.IFetchUserResponse
-          );
-        });
-      } else {
-      return response.json().then((json) => {
-        return (
-          {
-            user: null,
-            error: <I.IProblemDetail>json,
-          } as I.IFetchUserResponse
-        );
-      });
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
       }
-    }).catch((error) => {
-      return {
-        user: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUserResponse;
-    });
-  }
-
-  /**
-   * Send Message.
-   * Please create message objects beforehand by using such as client.createTextMessage().
-   * @param messages An array for message objects to send.
-   */
-  public sendMessages(...messages: I.IMessage[]): Promise<I.ISendMessagesResponse> {
-    const sendMessages: I.IMessage[] = [];
-    let copyMessage: I.IMessage;
-    messages.forEach(message => {
-      copyMessage = Object.assign({}, message);
-
-      if (copyMessage.created) {
-        copyMessage.created = (ISO3339String2Number(copyMessage.created as string));
-      } else {
-        delete copyMessage.created;
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
       }
-
-      if (copyMessage.modified) {
-        copyMessage.modified = (ISO3339String2Number(copyMessage.modified as string));
-      } else {
-        delete copyMessage.modified;
-      }
-
-      if (copyMessage.payload.hasOwnProperty('dataUrl')) {
-        delete (copyMessage.payload as I.IPayloadImage).dataUrl;
-      }
-      sendMessages.push(copyMessage);
-    });
-    return fetch(this._apiEndpoint + '/messages', {
-      method: 'POST',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({messages: sendMessages})
-    }).then((response: Response) => {
-      if (response.status === 201) {
-        return response.json().then((messagesRes) => {
-          return (
-            {
-              messageIds: <string[]>messagesRes.messageIds,
-              error: null,
-            } as I.ISendMessagesResponse
-          );
-        });
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              messageIds: null,
-              error: <I.IProblemDetail>json,
-            } as I.ISendMessagesResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        messageIds: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.ISendMessagesResponse;
-    });
-  }
-
-  /**
-   * Reset the number of unread for room specified by parameters.
-   * @param roomId Room ID
-   */
-  public markAsRead(roomId: string): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/rooms/' + roomId + '/users/' + this.userId, {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({unreadCount: 0})
-    }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then(() => {
-          return (
-            {
-              error: null,
-            } as I.IErrorResponse
-          );
-        });
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              error: <I.IProblemDetail>json,
-            } as I.IErrorResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IErrorResponse;
-    });
-  }
-
-  /**
-   * Reset the number of unread for each room for the user.
-   */
-  public markAllAsRead(): Promise<I.IErrorResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId, {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({unreadCount: 0})
-    }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then(() => {
-          return (
-            {
-              error: null,
-            } as I.IErrorResponse
-          );
-        });
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              error: <I.IProblemDetail>json,
-            } as I.IErrorResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IErrorResponse;
+      res.error = errRes;
+      return res;
     });
   }
 
@@ -804,6 +420,11 @@ export class Client {
   public fileUpload(file: File, mime: string): Promise<I.IPostAssetResponse>;
   public fileUpload(file: File, mime: string, width: number, height: number): Promise<I.IPostAssetResponse>;
   public fileUpload(file: File, mime: string, width?: number, height?: number): Promise<I.IPostAssetResponse> {
+    const res = {
+      asset: null,
+      error: null,
+    } as I.IPostAssetResponse;
+
     let formData = new FormData();
     formData.append('asset', file);
     if (width) {
@@ -815,9 +436,12 @@ export class Client {
     if (mime !== '') {
       formData.append('mime', mime);
     }
+    let headers = this.setHeaders();
+    delete(headers['Content-Type']);
+
     return fetch(this._apiEndpoint + '/assets', {
       method: 'POST',
-      headers: this._baseHeaders(),
+      headers: this.setHeaders(),
       body: formData,
     }).then((response: Response) => {
       if (response.status === 201) {
@@ -830,177 +454,37 @@ export class Client {
           );
         });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              asset: null,
-              error: <I.IProblemDetail>json,
-            } as I.IPostAssetResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        asset: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IPostAssetResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
   /**
-   * Get my contacts
+   * Retrieve asset info
    */
-  public getContacts(): Promise<I.IFetchUsersResponse> {
-    return fetch(this._apiEndpoint + '/users/' + this.userId + '/contacts', {
-      method: 'GET',
-      headers: this._jsonHeaders(),
-    }).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((usersRes) => {
-          return (
-            {
-              users: <I.IUser[]>usersRes.users,
-              error: null,
-            } as I.IFetchUsersResponse
-          );
-        });
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              users: [],
-              error: <I.IProblemDetail>json,
-            } as I.IFetchUsersResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        users: [],
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchUsersResponse;
-    });
-  }
+  public retrieveAssetInfo(filename: string): Promise<I.IHeadAssetResponse> {
+    const res = {
+      size: 0,
+      width: 0,
+      height: 0,
+      error: null,
+    } as I.IHeadAssetResponse;
 
-  /**
-   * Add block users
-   * @param userIds
-   */
-  public addBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-    let fetchParam = {
-      method: 'PUT',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({
-        userIds: userIds
-      })
-    };
-    if (!(userIds instanceof Array) || userIds.length === 0) {
-      fetchParam.body = JSON.stringify({});
-    }
-    return fetch(this._apiEndpoint + '/users/' + this.userId + '/blocks',
-      fetchParam
-    ).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((blockUsersRes) => {
-          return (
-            {
-              blockUsers: blockUsersRes.blockUsers,
-              error: null,
-            } as I.IFetchBlockUsersResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          blockUsers: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchBlockUsersResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              blockUsers: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchBlockUsersResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        blockUsers: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchBlockUsersResponse;
-    });
-  }
-
-  /**
-   * Remove block users
-   * @param userIds
-   */
-  public removeBlockUsers(userIds: string[]): Promise<I.IFetchBlockUsersResponse> {
-    let fetchParam = {
-      method: 'DELETE',
-      headers: this._jsonHeaders(),
-      body: JSON.stringify({
-        userIds: userIds
-      })
-    };
-    if (!(userIds instanceof Array) || userIds.length === 0) {
-      fetchParam.body = JSON.stringify({});
-    }
-    return fetch(this._apiEndpoint + '/users/' + this.userId + '/blocks',
-      fetchParam
-    ).then((response: Response) => {
-      if (response.status === 200) {
-        return response.json().then((blockUsersRes) => {
-          return (
-            {
-              blockUsers: blockUsersRes.blockUsers,
-              error: null,
-            } as I.IFetchBlockUsersResponse
-          );
-        });
-      } else if (response.status === 404) {
-        return {
-          blockUsers: null,
-          error: {
-            title: response.statusText,
-          } as I.IProblemDetail,
-        } as I.IFetchBlockUsersResponse;
-      } else {
-        return response.json().then((json) => {
-          return (
-            {
-              blockUsers: null,
-              error: <I.IProblemDetail>json,
-            } as I.IFetchBlockUsersResponse
-          );
-        });
-      }
-    }).catch((error) => {
-      return {
-        blockUsers: null,
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IFetchBlockUsersResponse;
-    });
-  }
-
-  /**
-   * Get asset info
-   */
-  public getAssetInfo(filename: string): Promise<I.IHeadAssetResponse> {
     return fetch(this._apiEndpoint + '/assets/' + filename + '/info', {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this.setHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.json().then((asset: I.IAsset) => {
@@ -1014,33 +498,36 @@ export class Client {
           );
         });
       } else if (response.status === 404) {
-        return {} as I.IHeadAssetResponse;
+        res.error = {
+          message: 'Asset not found.'
+        } as I.IErrorResponse;
+        return res;
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              error: <I.IProblemDetail>json,
-            } as I.IHeadAssetResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
-    }).catch((error) => {
-      return {
-        error: {
-          title: error.message,
-        } as I.IProblemDetail,
-      } as I.IHeadAssetResponse;
+    }).catch(error => {
+      let errRes = {} as I.IErrorResponse;
+      if (error.hasOwnProperty('message')) {
+        errRes.message = error.message;
+      }
+      if (error.hasOwnProperty('invalidParams')) {
+        errRes.invalidParams = error.invalidParams;
+      }
+      res.error = errRes;
+      return res;
     });
   }
 
 
   /**
-   * Get asset data url
+   * Retrieve asset data url
    */
-  public getAssetDataUrl(filename: string): Promise<string> {
+  public retrieveAssetDataUrl(filename: string): Promise<string> {
     return fetch(this._apiEndpoint + '/assets/' + filename, {
       method: 'GET',
-      headers: this._jsonHeaders(),
+      headers: this.setHeaders(),
     }).then((response: Response) => {
       if (response.status === 200) {
         return response.arrayBuffer().then((buffer: ArrayBuffer) => {
@@ -1064,14 +551,14 @@ export class Client {
     return window.btoa(binary);
   }
 
-  public subscribe(eventName: EventName, funcName: string, onMessage: Function, roomId: string): void {
-    if (this._conn && this.userId) {
-      this._conn.subscribe(eventName, funcName, onMessage, roomId);
+  public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
+    if (this._conn) {
+      this._conn.subscribe(eventName, funcName, onMessage);
     }
   }
 
   public unsubscribe(eventName: EventName, funcName: string): void {
-    if (this._conn && this.userId) {
+    if (this._conn) {
       this._conn.unsubscribe(eventName, funcName);
     }
   }

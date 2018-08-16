@@ -1,18 +1,10 @@
-export enum Platform {
-  IOS = 1,
-  ANDROID = 2,
-}
+export { UserRoomsFilter } from 'swagchat-protobuf/userMessage_pb';
+export { RoomType } from 'swagchat-protobuf/roomMessage_pb';
+export { Platform } from 'swagchat-protobuf/deviceMessage_pb';
+
 
 export enum EventName {
   MESSAGE = 'message',
-}
-
-export enum RoomType {
-  ONE_ON_ONE = 1,
-  PRIVATE_ROOM = 2,
-  PUBLIC_ROOM = 3,
-  NOTICE_ROOM = 4,
-  CUSTOMER_ROOM= 5,
 }
 
 export enum MessageType {

@@ -6,7 +6,6 @@ export class Realtime {
   conn: WebSocket;
   endpoint: string;
   userId: string;
-  websocket = WebSocket;
   public onConnected: Function;
   public onError: Function;
   public onClosed: Function;
@@ -17,8 +16,9 @@ export class Realtime {
   constructor(endpoint: string, userId?: string);
   constructor(endpoint: string, userId?: string, onConnected?: Function);
   constructor(endpoint: string, userId?: string, onConnected?: Function, onError?: Function);
+  constructor(endpoint: string, userId?: string, onConnected?: Function, onError?: Function, onClosed?: Function)
   constructor(endpoint: string, userId?: string, onConnected?: Function, onError?: Function, onClosed?: Function) {
-      logger('realtime', 'info', 'Connecting Realtime Server...');
+    logger('realtime', 'info', 'Connecting Realtime Server...');
 
     this.endpoint = endpoint;
 
@@ -43,10 +43,17 @@ export class Realtime {
   }
 
   public connect() {
-    if (this.userId) {
-      this.conn = new this.websocket(this.endpoint + '/ws?userId=' + this.userId);
+    if (this.userId === '') {
+      logger('realtime', 'error', 'userId is empty');
+      return;
+    }
+
+    const endpoint = this.endpoint + '/ws?userId=' + this.userId;
+    if (typeof(WebSocket) !== 'undefined') {
+      this.conn = new WebSocket(endpoint);
     } else {
-      this.conn = new this.websocket(this.endpoint);
+      const WebSocketForNode =  require('ws');
+      this.conn = new WebSocketForNode(endpoint);
     }
 
     this.conn.addEventListener('open', (e: Event) => {
@@ -82,27 +89,39 @@ export class Realtime {
       if (!e.data) {
         return;
       }
-      let message = <I.IMessage>JSON.parse(<string>e.data);
-      if (message.eventName) {
-        const eventHandlers = this.onEventHandlers[message.eventName];
-        const keys = Object.keys(eventHandlers);
-        if (keys.length > 0) {
-          keys.forEach((key: string) => {
-            eventHandlers[key](message);
-          });
-        }
+
+      if (typeof(e.data) !== 'string') {
+        return;
       }
+
+      const dataList = (e.data as string).split('\n\n');
+      dataList.forEach(data => {
+        try {
+          let message = JSON.parse(data) as I.IMessage;
+          if (message.eventName) {
+            const eventHandlers = this.onEventHandlers[message.eventName];
+            const keys = Object.keys(eventHandlers);
+            if (keys.length > 0) {
+              keys.forEach((key: string) => {
+                eventHandlers[key](message);
+              });
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
     });
 
     Object.keys(this.onEventHandlers).forEach((eventName: string) => {
       Object.keys(this.onEventHandlers[eventName]).forEach((funcName) => {
         setTimeout(() => {
-          this.sendEvent(eventName, funcName, 'subscribe', '');
+          this.sendEvent(eventName, funcName, 'subscribe');
         }, 2000);
       });
     });
 
-    if (window) {
+    if (typeof(window) !== 'undefined') {
       window.addEventListener('beforeunload', () => {
         this.close();
       }, false);
@@ -113,11 +132,11 @@ export class Realtime {
     this.conn.close();
   }
 
-  public sendEvent(eventName: string, funcName: string, action: string, roomId: string): Boolean {
+  public sendEvent(eventName: string, funcName: string, action: string): Boolean {
       if (this.conn.readyState === this.conn.OPEN) {
       try {
         this.conn.send(JSON.stringify({
-          roomId: roomId,
+          // roomId: roomId,
           eventName: eventName,
           funcName: funcName,
           action: action
@@ -134,7 +153,7 @@ export class Realtime {
     return false;
   }
 
-  public subscribe(eventName: EventName, funcName: string, func: Function, roomId: string): void {
+  public subscribe(eventName: EventName, funcName: string, func: Function): void {
     if (!eventName || typeof(eventName) !== 'string') {
       logger('realtime', 'error', 'Subscribe failure. eventName is not setting.');
       return;
@@ -160,7 +179,7 @@ export class Realtime {
 
     if (!(this.onEventHandlers[eventName] && this.onEventHandlers[eventName][funcName])) {
 
-      if (!this.sendEvent(eventName, funcName, 'subscribe', roomId)) {
+      if (!this.sendEvent(eventName, funcName, 'subscribe')) {
         logger('realtime', 'error', 'Subscribe ' + eventName + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
         return;
       }
@@ -175,7 +194,7 @@ export class Realtime {
       return;
     }
 
-    if (!this.sendEvent(eventName, funcName, 'unsubscribe', '')) {
+    if (!this.sendEvent(eventName, funcName, 'unsubscribe')) {
       logger('realtime', 'error', 'Unsubscribe ' + eventName + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
     }
 

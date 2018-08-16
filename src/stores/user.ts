@@ -1,16 +1,28 @@
-import { IUser, IRoomForUser, IProblemDetail } from '../';
+import { User, IUser, IMiniRoom, IErrorResponse } from '..';
 
 export interface UserState {
-  user: IUser | null;
-  userRooms: {[key: string]: IRoomForUser} | null;
+  user: User | null;
+  blocks: string[];
+
+  // user rooms
+  userRoomsMap: {[key: string]: IMiniRoom} | null;
+  userRooms: IMiniRoom[];
+  userRoomsAllCount: number;
+  userRoomsLimit: number;
+  userRoomsOffset: number;
+
+  // users
   usersAllCount: number;
   usersLimit: number;
   usersOffset: number;
   users: {[key: string]: IUser} | null;
+
+  // contacts
   contacts: {[key: string]: IUser} | null;
   selectedContacts: {[key: string]: IUser};
-  blocks: string[];
+
   profileUserId: string;
   profileUser: IUser | null;
-  problemDetail: IProblemDetail | null;
+
+  errorResponse: IErrorResponse | null;
 }

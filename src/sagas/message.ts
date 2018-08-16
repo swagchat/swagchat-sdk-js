@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
-  IFetchMessagesResponse, ISendMessagesResponse,
-} from '../';
+  IFetchMessagesResponse, ISendMessageResponse,
+} from '..';
 import {
   FETCH_MESSAGES_REQUEST,
   fetchMessagesRequestSuccessActionCreator,
@@ -19,7 +19,7 @@ function* gFetchMessagesRequest() {
     return;
   }
   const {messages, error}: IFetchMessagesResponse = yield call(() => {
-    return state.room.room!.getMessages({
+    return state.room.room!.retrieveMessages({
       limit: state.message.messagesLimit,
       offset: state.message.messagesOffset,
     });
@@ -33,24 +33,26 @@ function* gFetchMessagesRequest() {
 
 function* gSendMessagesRequest() {
   let state: State = yield select();
-  const {messageIds, error}: ISendMessagesResponse = yield call(() => {
-    return state.client.client!.sendMessages(...state.message.localMessageList);
+  const room = state.room.room!;
+  const { error }: ISendMessageResponse = yield call(() => {
+    return room.sendMessage(state.message.localMessageList[0]);
   });
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
-  } else if (messageIds) {
+  } else {
     yield put(sendMessagesRequestSuccessActionCreator([]));
   }
 }
 
 function* gSendDirectMessagesRequest(action: SendDirectMessagesRequestAction) {
   let state: State = yield select();
-  const {messageIds, error}: ISendMessagesResponse = yield call((messages) => {
-    return state.client.client!.sendMessages(...messages);
+  let room = state.room.room!;
+  const { error }: ISendMessageResponse = yield call((messages) => {
+    return room.sendMessage(messages[0]);
   }, action.messages);
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
-  } else if (messageIds) {
+  } else {
     yield put(sendMessagesRequestSuccessActionCreator(action.messages));
   }
 }

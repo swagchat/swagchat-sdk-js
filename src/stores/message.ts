@@ -1,4 +1,4 @@
-import { IMessage } from '../';
+import { IMessage } from '..';
 
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 

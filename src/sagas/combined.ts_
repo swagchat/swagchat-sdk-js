@@ -2,7 +2,7 @@ import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
 import {
   IUser, IRoom, IPostAssetResponse, IFetchUserResponse, IFetchRoomResponse, RoomType,
   generateRoomName, isUrl, cookieUserIdKey, cookieRoomIdKey,
-} from '../';
+} from '..';
 import { setClientActionCreator } from '../actions/client';
 import {
   uploadAssetRequestSuccessActionCreator,

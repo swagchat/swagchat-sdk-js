@@ -1,4 +1,4 @@
-import { IAddonMessage, IAddonRoomListItem } from '../';
+import { IAddonMessage, IAddonRoomListItem } from '..';
 
 export interface AddonState {
   messages: {[key: string]: IAddonMessage} | null;

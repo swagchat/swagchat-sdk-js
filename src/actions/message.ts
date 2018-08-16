@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IMessages, IMessage, IProblemDetail } from '../';
+import { IMessages, IMessage, IErrorResponse } from '..';
 
 export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
 export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
@@ -124,12 +124,12 @@ export const fetchMessagesRequestSuccessActionCreator = (messages: IMessages): F
 });
 
 export interface FetchMessagesRequestFailureAction extends MessageBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
 export const fetchMessagesRequestFailureActionCreator =
-    (problemDetail: IProblemDetail): FetchMessagesRequestFailureAction => ({
+    (errorResponse: IErrorResponse): FetchMessagesRequestFailureAction => ({
   type: FETCH_MESSAGES_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface PushLocalMessageAction extends MessageBaseAction {
@@ -169,12 +169,12 @@ export const sendMessagesRequestSuccessActionCreator = (messageList: IMessage[])
 });
 
 export interface SendMessagesRequestFailureAction extends MessageBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
 export const sendMessagesRequestFailureActionCreator =
-    (problemDetail: IProblemDetail): SendMessagesRequestFailureAction => ({
+    (errorResponse: IErrorResponse): SendMessagesRequestFailureAction => ({
   type: SEND_MESSAGES_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface DeleteLocalMessagesAction extends MessageBaseAction {

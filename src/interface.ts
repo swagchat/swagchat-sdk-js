@@ -1,121 +1,74 @@
+import {
+    AddBlockUsersRequest, AddDeviceRequest, AddRoomUsersRequest, CreateRoomRequest,
+    CreateUserRequest, DeleteBlockUsersRequest, DeleteDeviceRequest, DeleteRoomUsersRequest,
+    Device as pbDevice, ErrorResponse as pbIErrorResponse, InvalidParam, Message as pbMessage,
+    MiniRoom as pbMiniRoom, MiniUser as pbMiniUser, RetrieveRoomRequest, RetrieveUserRequest,
+    RetrieveUserRoomsRequest, Room as pbRoom, RoomUser as pbRoomUser, SendMessageRequest,
+    UpdateRoomRequest, UpdateUserRequest, User as pbUser, UserRoomsResponse as pbUserRoomsResponse,
+} from 'swagchat-protobuf';
 import { Room } from './Room';
-import { RoleType, MessageActionType, MessageType } from './const';
+import { User } from './User';
 
-export interface IDevice {
-  userId: string;
-  platform: number;
-  token: string;
-  notificationDeviceId: string;
+export interface IErrorResponse extends pbIErrorResponse.AsObject {
+  invalidParams: Array<InvalidParam.AsObject>;
 }
 
-export interface IUser {
-  userId: string;
-  name: string;
-  pictureUrl?: string;
-  informationUrl?: string;
-  unreadCount?: number;
-  metaData?: {[key: string]: string | number | boolean | Object};
-  public?: boolean;
-  canBlock?: boolean;
-  lang?: string;
-  accessToken?: string;
-  lastAccessRoomId?: string;
-  lastAccessed?: string;
-  created?: string;
-  modified?: string;
-  rooms?: IRoomForUser[];
-  devices?: IDevice[];
-  blocks?: string[];
-  roles?: number[];
-  mutedRooms?: string[];
+// user
+export interface IUser extends pbUser.AsObject {}
+export interface IMiniRoom extends pbMiniRoom.AsObject {}
+export interface ICreateUserRequest extends CreateUserRequest.AsObject {
+  metaDataObj?: object;
+}
+export interface IRetrieveUserRequest extends RetrieveUserRequest.AsObject {}
+export interface IRetrieveUserRoomsRequest extends RetrieveUserRoomsRequest.AsObject {}
+export interface IUpdateUserRequest extends UpdateUserRequest.AsObject {
+  metaDataObj?: object;
+}
+export interface IUserRoomsResponse extends pbUserRoomsResponse.AsObject {
+  rooms: IMiniRoom[];
+  allCount: number;
 }
 
-export interface IRoomForUser {
-  roomId: string;
-  userId: string;
-  name: string;
-  pictureUrl: string;
-  informationUrl: string;
-  metaData: {[key: string]: string | number | boolean | Object};
-  type: number;
-  lastMessage: string;
-  lastMessageUpdated: string;
-  canLeft: boolean;
-  created: string;
-  modified: string;
-  users: IUserForRoom[];
-  ruUnreadCount: number;
+// room
+export interface IRoom extends pbRoom.AsObject {
+  users: Array<IMiniUser>;
+}
+export interface IMiniUser extends pbMiniUser.AsObject {}
+export interface ICreateRoomRequest extends CreateRoomRequest.AsObject {
+  metaDataObj?: object;
+}
+export interface IRetrieveRoomRequest extends RetrieveRoomRequest.AsObject {}
+export interface IUpdateRoomRequest extends UpdateRoomRequest.AsObject {
+  metaDataObj?: object;
 }
 
-export interface IRoom {
-  roomId?: string;
-  userId?: string;
-  name?: string;
-  pictureUrl?: string;
-  informationUrl?: string;
-  metaData?: {[key: string]: string | number | boolean | Object};
-  availableMessageTypes?: string[];
-  type?: number;
-  lastMessage?: string;
-  lastMessageUpdated?: string;
-  messageCount?: number;
-  canLeft?: boolean;
-  speechMode?: number;
-  created?: string;
-  modified?: string;
-  users?: IUserForRoom[];
-  userIds?: string[];
-}
+// device
+export interface IDevice extends pbDevice.AsObject {}
+export interface IAddDeviceRequest extends AddDeviceRequest.AsObject {}
+export interface IDeleteDeviceRequest extends DeleteDeviceRequest.AsObject {}
 
-export interface IUserForRoom {
-  userId: string;
-  name: string;
-  pictureUrl: string;
-  informationUrl?: string;
-  metaData?: {[key: string]: string | number | boolean | Object};
-  isCanBlock?: boolean;
-  lastAccessed?: string;
-  created?: string;
-  modified?: string;
-  ruDisplay?: boolean;
-}
+// blockUser
+export interface IAddBlockUsersRequest extends AddBlockUsersRequest.AsObject {}
+export interface IDeleteBlockUsersRequest extends DeleteBlockUsersRequest.AsObject {}
 
-export interface IRoomUser {
-  roomId: string;
-  userId: string;
-  unreadCount: number;
-  metaData?: {[key: string]: string | number | boolean | Object};
-  created: string;
-  modified: string;
-}
+// roomUser
+export interface IRoomUser extends pbRoomUser.AsObject {}
+export interface IAddRoomUsersRequest extends AddRoomUsersRequest.AsObject {}
+export interface IDeleteRoomUsersRequest extends DeleteRoomUsersRequest.AsObject {}
 
-// export interface IBlockUser {
-//   userId: string;
-//   blockUserId: string;
-//   created: string;
-// }
+// message
+export interface IMessage extends pbMessage.AsObject {}
+export interface ISendMessageRequest extends SendMessageRequest.AsObject {
+  payloadObj?: object;
+}
 
 export interface IMessages {
   allCount: number;
   messages: IMessage[];
 }
 
-export interface IMessage {
-  messageId?: string;
-  suggestMessageId?: string;
-  roomId: string;
-  userId: string;
-  type: MessageType;
-  eventName?: string;
-  payload: Object;
-  role?: RoleType;
-  created?: string | number;
-  modified?: string | number;
-}
-
-export interface ISendMessagesResponse {
-  messageIds: string[] | null;
-  error: IProblemDetail | null;
+export interface ISendMessageResponse {
+  error: IErrorResponse | null;
 }
 
 export interface IPayloadText {
@@ -140,83 +93,6 @@ export interface IPayloadFile {
   mime: string;
   size: number;
 }
-
-export interface IPayloadButtons {
-  thumbnailImageUrl: string;
-  imageAspectRatio: 'rectangle' | 'square';
-  imageSize: 'cover' | 'contain';
-  imageBackgroundColor: string;
-  title: string;
-  text: string;
-  defaultAction: BotAction;
-  actions: BotAction[];
-}
-
-export interface IPayloadConfirm {
-  text: string;
-  actions: BotAction[];
-}
-
-export interface IPayloadList {
-  text: string;
-  actions: BotAction[];
-}
-
-export interface IPayloadCarousel {
-  columns: ICarousel[];
-  imageAspectRatio: 'rectangle' | 'square';
-  imageSize: 'cover' | 'contain';
-}
-
-export interface ICarousel {
-  thumbnailImageUrl: string;
-  imageBackgroundColor: string;
-  title: string;
-  text: string;
-  defaultAction: BotAction;
-  actions: BotAction[];
-}
-
-export interface IPayloadImageCarousel {
-  columns: IImageColumn[];
-}
-
-export interface IImageColumn {
-  imageUrl: string;
-  action: BotAction;
-}
-
-export interface IBotActionPostback {
-  type: MessageActionType.POSTBACK;
-  label: string;
-  data: string;
-  displayText: string;
-  text: string;
-}
-
-export interface IBotActionMessage {
-  type: MessageActionType.MESSAGE;
-  label: string;
-  text: string;
-}
-
-export interface IBotActionUri {
-  type: MessageActionType.URI;
-  label: string;
-  uri: string;
-}
-
-export interface IBotActionDatetime {
-  type: MessageActionType.DATETIME_PICKER;
-  label: string;
-  data: string;
-  mode: 'date' | 'time' | 'datetime';
-  initial: string;
-  max: string;
-  min: string;
-}
-
-export type BotAction = IBotActionPostback | IBotActionMessage | IBotActionUri | IBotActionDatetime;
 
 export interface IAsset {
   assetId: string;
@@ -249,63 +125,112 @@ export interface IInvalidParam {
   reason: string;
 }
 
-export interface IProblemDetail {
-  type?: string;
-  title: string;
-  status?: number;
-  detail?: string;
-  instance?: string;
-  errorName?: string;
-  invalidParams?: IInvalidParam[];
+// user
+export interface ICreateUserResponse {
+  user: User | null;
+  error: IErrorResponse | null;
 }
 
 export interface IFetchUsersResponse {
   users: IUser[];
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }
 
 export interface IFetchUserResponse {
-  user: IUser | null;
-  error: IProblemDetail | null;
+  user: User | null;
+  error: IErrorResponse | null;
 }
 
-export interface IFetchUserDeviceResponse {
+export interface IRetrieveUserRoomsResponse {
+  userRoomsResponse: IUserRoomsResponse | null;
+  error: IErrorResponse | null;
+}
+
+export interface IUpdateUserResponse {
+  error: IErrorResponse | null;
+}
+
+export interface IFetchProfileResponse {
+  user: IUser | null;
+  error: IErrorResponse | null;
+}
+
+// device
+export interface IAddDeviceResponse {
   device: IDevice | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
+}
+
+export interface IDeleteDeviceResponse {
+  error: IErrorResponse | null;
+}
+
+// room
+export interface ICreateRoomResponse {
+  room: Room | null;
+  error: IErrorResponse | null;
 }
 
 export interface IFetchRoomsResponse {
-  rooms: IRoom[] | null;
-  error: IProblemDetail | null;
+  rooms: IRoom[];
+  error: IErrorResponse | null;
 }
 
 export interface IFetchRoomResponse {
   room: Room | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
+}
+
+export interface IUpdateRoomResponse {
+  error: IErrorResponse | null;
+}
+
+export interface IDeleteRoomResponse {
+  error: IErrorResponse | null;
+}
+
+// roomUser
+export interface IAddRoomUsersResponse {
+  error: IErrorResponse | null;
 }
 
 export interface IFetchRoomUsersResponse {
   roomUsers: IRoomUser[] | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
+}
+
+export interface IDeleteRoomUsersResponse {
+  error: IErrorResponse | null;
+}
+
+export interface IMarkAsReadResponse {
+  error: IErrorResponse | null;
+}
+
+// blockUsers
+export interface IAddBlockUsersResponse {
+  error: IErrorResponse | null;
 }
 
 export interface IFetchBlockUsersResponse {
   blockUsers: string[] | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }
 
+export interface IDeleteBlockUsersResponse {
+  error: IErrorResponse | null;
+}
+
+// message
 export interface IFetchMessagesResponse {
   messages: IMessages | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }
 
+// asset
 export interface IPostAssetResponse {
   asset: IAsset | null;
-  error: IProblemDetail | null;
-}
-
-export interface IErrorResponse {
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }
 
 export interface IAddonMessage {
@@ -320,12 +245,12 @@ export interface IAddonMessage {
 
 export interface IAddonMessageItemProps {
   message?: IMessage;
-  user?: IUserForRoom;
+  user?: IMiniUser;
   myUserId?: string;
   onRenderComplete?: () => {};
   isLast?: boolean;
   isSearchResult?: boolean;
-  opponentUser?: IUserForRoom;
+  opponentUser?: IMiniUser;
   calcHeight?: (height: number) => void;
   text?: string;
   animation?: boolean;
@@ -341,7 +266,7 @@ export interface IAddonMessageInteractionProps {
 }
 
 export interface IAddonMessageMenuProps {
-  user?: IUser;
+  user?: pbUser;
   room?: IRoom;
   ownMenuIndex: number;
   currentMenuIndex: number;
@@ -354,7 +279,7 @@ export interface IAddonRoomListItem {
 
 export interface IAddonRoomListItemProps {
   myUserId: string;
-  userRoom: IRoomForUser;
+  userRoom: IMiniRoom;
   noAvatarImages: string[];
   onClick?: Function;
 }
@@ -390,12 +315,12 @@ export interface ISetting {
 
 export interface IFetchSettingResponse {
   setting: ISetting | null;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }
 
 export interface IHeadAssetResponse {
   size: number;
   width: number;
   height: number;
-  error: IProblemDetail | null;
+  error: IErrorResponse | null;
 }

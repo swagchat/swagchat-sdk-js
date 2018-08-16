@@ -1,4 +1,4 @@
-import { IUserForRoom, IRoomUser } from '../';
+import { IMiniUser, IRoomUser } from '..';
 import { RoomState } from '../stores/room';
 import {
   RoomActions,
@@ -21,7 +21,7 @@ const getInitialState = (): RoomState => ({
   roomsLimit: 0,
   roomsOffset: 0,
   rooms: null,
-  problemDetail: null,
+  errorResponse: null,
 });
 
 export function room(state: RoomState = getInitialState(), action: RoomActions): RoomState {
@@ -44,10 +44,10 @@ export function room(state: RoomState = getInitialState(), action: RoomActions):
       );
     case FETCH_ROOM_REQUEST_SUCCESS:
       const rfrsAction = action as FetchRoomRequestSuccessAction;
-      let roomUsers: {[key: string]: IUserForRoom} = {};
+      let roomUsers: {[key: string]: IMiniUser} = {};
       if (rfrsAction.room.users) {
-        rfrsAction.room.users!.map((user: IUserForRoom) => {
-          roomUsers[user.userId] = user;
+        rfrsAction.room.users!.map((user: IMiniUser) => {
+          roomUsers[user.userId!] = user;
         });
       } else {
         roomUsers = state.roomUsers!;
@@ -66,13 +66,13 @@ export function room(state: RoomState = getInitialState(), action: RoomActions):
         state,
         {
           room: null,
-          problemDetail: (action as FetchRoomRequestFailureAction).problemDetail,
+          errorResponse: (action as FetchRoomRequestFailureAction).errorResponse,
         }
       );
     case ADD_ROOM_USER_REQUEST_SUCCESS:
       let addRoomUsers: {[key: string]: IRoomUser} = {};
       (action as AddRoomUserRequestSuccessAction).roomUsers!.map((user: IRoomUser) => {
-        addRoomUsers[user.userId] = user;
+        addRoomUsers[user.userId!] = user;
       });
       return Object.assign(
         {},
@@ -86,13 +86,13 @@ export function room(state: RoomState = getInitialState(), action: RoomActions):
         {},
         state,
         {
-          problemDetail: (action as AddRoomUserRequestFailureAction).problemDetail,
+          errorResponse: (action as AddRoomUserRequestFailureAction).errorResponse,
         }
       );
     case REMOVE_ROOM_USER_REQUEST_SUCCESS:
       let removeRoomUsers: {[key: string]: IRoomUser} = {};
       for (let roomUser of (action as RemoveRoomUserRequestSuccessAction).roomUsers) {
-        removeRoomUsers[roomUser.userId] = roomUser;
+        removeRoomUsers[roomUser.userId!] = roomUser;
       }
       return Object.assign(
         {},
@@ -106,7 +106,7 @@ export function room(state: RoomState = getInitialState(), action: RoomActions):
         {},
         state,
         {
-          problemDetail: (action as RemoveRoomUserRequestFailureAction).problemDetail,
+          errorResponse: (action as RemoveRoomUserRequestFailureAction).errorResponse,
         }
       );
     default:

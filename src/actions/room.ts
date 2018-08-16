@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Room, IProblemDetail, IRoomUser } from '../';
+import { Room, IErrorResponse, IRoomUser } from '..';
 
 export const SET_CURRENT_ROOM_ID = 'SET_CURRENT_ROOM_ID';
 export const SET_CURRENT_ROOM_NAME = 'SET_CURRENT_ROOM_NAME';
@@ -64,11 +64,11 @@ export const fetchRoomRequestSuccessActionCreator = (room: Room): FetchRoomReque
 });
 
 export interface FetchRoomRequestFailureAction extends RoomBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const fetchRoomRequestFailureActionCreator = (problemDetail: IProblemDetail): FetchRoomRequestFailureAction => ({
+export const fetchRoomRequestFailureActionCreator = (errorResponse: IErrorResponse): FetchRoomRequestFailureAction => ({
   type: FETCH_ROOM_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface AddRoomUserRequestAction extends RoomBaseAction {
@@ -88,11 +88,11 @@ export const addRoomUserRequestSuccessActionCreator = (roomUsers: IRoomUser[]): 
 });
 
 export interface AddRoomUserRequestFailureAction extends RoomBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const addRoomUserRequestFailureActionCreator = (problemDetail: IProblemDetail): AddRoomUserRequestFailureAction => ({
+export const addRoomUserRequestFailureActionCreator = (errorResponse: IErrorResponse): AddRoomUserRequestFailureAction => ({
   type: ADD_ROOM_USER_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface RemoveRoomUserRequestAction extends RoomBaseAction {
@@ -112,11 +112,11 @@ export const removeRoomUserRequestSuccessActionCreator = (roomUsers: IRoomUser[]
 });
 
 export interface RemoveRoomUserRequestFailureAction extends RoomBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const removeRoomUserRequestFailureActionCreator = (problemDetail: IProblemDetail): RemoveRoomUserRequestFailureAction => ({
+export const removeRoomUserRequestFailureActionCreator = (errorResponse: IErrorResponse): RemoveRoomUserRequestFailureAction => ({
   type: REMOVE_ROOM_USER_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export type RoomActions =

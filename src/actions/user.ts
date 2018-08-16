@@ -1,9 +1,13 @@
 import { Action } from 'redux';
-import { IUser, IRoomForUser, IProblemDetail } from '../';
+
+import { IErrorResponse, IMiniRoom, IUser, IUserRoomsResponse, User, UserRoomsFilter } from '../';
 
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
 export const FETCH_USER_REQUEST_SUCCESS = 'FETCH_USER_REQUEST_SUCCESS';
 export const FETCH_USER_REQUEST_FAILURE = 'FETCH_USER_REQUEST_FAILURE';
+export const RETRIEVE_USER_ROOMS_REQUEST = 'RETRIEVE_USER_ROOMS_REQUEST';
+export const RETRIEVE_USER_ROOMS_REQUEST_SUCCESS = 'RETRIEVE_USER_ROOMS_REQUEST_SUCCESS';
+export const RETRIEVE_USER_ROOMS_REQUEST_FAILURE = 'RETRIEVE_USER_ROOMS_REQUEST_FAILURE';
 export const SET_PROFILE_USER_ID = 'SET_PROFILE_USER_ID';
 export const FETCH_PROFILE_USER_REQUEST = 'FETCH_PROFILE_USER_REQUEST';
 export const FETCH_PROFILE_USER_REQUEST_SUCCESS = 'FETCH_PROFILE_USER_REQUEST_SUCCESS';
@@ -29,6 +33,9 @@ export type UserActionTypes =
   typeof FETCH_USER_REQUEST |
   typeof FETCH_USER_REQUEST_SUCCESS |
   typeof FETCH_USER_REQUEST_FAILURE |
+  typeof RETRIEVE_USER_ROOMS_REQUEST |
+  typeof RETRIEVE_USER_ROOMS_REQUEST_SUCCESS |
+  typeof RETRIEVE_USER_ROOMS_REQUEST_FAILURE |
   typeof SET_PROFILE_USER_ID |
   typeof FETCH_PROFILE_USER_REQUEST |
   typeof FETCH_PROFILE_USER_REQUEST_SUCCESS |
@@ -54,32 +61,55 @@ export type UserActionTypes =
 export interface UserBaseAction extends Action {
   type: UserActionTypes;
 }
+
 export interface FetchUserRequestAction extends UserBaseAction {
+  userId: string;
   updateLastAccessRoomId: boolean;
 }
-export const fetchUserRequestActionCreator = (updateLastAccessRoomId: boolean): FetchUserRequestAction => ({
+export const fetchUserRequestActionCreator = (userId: string, updateLastAccessRoomId: boolean): FetchUserRequestAction => ({
   type: FETCH_USER_REQUEST,
-  updateLastAccessRoomId: updateLastAccessRoomId,
+  userId,
+  updateLastAccessRoomId,
 });
 
 export interface FetchUserRequestSuccessAction extends UserBaseAction {
-  user: IUser;
-  userRooms: {[key: string]: IRoomForUser} | null | undefined;
-  blocks: string[] | undefined;
+  user: User;
 }
-export const fetchUserRequestSuccessActionCreator = (user: IUser, userRooms: {[key: string]: IRoomForUser} | null | undefined, blocks: string[] | undefined): FetchUserRequestSuccessAction => ({
+export const fetchUserRequestSuccessActionCreator = (user: User): FetchUserRequestSuccessAction => ({
   type: FETCH_USER_REQUEST_SUCCESS,
   user: user,
-  userRooms: userRooms,
-  blocks: blocks,
 });
 
 export interface FetchUserRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const fetchUserRequestFailureActionCreator = (problemDetail: IProblemDetail): FetchUserRequestFailureAction => ({
+export const fetchUserRequestFailureActionCreator = (errorResponse: IErrorResponse): FetchUserRequestFailureAction => ({
   type: FETCH_USER_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
+});
+
+export interface RetrieveUserRoomsRequestAction extends UserBaseAction {
+  filter: UserRoomsFilter;
+}
+export const retrieveUserRoomsRequestActionCreator = (filter: UserRoomsFilter): RetrieveUserRoomsRequestAction => ({
+  type: RETRIEVE_USER_ROOMS_REQUEST,
+  filter: filter
+});
+
+export interface RetrieveUserRoomsRequestSuccessAction extends UserBaseAction {
+  userRoomsResponse: IUserRoomsResponse;
+}
+export const retrieveUserRoomsRequestSuccessActionCreator = (userRoomsResponse: IUserRoomsResponse): RetrieveUserRoomsRequestSuccessAction => ({
+  type: RETRIEVE_USER_ROOMS_REQUEST_SUCCESS,
+  userRoomsResponse: userRoomsResponse,
+});
+
+export interface RetrieveUserRoomsRequestFailureAction extends UserBaseAction {
+  errorResponse: IErrorResponse;
+}
+export const retrieveUserRoomsRequestFailureActionCreator = (errorResponse: IErrorResponse): RetrieveUserRoomsRequestFailureAction => ({
+  type: RETRIEVE_USER_ROOMS_REQUEST_FAILURE,
+  errorResponse: errorResponse,
 });
 
 export interface SetProfileUserIdAction extends UserBaseAction {
@@ -99,19 +129,19 @@ export const fetchProfileUserRequestActionCreator = (profileUserId: string): Fet
 });
 
 export interface FetchProfileUserRequestSuccessAction extends UserBaseAction {
-  profileUser: IUser;
+  profileUser: User;
 }
-export const fetchProfileUserRequestSuccessActionCreator = (profileUser: IUser): FetchProfileUserRequestSuccessAction => ({
+export const fetchProfileUserRequestSuccessActionCreator = (profileUser: User): FetchProfileUserRequestSuccessAction => ({
   type: FETCH_PROFILE_USER_REQUEST_SUCCESS,
   profileUser: profileUser,
 });
 
 export interface FetchProfileUserRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const fetchProfileUserRequestFailureActionCreator = (problemDetail: IProblemDetail): FetchProfileUserRequestFailureAction => ({
+export const fetchProfileUserRequestFailureActionCreator = (errorResponse: IErrorResponse): FetchProfileUserRequestFailureAction => ({
   type: FETCH_PROFILE_USER_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface ClearProfileUserAction extends UserBaseAction {
@@ -135,12 +165,12 @@ export const fetchContactsRequestSuccessActionCreator = (contacts: {[key: string
 });
 
 export interface FetchContactsRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
 export const fetchContactsRequestFailureActionCreator
- = (problemDetail: IProblemDetail): FetchContactsRequestFailureAction => ({
+ = (errorResponse: IErrorResponse): FetchContactsRequestFailureAction => ({
   type: FETCH_CONTACTS_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface UpdateSelectContactsAction extends UserBaseAction {
@@ -172,12 +202,12 @@ export const markAsReadRequestSuccessActionCreator = (): MarkAsReadRequestSucces
 });
 
 export interface MarkAsReadRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
 
-export const markAsReadRequestFailureActionCreator = (problemDetail: IProblemDetail): MarkAsReadRequestFailureAction => ({
+export const markAsReadRequestFailureActionCreator = (errorResponse: IErrorResponse): MarkAsReadRequestFailureAction => ({
   type: MARK_AS_READ_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface UserBlockRequestAction extends UserBaseAction {
@@ -197,11 +227,11 @@ export const userBlockRequestSuccessActionCreator = (blocks: string[]): UserBloc
 });
 
 export interface UserBlockRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const userBlockRequestFailureActionCreator = (problemDetail: IProblemDetail): UserBlockRequestFailureAction => ({
+export const userBlockRequestFailureActionCreator = (errorResponse: IErrorResponse): UserBlockRequestFailureAction => ({
   type: USER_BLOCK_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface UserUnBlockRequestAction extends UserBaseAction {
@@ -221,18 +251,18 @@ export const userUnBlockRequestSuccessActionCreator = (blocks: string[]): UserUn
 });
 
 export interface UserUnBlockRequestFailureAction extends UserBaseAction {
-  problemDetail: IProblemDetail;
+  errorResponse: IErrorResponse;
 }
-export const userUnBlockRequestFailureActionCreator = (problemDetail: IProblemDetail): UserUnBlockRequestFailureAction => ({
+export const userUnBlockRequestFailureActionCreator = (errorResponse: IErrorResponse): UserUnBlockRequestFailureAction => ({
   type: USER_UNBLOCK_REQUEST_FAILURE,
-  problemDetail: problemDetail,
+  errorResponse: errorResponse,
 });
 
 export interface UpdateUserRoomAction extends UserBaseAction {
   roomId: string;
-  userRoom: IRoomForUser;
+  userRoom: IMiniRoom;
 }
-export const updateUserRoomActionCreator = (roomId: string, userRoom: IRoomForUser): UpdateUserRoomAction => ({
+export const updateUserRoomActionCreator = (roomId: string, userRoom: IMiniRoom): UpdateUserRoomAction => ({
   type: UPDATE_USER_ROOM,
   roomId: roomId,
   userRoom: userRoom,
@@ -243,6 +273,9 @@ export type UserActions =
   FetchUserRequestAction |
   FetchUserRequestSuccessAction |
   FetchUserRequestFailureAction |
+  RetrieveUserRoomsRequestAction |
+  RetrieveUserRoomsRequestSuccessAction |
+  RetrieveUserRoomsRequestFailureAction |
   SetProfileUserIdAction |
   FetchProfileUserRequestAction |
   FetchProfileUserRequestSuccessAction |

@@ -25,7 +25,7 @@ export function asset(state: AssetState = getInitialState(), action: AssetAction
         state,
         {
           asset: null,
-          problemDetail: (<UploadAssetRequestFailureAction>action).problemDetail,
+          errorResponse: (<UploadAssetRequestFailureAction>action).errorResponse,
         }
       );
     default:

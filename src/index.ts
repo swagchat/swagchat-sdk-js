@@ -4,6 +4,7 @@
 export * from './Client';
 export * from './Realtime';
 export * from './Room';
+export * from './User';
 export * from './const';
 export * from './utils';
 export * from './utils/cookie';
@@ -16,8 +17,6 @@ export * from './actions/combined';
 export * from './actions/message';
 export * from './actions/addon';
 export * from './actions/room';
-// export * from './actions/setting';
-// export * from './actions/style';
 export * from './actions/user';
 
 export * from './reducers/addon';
@@ -26,12 +25,10 @@ export * from './reducers/client';
 export * from './reducers/message';
 export * from './reducers/addon';
 export * from './reducers/room';
-// export * from './reducers/setting';
-// export * from './reducers/style';
 export * from './reducers/user';
 
 export * from './sagas/asset';
-export * from './sagas/combined';
+// export * from './sagas/combined';
 export * from './sagas/message';
 export * from './sagas/room';
 export * from './sagas/user';
@@ -43,10 +40,8 @@ export * from './stores/client';
 export * from './stores/message';
 export * from './stores/addon';
 export * from './stores/room';
-// export * from './stores/setting';
-// export * from './stores/style';
 export * from './stores/user';
-export * from './stores/';
+export * from './stores';
 
 export * from './utils/cookie';
 

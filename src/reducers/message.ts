@@ -1,4 +1,4 @@
-import { IMessage, messageList2map } from '../';
+import { IMessage, messageList2map } from '..';
 import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
 import {
   MessageActions,
@@ -145,7 +145,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         {},
         state,
         {
-          problemDetail: (action as FetchMessagesRequestFailureAction).problemDetail,
+          errorResponse: (action as FetchMessagesRequestFailureAction).errorResponse,
         }
       );
     case PUSH_LOCAL_MESSAGE:

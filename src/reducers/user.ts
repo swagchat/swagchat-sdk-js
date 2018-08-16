@@ -3,6 +3,8 @@ import {
   UserActions,
   FETCH_USER_REQUEST_SUCCESS, FetchUserRequestSuccessAction,
   FETCH_USER_REQUEST_FAILURE, FetchUserRequestFailureAction,
+  RETRIEVE_USER_ROOMS_REQUEST_SUCCESS, RetrieveUserRoomsRequestSuccessAction,
+  RETRIEVE_USER_ROOMS_REQUEST_FAILURE, RetrieveUserRoomsRequestFailureAction,
   SET_PROFILE_USER_ID, SetProfileUserIdAction,
   FETCH_PROFILE_USER_REQUEST_SUCCESS, FetchProfileUserRequestSuccessAction,
   FETCH_PROFILE_USER_REQUEST_FAILURE, FetchProfileUserRequestFailureAction,
@@ -19,26 +21,38 @@ import {
   USER_UNBLOCK_REQUEST_FAILURE, UserUnBlockRequestFailureAction,
   UPDATE_USER_ROOM, UpdateUserRoomAction,
 } from '../actions/user';
-import { IUser, IRoomForUser } from '../';
+import { IUser, IMiniRoom, userRoomList2map } from '..';
+const R = require('ramda');
 
 const getInitialState = (): UserState => ({
   user: null,
-  userRooms: null,
+  blocks: [],
+
+  // user rooms
+  userRoomsMap: null,
+  userRooms: new Array<IMiniRoom>(),
+  userRoomsAllCount: 0,
+  userRoomsLimit: 0,
+  userRoomsOffset: 0,
+
+  // users
   usersAllCount: 0,
   usersLimit: 0,
   usersOffset: 0,
   users: null,
+
+  // contacts
   contacts: null,
   selectedContacts: {},
-  blocks: [],
+
   profileUserId: '',
   profileUser: null,
-  problemDetail: null,
+  errorResponse: null,
 });
 
 export function user(state: UserState = getInitialState(), action: UserActions): UserState {
-  let userRooms: {[key: string]: IRoomForUser} | null;
-  let userRoom: IRoomForUser;
+  let userRooms: {[key: string]: IMiniRoom} | null;
+  let userRoom: IMiniRoom;
 
   switch (action.type) {
     case FETCH_USER_REQUEST_SUCCESS:
@@ -48,11 +62,8 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {user: fursAction.user}
       );
-      if (fursAction.userRooms !== undefined) {
-        resUser = Object.assign(resUser, {userRooms: fursAction.userRooms});
-      }
-      if (fursAction.blocks !== undefined) {
-        resUser = Object.assign(resUser, {blocks: fursAction.blocks});
+      if (fursAction.user.blockUsers !== undefined) {
+        resUser = Object.assign(resUser, {blocks: fursAction.user.blockUsers});
       }
       return resUser;
     case FETCH_USER_REQUEST_FAILURE:
@@ -61,7 +72,29 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           user: null,
-          problemDetail: (action as FetchUserRequestFailureAction).problemDetail,
+          errorResponse: (action as FetchUserRequestFailureAction).errorResponse,
+        }
+      );
+    case RETRIEVE_USER_ROOMS_REQUEST_SUCCESS:
+      const rurrsAction = action as RetrieveUserRoomsRequestSuccessAction;
+      return Object.assign(
+        {},
+        state,
+        {
+          userRoomsMap: R.merge(userRoomList2map(rurrsAction.userRoomsResponse.rooms), state.userRoomsMap),
+          userRooms: R.concat(state.userRooms, rurrsAction.userRoomsResponse.rooms),
+          userRoomsAllCount: rurrsAction.userRoomsResponse.allCount,
+          userRoomsLimit: rurrsAction.userRoomsResponse.limit,
+          userRoomsOffset: state.userRoomsOffset +  rurrsAction.userRoomsResponse.limit!,
+        }
+      );
+    case RETRIEVE_USER_ROOMS_REQUEST_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          rooms: new Array<IMiniRoom>(),
+          errorResponse: (action as RetrieveUserRoomsRequestFailureAction).errorResponse,
         }
       );
     case SET_PROFILE_USER_ID:
@@ -78,7 +111,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           profileUser: (action as FetchProfileUserRequestSuccessAction).profileUser,
-          problemDetail: null,
+          errorResponse: null,
         }
       );
     case FETCH_PROFILE_USER_REQUEST_FAILURE:
@@ -87,7 +120,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           profileUser: null,
-          problemDetail: (action as FetchProfileUserRequestFailureAction).problemDetail,
+          errorResponse: (action as FetchProfileUserRequestFailureAction).errorResponse,
         }
       );
     case CLEAR_PROFILE_USER:
@@ -112,12 +145,12 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           users: null,
-          problemDetail: (<FetchContactsRequestFailureAction>action).problemDetail,
+          errorResponse: (<FetchContactsRequestFailureAction>action).errorResponse,
         }
       );
     case UPDATE_SELECT_CONTACTS:
       const updateSelectContactsAction = action as UpdateSelectContactsAction;
-      const contactUserId = updateSelectContactsAction.contact.userId;
+      const contactUserId = updateSelectContactsAction.contact.userId!;
       let selectedContacts = Object.assign({}, state.selectedContacts) as {[key: string]: IUser};
       if (selectedContacts[contactUserId]) {
         delete selectedContacts[contactUserId];
@@ -146,7 +179,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         {},
         state,
         {
-          problemDetail: (action as MarkAsReadRequestFailureAction).problemDetail,
+          errorResponse: (action as MarkAsReadRequestFailureAction).errorResponse,
         }
       );
     case USER_BLOCK_REQUEST_SUCCESS:
@@ -163,7 +196,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           user: null,
-          problemDetail: (action as UserBlockRequestFailureAction).problemDetail,
+          errorResponse: (action as UserBlockRequestFailureAction).errorResponse,
         }
       );
     case USER_UNBLOCK_REQUEST_SUCCESS:
@@ -180,13 +213,13 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         state,
         {
           user: null,
-          problemDetail: (action as UserUnBlockRequestFailureAction).problemDetail,
+          errorResponse: (action as UserUnBlockRequestFailureAction).errorResponse,
         }
       );
     case UPDATE_USER_ROOM:
       const uura = (action as UpdateUserRoomAction);
       userRoom = uura.userRoom,
-      userRooms = Object.assign({}, state.userRooms);
+      userRooms = Object.assign({}, state.userRoomsMap);
       if (userRooms![uura.roomId] !== undefined) {
         userRooms![uura.roomId] = userRoom;
       }
