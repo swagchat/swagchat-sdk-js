@@ -8,6 +8,7 @@ export const FETCH_USER_REQUEST_FAILURE = 'FETCH_USER_REQUEST_FAILURE';
 export const RETRIEVE_USER_ROOMS_REQUEST = 'RETRIEVE_USER_ROOMS_REQUEST';
 export const RETRIEVE_USER_ROOMS_REQUEST_SUCCESS = 'RETRIEVE_USER_ROOMS_REQUEST_SUCCESS';
 export const RETRIEVE_USER_ROOMS_REQUEST_FAILURE = 'RETRIEVE_USER_ROOMS_REQUEST_FAILURE';
+export const CLEAR_USER_ROOMS = 'CLEAR_USER_ROOMS';
 export const SET_PROFILE_USER_ID = 'SET_PROFILE_USER_ID';
 export const FETCH_PROFILE_USER_REQUEST = 'FETCH_PROFILE_USER_REQUEST';
 export const FETCH_PROFILE_USER_REQUEST_SUCCESS = 'FETCH_PROFILE_USER_REQUEST_SUCCESS';
@@ -36,6 +37,7 @@ export type UserActionTypes =
   typeof RETRIEVE_USER_ROOMS_REQUEST |
   typeof RETRIEVE_USER_ROOMS_REQUEST_SUCCESS |
   typeof RETRIEVE_USER_ROOMS_REQUEST_FAILURE |
+  typeof CLEAR_USER_ROOMS |
   typeof SET_PROFILE_USER_ID |
   typeof FETCH_PROFILE_USER_REQUEST |
   typeof FETCH_PROFILE_USER_REQUEST_SUCCESS |
@@ -101,7 +103,7 @@ export interface RetrieveUserRoomsRequestSuccessAction extends UserBaseAction {
 }
 export const retrieveUserRoomsRequestSuccessActionCreator = (userRoomsResponse: IUserRoomsResponse): RetrieveUserRoomsRequestSuccessAction => ({
   type: RETRIEVE_USER_ROOMS_REQUEST_SUCCESS,
-  userRoomsResponse: userRoomsResponse,
+  userRoomsResponse,
 });
 
 export interface RetrieveUserRoomsRequestFailureAction extends UserBaseAction {
@@ -109,7 +111,13 @@ export interface RetrieveUserRoomsRequestFailureAction extends UserBaseAction {
 }
 export const retrieveUserRoomsRequestFailureActionCreator = (errorResponse: IErrorResponse): RetrieveUserRoomsRequestFailureAction => ({
   type: RETRIEVE_USER_ROOMS_REQUEST_FAILURE,
-  errorResponse: errorResponse,
+  errorResponse,
+});
+
+export interface ClearUserRoomsAction extends UserBaseAction {
+}
+export const clearUserRoomsActionCreator = (): ClearUserRoomsAction => ({
+  type: CLEAR_USER_ROOMS,
 });
 
 export interface SetProfileUserIdAction extends UserBaseAction {
@@ -276,6 +284,7 @@ export type UserActions =
   RetrieveUserRoomsRequestAction |
   RetrieveUserRoomsRequestSuccessAction |
   RetrieveUserRoomsRequestFailureAction |
+  ClearUserRoomsAction |
   SetProfileUserIdAction |
   FetchProfileUserRequestAction |
   FetchProfileUserRequestSuccessAction |

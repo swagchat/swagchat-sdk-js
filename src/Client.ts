@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
-import { History } from 'history';
+import { History, createHashHistory } from 'history';
 import { Realtime } from './Realtime';
-import { EventName } from './const';
+import { EventType } from './const';
 import { logger } from './utils';
 import * as I from './interface';
 import { User, IUserParams } from './User';
@@ -13,7 +13,7 @@ export interface IClientParams {
   userId?: string;
   accessToken?: string;
   paths?: IPaths;
-  history: History;
+  history?: History;
   isGuest?: boolean;
   realm?: string;
   updateLastAccessRoomId?: boolean;
@@ -175,6 +175,8 @@ export class Client {
 
     if (params.history !== undefined) {
       this._history = params.history;
+    } else {
+      this._history = createHashHistory();
     }
 
     // if (params.realm !== undefined) {
@@ -551,15 +553,15 @@ export class Client {
     return window.btoa(binary);
   }
 
-  public subscribe(eventName: EventName, funcName: string, onMessage: Function): void {
+  public subscribe(eventType: EventType, funcName: string, onMessage: Function): void {
     if (this._conn) {
-      this._conn.subscribe(eventName, funcName, onMessage);
+      this._conn.subscribe(eventType, funcName, onMessage);
     }
   }
 
-  public unsubscribe(eventName: EventName, funcName: string): void {
+  public unsubscribe(eventType: EventType, funcName: string): void {
     if (this._conn) {
-      this._conn.unsubscribe(eventName, funcName);
+      this._conn.unsubscribe(eventType, funcName);
     }
   }
 }

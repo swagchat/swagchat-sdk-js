@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import * as I from './interface';
 import { User } from './User';
 import { logger, createQueryParams } from './utils';
-import { SpeechMode, EventName } from './const';
+import { SpeechMode } from './const';
 
 export interface IRoomParams {
   apiEndpoint: string;
@@ -372,7 +372,6 @@ export class Room {
     pbReq.setUserId(this._user.userId);
     pbReq.setType(req.type);
     pbReq.setRole(req.role);
-    pbReq.setEventName(EventName.MESSAGE);
     const body = pbReq.toObject();
     body['payload'] = req.payloadObj;
 

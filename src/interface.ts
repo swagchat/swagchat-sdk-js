@@ -1,10 +1,11 @@
 import {
     AddBlockUsersRequest, AddDeviceRequest, AddRoomUsersRequest, CreateRoomRequest,
     CreateUserRequest, DeleteBlockUsersRequest, DeleteDeviceRequest, DeleteRoomUsersRequest,
-    Device as pbDevice, ErrorResponse as pbIErrorResponse, InvalidParam, Message as pbMessage,
-    MiniRoom as pbMiniRoom, MiniUser as pbMiniUser, RetrieveRoomRequest, RetrieveUserRequest,
-    RetrieveUserRoomsRequest, Room as pbRoom, RoomUser as pbRoomUser, SendMessageRequest,
-    UpdateRoomRequest, UpdateUserRequest, User as pbUser, UserRoomsResponse as pbUserRoomsResponse,
+    Device as pbDevice, ErrorResponse as pbIErrorResponse, EventData as pbEventData, InvalidParam,
+    Message as pbMessage, MiniRoom as pbMiniRoom, MiniUser as pbMiniUser, RetrieveRoomRequest,
+    RetrieveUserRequest, RetrieveUserRoomsRequest, Room as pbRoom, RoomUser as pbRoomUser,
+    SendMessageRequest, UpdateRoomRequest, UpdateUserRequest, User as pbUser,
+    UserJoinEventPayload as pbUserJoinEventPayload, UserRoomsResponse as pbUserRoomsResponse
 } from 'swagchat-protobuf';
 import { Room } from './Room';
 import { User } from './User';
@@ -103,6 +104,13 @@ export interface IAsset {
   width?: number;
   height?: number;
 }
+
+// event
+
+export interface IEventData extends pbEventData.AsObject {
+  user_ids: Array<string>;
+}
+export interface IUserJoinEventPayload extends pbUserJoinEventPayload.AsObject {}
 
 export interface ICloseEvent extends Event {
   code: number;

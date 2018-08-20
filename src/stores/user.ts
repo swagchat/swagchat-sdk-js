@@ -1,4 +1,4 @@
-import { User, IUser, IMiniRoom, IErrorResponse } from '..';
+import { User, IUser, IMiniRoom, IErrorResponse, UserRoomsFilter } from '..';
 
 export interface UserState {
   user: User | null;
@@ -10,6 +10,7 @@ export interface UserState {
   userRoomsAllCount: number;
   userRoomsLimit: number;
   userRoomsOffset: number;
+  userRoomsFilter: UserRoomsFilter;
 
   // users
   usersAllCount: number;

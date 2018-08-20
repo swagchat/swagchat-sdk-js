@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import { Device, PublicProfileScope } from 'swagchat-protobuf';
 
 import { Client } from './Client';
-import { EventName, Platform } from './const';
+import { EventType, Platform } from './const';
 import * as I from './interface';
 import { IRoomParams, Room } from './Room';
 import { logger } from './utils';
@@ -164,7 +164,11 @@ export class User {
   }
 
   public onMessageReceived(callback: Function) {
-    this._client.subscribe(EventName.MESSAGE, 'messageList', callback);
+    this._client.subscribe(EventType.MESSAGEEVENT, 'messageList', callback);
+  }
+
+  public onUserJoinReceived(callback: Function) {
+    this._client.subscribe(EventType.USERJOINEVENT, 'userJoin', callback);
   }
 
   /**
@@ -635,7 +639,6 @@ export class User {
     pbReq.setUserId(this.userId);
     pbReq.setType(req.type);
     pbReq.setRole(req.role);
-    pbReq.setEventName(EventName.MESSAGE);
     const body = pbReq.toObject();
     body['payload'] = req.payloadObj;
 

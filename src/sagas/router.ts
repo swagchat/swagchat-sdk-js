@@ -33,6 +33,9 @@ function* gLocationChange() {
   }
 
   let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
+  if (!roomsPathRegExp) {
+    roomsPathRegExp = location.hash.match(new RegExp('^#' + client.paths.roomListPath));
+  }
 
   if (state.user.user === null) {
     // let userRooms: {[key: string]: IRoomForUser} = {};

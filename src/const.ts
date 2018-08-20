@@ -1,11 +1,7 @@
 export { UserRoomsFilter } from 'swagchat-protobuf/userMessage_pb';
 export { RoomType } from 'swagchat-protobuf/roomMessage_pb';
+export { EventType } from 'swagchat-protobuf/eventMessage_pb';
 export { Platform } from 'swagchat-protobuf/deviceMessage_pb';
-
-
-export enum EventName {
-  MESSAGE = 'message',
-}
 
 export enum MessageType {
   TEXT = 'text',

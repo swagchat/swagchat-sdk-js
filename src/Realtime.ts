@@ -1,5 +1,5 @@
 import { logger } from './utils';
-import { EventName } from './const';
+import { EventType } from './const';
 import * as I from './interface';
 
 export class Realtime {
@@ -10,7 +10,7 @@ export class Realtime {
   public onError: Function;
   public onClosed: Function;
 
-  public onEventHandlers: {[key: string]: {[key: string]: Function}}; // [eventName][funcName] = func;
+  public onEventHandlers: {[key: string]: Function}[]; // [eventType][funcName] = func;
 
   constructor(endpoint: string);
   constructor(endpoint: string, userId?: string);
@@ -38,7 +38,7 @@ export class Realtime {
       this.onClosed = onClosed;
     }
 
-    this.onEventHandlers = {};
+    this.onEventHandlers = new Array<{[key: string]: Function}>();
     this.connect();
   }
 
@@ -90,36 +90,66 @@ export class Realtime {
         return;
       }
 
-      if (typeof(e.data) !== 'string') {
-        return;
-      }
+      const sendEventHandler = (dataString: string) => {
+        if (dataString === '') {
+          return;
+        }
 
-      const dataList = (e.data as string).split('\n\n');
-      dataList.forEach(data => {
-        try {
-          let message = JSON.parse(data) as I.IMessage;
-          if (message.eventName) {
-            const eventHandlers = this.onEventHandlers[message.eventName];
+        const dataList = dataString.split('\n\n') as string[];
+        dataList.forEach(data => {
+          try {
+            const eventDataObj = JSON.parse(data) as I.IEventData;
+            if (eventDataObj.type !== EventType.MESSAGEEVENT && eventDataObj.type !== EventType.USERJOINEVENT) {
+              return;
+            }
+
+            const buffer = new Buffer(eventDataObj.data as string, 'base64');
+            const dataJson = buffer.toString('utf-8');
+            const eventData = JSON.parse(dataJson);
+            const eventHandlers = this.onEventHandlers[eventDataObj.type];
             const keys = Object.keys(eventHandlers);
+
             if (keys.length > 0) {
               keys.forEach((key: string) => {
-                eventHandlers[key](message);
+                eventHandlers[key](eventData);
               });
             }
+          } catch (ex) {
+            console.log(ex);
           }
-        } catch (e) {
-          console.log(e);
+        });
+      };
+
+      let dataString = '';
+
+      if (typeof(e.data) === 'string') {
+        dataString = e.data;
+      }
+
+      if (typeof(e.data) === 'object') {
+        if (e.data instanceof Blob) {
+          const reader = new FileReader();
+
+          reader.addEventListener('loadend', (e: ProgressEvent) => {
+            dataString = (e.target as FileReader).result;
+            sendEventHandler(dataString);
+          });
+          reader.readAsText(e.data);
+        } else {
+          const buf = new Uint8Array(e.data as Buffer).buffer;
+          dataString = String.fromCharCode.apply(null, new Uint8Array(buf));
+          sendEventHandler(dataString);
         }
-      });
+      }
     });
 
-    Object.keys(this.onEventHandlers).forEach((eventName: string) => {
-      Object.keys(this.onEventHandlers[eventName]).forEach((funcName) => {
+    for (let eventType = 0; eventType < this.onEventHandlers.length; eventType++) {
+      Object.keys(this.onEventHandlers[eventType]).forEach((funcName) => {
         setTimeout(() => {
-          this.sendEvent(eventName, funcName, 'subscribe');
+          this.sendEvent(eventType, funcName, 'subscribe');
         }, 2000);
       });
-    });
+    }
 
     if (typeof(window) !== 'undefined') {
       window.addEventListener('beforeunload', () => {
@@ -132,12 +162,12 @@ export class Realtime {
     this.conn.close();
   }
 
-  public sendEvent(eventName: string, funcName: string, action: string): Boolean {
-      if (this.conn.readyState === this.conn.OPEN) {
+  public sendEvent(eventType: EventType, funcName: string, action: string): Boolean {
+    if (this.conn.readyState === this.conn.OPEN) {
       try {
         this.conn.send(JSON.stringify({
           // roomId: roomId,
-          eventName: eventName,
+          eventType: eventType,
           funcName: funcName,
           action: action
         }));
@@ -153,19 +183,19 @@ export class Realtime {
     return false;
   }
 
-  public subscribe(eventName: EventName, funcName: string, func: Function): void {
-    if (!eventName || typeof(eventName) !== 'string') {
-      logger('realtime', 'error', 'Subscribe failure. eventName is not setting.');
+  public subscribe(eventType: EventType, funcName: string, func: Function): void {
+    if (eventType !== EventType.MESSAGEEVENT && eventType !== EventType.USERJOINEVENT) {
+      logger('realtime', 'error', 'Subscribe failure. eventType is not setting.');
       return;
     }
 
     if (!funcName || typeof(funcName) !== 'string') {
-      logger('realtime', 'error', 'Subscribe ' + eventName + ' failure. funcName is not setting.');
+      logger('realtime', 'error', 'Subscribe ' + eventType + ' failure. funcName is not setting.');
       return;
     }
 
     if (func === undefined) {
-      logger('realtime', 'error', 'Subscribe ' + eventName + ' failure. function is undefined.');
+      logger('realtime', 'error', 'Subscribe ' + eventType + ' failure. function is undefined.');
       return;
     }
 
@@ -173,35 +203,35 @@ export class Realtime {
       return;
     }
 
-    if (!this.onEventHandlers[eventName]) {
-      this.onEventHandlers[eventName] = {};
+    if (!this.onEventHandlers[eventType]) {
+      this.onEventHandlers[eventType] = {};
     }
 
-    if (!(this.onEventHandlers[eventName] && this.onEventHandlers[eventName][funcName])) {
+    if (!(this.onEventHandlers[eventType] && this.onEventHandlers[eventType][funcName])) {
 
-      if (!this.sendEvent(eventName, funcName, 'subscribe')) {
-        logger('realtime', 'error', 'Subscribe ' + eventName + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
+      if (!this.sendEvent(eventType, funcName, 'subscribe')) {
+        logger('realtime', 'error', 'Subscribe ' + eventType + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
         return;
       }
-      this.onEventHandlers[eventName][funcName] = func;
+      this.onEventHandlers[eventType][funcName] = func;
     }
 
-    logger('realtime', 'info', 'Subscribe ' + eventName + ' success funcName[' + funcName + '] userId[' + this.userId + ']');
+    logger('realtime', 'info', 'Subscribe ' + eventType + ' success funcName[' + funcName + '] userId[' + this.userId + ']');
   }
 
-  public unsubscribe(eventName: EventName, funcName: string): void {
+  public unsubscribe(eventType: EventType, funcName: string): void {
     if (this.conn.readyState !== this.conn.OPEN) {
       return;
     }
 
-    if (!this.sendEvent(eventName, funcName, 'unsubscribe')) {
-      logger('realtime', 'error', 'Unsubscribe ' + eventName + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
+    if (!this.sendEvent(eventType, funcName, 'unsubscribe')) {
+      logger('realtime', 'error', 'Unsubscribe ' + eventType + ' failure funcName[' + funcName + '] userId[' + this.userId + ']');
     }
 
-    if (this.onEventHandlers[eventName] && this.onEventHandlers[eventName][funcName]) {
-      delete this.onEventHandlers[eventName][funcName];
+    if (this.onEventHandlers[eventType] && this.onEventHandlers[eventType][funcName]) {
+      delete this.onEventHandlers[eventType][funcName];
     }
 
-    logger('realtime', 'info', 'Unsubscribe ' + eventName + ' success funcName[' + funcName + '] userId[' + this.userId + ']');
+    logger('realtime', 'info', 'Unsubscribe ' + eventType + ' success funcName[' + funcName + '] userId[' + this.userId + ']');
   }
 }

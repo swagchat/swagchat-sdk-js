@@ -5,6 +5,7 @@ import {
   FETCH_USER_REQUEST_FAILURE, FetchUserRequestFailureAction,
   RETRIEVE_USER_ROOMS_REQUEST_SUCCESS, RetrieveUserRoomsRequestSuccessAction,
   RETRIEVE_USER_ROOMS_REQUEST_FAILURE, RetrieveUserRoomsRequestFailureAction,
+  CLEAR_USER_ROOMS,
   SET_PROFILE_USER_ID, SetProfileUserIdAction,
   FETCH_PROFILE_USER_REQUEST_SUCCESS, FetchProfileUserRequestSuccessAction,
   FETCH_PROFILE_USER_REQUEST_FAILURE, FetchProfileUserRequestFailureAction,
@@ -21,7 +22,7 @@ import {
   USER_UNBLOCK_REQUEST_FAILURE, UserUnBlockRequestFailureAction,
   UPDATE_USER_ROOM, UpdateUserRoomAction,
 } from '../actions/user';
-import { IUser, IMiniRoom, userRoomList2map } from '..';
+import { IUser, IMiniRoom, userRoomList2map, UserRoomsFilter, } from '..';
 const R = require('ramda');
 
 const getInitialState = (): UserState => ({
@@ -34,6 +35,7 @@ const getInitialState = (): UserState => ({
   userRoomsAllCount: 0,
   userRoomsLimit: 0,
   userRoomsOffset: 0,
+  userRoomsFilter: UserRoomsFilter.NONE,
 
   // users
   usersAllCount: 0,
@@ -86,6 +88,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
           userRoomsAllCount: rurrsAction.userRoomsResponse.allCount,
           userRoomsLimit: rurrsAction.userRoomsResponse.limit,
           userRoomsOffset: state.userRoomsOffset +  rurrsAction.userRoomsResponse.limit!,
+          userRoomsFilter: rurrsAction.userRoomsResponse.filter,
         }
       );
     case RETRIEVE_USER_ROOMS_REQUEST_FAILURE:
@@ -95,6 +98,20 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         {
           rooms: new Array<IMiniRoom>(),
           errorResponse: (action as RetrieveUserRoomsRequestFailureAction).errorResponse,
+        }
+      );
+    case CLEAR_USER_ROOMS:
+      return Object.assign(
+        {},
+        state,
+        {
+          userRoomsMap: null,
+          userRooms: new Array<IMiniRoom>(),
+          userRoomsAllCount: 0,
+          userRoomsLimit: 0,
+          userRoomsOffset: 0,
+          userRoomsloadedRowCount: 0,
+          userRoomsloadedRowsMap: {},
         }
       );
     case SET_PROFILE_USER_ID:
