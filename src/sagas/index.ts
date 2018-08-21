@@ -5,6 +5,8 @@ import { messageSaga } from './message';
 import { roomSaga } from './room';
 import { routerSaga } from './router';
 import { userSaga } from './user';
+import { userRoomsAllSaga } from './userRoomsAll';
+import { userRoomsUnreadSaga } from './userRoomsUnread';
 
 export function* rootSaga(): IterableIterator<ForkEffect> {
   yield fork(assetSaga);
@@ -13,4 +15,6 @@ export function* rootSaga(): IterableIterator<ForkEffect> {
   yield fork(roomSaga);
   yield fork(routerSaga);
   yield fork(userSaga);
+  yield fork(userRoomsAllSaga);
+  yield fork(userRoomsUnreadSaga);
 }

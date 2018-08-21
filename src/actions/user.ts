@@ -1,14 +1,10 @@
 import { Action } from 'redux';
 
-import { IErrorResponse, IMiniRoom, IUser, IUserRoomsResponse, User, UserRoomsFilter } from '../';
+import { IErrorResponse, IUser, User } from '..';
 
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
 export const FETCH_USER_REQUEST_SUCCESS = 'FETCH_USER_REQUEST_SUCCESS';
 export const FETCH_USER_REQUEST_FAILURE = 'FETCH_USER_REQUEST_FAILURE';
-export const RETRIEVE_USER_ROOMS_REQUEST = 'RETRIEVE_USER_ROOMS_REQUEST';
-export const RETRIEVE_USER_ROOMS_REQUEST_SUCCESS = 'RETRIEVE_USER_ROOMS_REQUEST_SUCCESS';
-export const RETRIEVE_USER_ROOMS_REQUEST_FAILURE = 'RETRIEVE_USER_ROOMS_REQUEST_FAILURE';
-export const CLEAR_USER_ROOMS = 'CLEAR_USER_ROOMS';
 export const SET_PROFILE_USER_ID = 'SET_PROFILE_USER_ID';
 export const FETCH_PROFILE_USER_REQUEST = 'FETCH_PROFILE_USER_REQUEST';
 export const FETCH_PROFILE_USER_REQUEST_SUCCESS = 'FETCH_PROFILE_USER_REQUEST_SUCCESS';
@@ -28,16 +24,11 @@ export const USER_BLOCK_REQUEST_FAILURE = 'USER_BLOCK_REQUEST_FAILURE';
 export const USER_UNBLOCK_REQUEST = 'USER_UNBLOCK_REQUEST';
 export const USER_UNBLOCK_REQUEST_SUCCESS = 'USER_UNBLOCK_REQUEST_SUCCESS';
 export const USER_UNBLOCK_REQUEST_FAILURE = 'USER_UNBLOCK_REQUEST_FAILURE';
-export const UPDATE_USER_ROOM = 'UPDATE_USER_ROOM';
 
 export type UserActionTypes =
   typeof FETCH_USER_REQUEST |
   typeof FETCH_USER_REQUEST_SUCCESS |
   typeof FETCH_USER_REQUEST_FAILURE |
-  typeof RETRIEVE_USER_ROOMS_REQUEST |
-  typeof RETRIEVE_USER_ROOMS_REQUEST_SUCCESS |
-  typeof RETRIEVE_USER_ROOMS_REQUEST_FAILURE |
-  typeof CLEAR_USER_ROOMS |
   typeof SET_PROFILE_USER_ID |
   typeof FETCH_PROFILE_USER_REQUEST |
   typeof FETCH_PROFILE_USER_REQUEST_SUCCESS |
@@ -56,8 +47,7 @@ export type UserActionTypes =
   typeof USER_BLOCK_REQUEST_FAILURE |
   typeof USER_UNBLOCK_REQUEST |
   typeof USER_UNBLOCK_REQUEST_SUCCESS |
-  typeof USER_UNBLOCK_REQUEST_FAILURE |
-  typeof UPDATE_USER_ROOM
+  typeof USER_UNBLOCK_REQUEST_FAILURE
 ;
 
 export interface UserBaseAction extends Action {
@@ -88,36 +78,6 @@ export interface FetchUserRequestFailureAction extends UserBaseAction {
 export const fetchUserRequestFailureActionCreator = (errorResponse: IErrorResponse): FetchUserRequestFailureAction => ({
   type: FETCH_USER_REQUEST_FAILURE,
   errorResponse: errorResponse,
-});
-
-export interface RetrieveUserRoomsRequestAction extends UserBaseAction {
-  filter: UserRoomsFilter;
-}
-export const retrieveUserRoomsRequestActionCreator = (filter: UserRoomsFilter): RetrieveUserRoomsRequestAction => ({
-  type: RETRIEVE_USER_ROOMS_REQUEST,
-  filter: filter
-});
-
-export interface RetrieveUserRoomsRequestSuccessAction extends UserBaseAction {
-  userRoomsResponse: IUserRoomsResponse;
-}
-export const retrieveUserRoomsRequestSuccessActionCreator = (userRoomsResponse: IUserRoomsResponse): RetrieveUserRoomsRequestSuccessAction => ({
-  type: RETRIEVE_USER_ROOMS_REQUEST_SUCCESS,
-  userRoomsResponse,
-});
-
-export interface RetrieveUserRoomsRequestFailureAction extends UserBaseAction {
-  errorResponse: IErrorResponse;
-}
-export const retrieveUserRoomsRequestFailureActionCreator = (errorResponse: IErrorResponse): RetrieveUserRoomsRequestFailureAction => ({
-  type: RETRIEVE_USER_ROOMS_REQUEST_FAILURE,
-  errorResponse,
-});
-
-export interface ClearUserRoomsAction extends UserBaseAction {
-}
-export const clearUserRoomsActionCreator = (): ClearUserRoomsAction => ({
-  type: CLEAR_USER_ROOMS,
 });
 
 export interface SetProfileUserIdAction extends UserBaseAction {
@@ -266,25 +226,12 @@ export const userUnBlockRequestFailureActionCreator = (errorResponse: IErrorResp
   errorResponse: errorResponse,
 });
 
-export interface UpdateUserRoomAction extends UserBaseAction {
-  roomId: string;
-  userRoom: IMiniRoom;
-}
-export const updateUserRoomActionCreator = (roomId: string, userRoom: IMiniRoom): UpdateUserRoomAction => ({
-  type: UPDATE_USER_ROOM,
-  roomId: roomId,
-  userRoom: userRoom,
-});
-
 export type UserActions =
   UserBaseAction |
   FetchUserRequestAction |
   FetchUserRequestSuccessAction |
   FetchUserRequestFailureAction |
-  RetrieveUserRoomsRequestAction |
-  RetrieveUserRoomsRequestSuccessAction |
-  RetrieveUserRoomsRequestFailureAction |
-  ClearUserRoomsAction |
+  UpdateSelectContactsAction |
   SetProfileUserIdAction |
   FetchProfileUserRequestAction |
   FetchProfileUserRequestSuccessAction |
@@ -303,6 +250,5 @@ export type UserActions =
   UserBlockRequestFailureAction |
   UserUnBlockRequestAction |
   UserUnBlockRequestSuccessAction |
-  UserUnBlockRequestFailureAction |
-  UpdateUserRoomAction
+  UserUnBlockRequestFailureAction
 ;

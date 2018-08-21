@@ -1,15 +1,12 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { call, ForkEffect, put, select, takeLatest } from 'redux-saga/effects';
 
-import { IFetchUserResponse, IRetrieveUserRequest, UserRoomsFilter } from '../';
-import { setIsFirstFetchActionCreator } from '../actions/message';
-// import { createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator } from '../actions/combined';
-import { setCurrentRoomIdActionCreator } from '../actions/room';
+import { IFetchUserResponse, IRetrieveUserRequest } from '..';
 import {
     clearProfileUserActionCreator, fetchUserRequestFailureActionCreator,
-    fetchUserRequestSuccessActionCreator, retrieveUserRoomsRequestActionCreator,
-    setProfileUserIdActionCreator
+    fetchUserRequestSuccessActionCreator, setProfileUserIdActionCreator
 } from '../actions/user';
+import { retrieveUserRoomsAllRequestActionCreator } from '../actions/userRoomsAll';
 import { State } from '../stores';
 
 function* gLocationChange() {
@@ -66,7 +63,7 @@ function* gLocationChange() {
 
   if (roomsPathRegExp !== null) {
     // rooms page
-    yield put(retrieveUserRoomsRequestActionCreator(UserRoomsFilter.NONE));
+    yield put(retrieveUserRoomsAllRequestActionCreator());
   }
 
   let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
@@ -74,13 +71,13 @@ function* gLocationChange() {
     // messages page
     const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
-      const currentRoomId = roomIds[1];
-      let state: State = yield select();
-      if (state.user.userRoomsMap![currentRoomId] !== undefined) {
-        yield put(setIsFirstFetchActionCreator(true));
-        yield put(setCurrentRoomIdActionCreator(currentRoomId));
-        // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
-      }
+      // const currentRoomId = roomIds[1];
+      // let state: State = yield select();
+      // if (state.user.userRoomsMap![currentRoomId] !== undefined) {
+      //   yield put(setIsFirstFetchActionCreator(true));
+      //   yield put(setCurrentRoomIdActionCreator(currentRoomId));
+      //   // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
+      // }
     }
   }
 
@@ -89,12 +86,12 @@ function* gLocationChange() {
     // roomSetting page
     const roomIds = location.pathname.match(new RegExp(client.paths.roomSettingPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
-      const currentRoomId = roomIds[1];
-      let state: State = yield select();
-      if (state.user.userRoomsMap![currentRoomId] !== undefined) {
-        yield put(setCurrentRoomIdActionCreator(currentRoomId));
-        // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
-      }
+      // const currentRoomId = roomIds[1];
+      // let state: State = yield select();
+      // if (state.user.userRoomsMap![currentRoomId] !== undefined) {
+      //   yield put(setCurrentRoomIdActionCreator(currentRoomId));
+      //   // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
+      // }
     }
   }
 

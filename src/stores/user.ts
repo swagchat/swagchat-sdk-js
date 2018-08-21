@@ -1,16 +1,8 @@
-import { User, IUser, IMiniRoom, IErrorResponse, UserRoomsFilter } from '..';
+import { User, IUser, IErrorResponse } from '..';
 
 export interface UserState {
   user: User | null;
   blocks: string[];
-
-  // user rooms
-  userRoomsMap: {[key: string]: IMiniRoom} | null;
-  userRooms: IMiniRoom[];
-  userRoomsAllCount: number;
-  userRoomsLimit: number;
-  userRoomsOffset: number;
-  userRoomsFilter: UserRoomsFilter;
 
   // users
   usersAllCount: number;

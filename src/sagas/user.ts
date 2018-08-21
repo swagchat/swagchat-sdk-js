@@ -2,8 +2,8 @@ import { call, ForkEffect, put, select, takeLatest } from 'redux-saga/effects';
 
 import {
     IAddBlockUsersRequest, IDeleteBlockUsersRequest, IFetchBlockUsersResponse, IFetchUserResponse,
-    IFetchUsersResponse, IRetrieveUserRequest, IRetrieveUserRoomsRequest, IUser
-} from '../';
+    IFetchUsersResponse, IRetrieveUserRequest, IUser
+} from '..';
 import { setCurrentRoomIdActionCreator } from '../actions/room';
 import {
     FETCH_CONTACTS_REQUEST, FETCH_PROFILE_USER_REQUEST, FETCH_USER_REQUEST,
@@ -13,14 +13,12 @@ import {
     fetchUserRequestActionCreator, fetchUserRequestFailureActionCreator,
     fetchUserRequestSuccessActionCreator, MARK_AS_READ_REQUEST, MarkAsReadRequestAction,
     markAsReadRequestFailureActionCreator, markAsReadRequestSuccessActionCreator,
-    RETRIEVE_USER_ROOMS_REQUEST, RetrieveUserRoomsRequestAction,
-    retrieveUserRoomsRequestFailureActionCreator, retrieveUserRoomsRequestSuccessActionCreator,
     USER_BLOCK_REQUEST, USER_UNBLOCK_REQUEST, UserBlockRequestAction,
     userBlockRequestFailureActionCreator, userBlockRequestSuccessActionCreator,
     UserUnBlockRequestAction, userUnBlockRequestFailureActionCreator,
     userUnBlockRequestSuccessActionCreator
 } from '../actions/user';
-import { IRetrieveUserRoomsResponse } from '../interface';
+
 import { State } from '../stores';
 
 function* gFetchUserRequest(action: FetchUserRequestAction) {
@@ -59,12 +57,12 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
       if (messagesPathRegExp !== null) {
         const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
         if (roomIds !== null) {
-          const currentRoomId = roomIds[1];
-          let state: State = yield select();
-          if (state.user.userRoomsMap![currentRoomId] !== undefined) {
-            yield put(setCurrentRoomIdActionCreator(currentRoomId));
-            // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
-          }
+          // const currentRoomId = roomIds[1];
+          // let state: State = yield select();
+          // if (state.user.userRoomsMap![currentRoomId] !== undefined) {
+          //   yield put(setCurrentRoomIdActionCreator(currentRoomId));
+          //   // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
+          // }
           return;
         }
       }
@@ -77,25 +75,6 @@ function* gFetchUserRequest(action: FetchUserRequestAction) {
     }
   } else {
     yield put(fetchUserRequestFailureActionCreator(userRes.error!));
-  }
-}
-
-function* gRetrieveUserRoomsRequest(action: RetrieveUserRoomsRequestAction) {
-  const state: State = yield select();
-  const user = state.user;
-  const res: IRetrieveUserRoomsResponse = yield call(() => {
-    const req = {
-      userId: user.user!.userId,
-      limit: state.client.client!.settings.roomListPagingCount,
-      offset: user.userRoomsOffset,
-      filter: action.filter
-    } as IRetrieveUserRoomsRequest;
-    return user.user!.retrieveRooms(req);
-  });
-  if (res.error) {
-    yield put(retrieveUserRoomsRequestFailureActionCreator(res.error));
-  } else {
-    yield put(retrieveUserRoomsRequestSuccessActionCreator(res.userRoomsResponse!));
   }
 }
 
@@ -181,7 +160,6 @@ function* gUserUnBlockRequest(action: UserUnBlockRequestAction) {
 
 export function* userSaga(): IterableIterator<ForkEffect> {
   yield takeLatest(FETCH_USER_REQUEST, gFetchUserRequest);
-  yield takeLatest(RETRIEVE_USER_ROOMS_REQUEST, gRetrieveUserRoomsRequest);
   yield takeLatest(FETCH_PROFILE_USER_REQUEST, gFetchProfileUserRequest);
   yield takeLatest(FETCH_CONTACTS_REQUEST, gFetchContactsRequest);
   yield takeLatest(MARK_AS_READ_REQUEST, gMarkAsReadRequest);
