@@ -118,7 +118,7 @@ export interface ICloseEvent extends Event {
 }
 
 export interface IMessageEvent extends Event {
-  data: (String|Buffer|ArrayBuffer|Buffer[]);
+  data: (String|Buffer|ArrayBuffer|Buffer[]|Blob);
   isBinary: boolean;
   target: WebSocket;
 }

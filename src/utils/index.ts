@@ -200,7 +200,7 @@ const infoLogColor = '#03A9F4';
 const errorLogColor = '#F44336';
 
 export function logger(label: string, level: string, message: string) {
-  if (process.env.REACT_APP_ENV === 'production' || process.env.NODE_ENV === 'production') {
+  if (process.env.REACT_APP_ENV === 'production') {
     return;
   }
 

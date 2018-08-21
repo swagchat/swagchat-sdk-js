@@ -107,8 +107,11 @@ export class Realtime {
             const dataJson = buffer.toString('utf-8');
             const eventData = JSON.parse(dataJson);
             const eventHandlers = this.onEventHandlers[eventDataObj.type];
-            const keys = Object.keys(eventHandlers);
+            if (!eventHandlers) {
+              return;
+            }
 
+            const keys = Object.keys(eventHandlers);
             if (keys.length > 0) {
               keys.forEach((key: string) => {
                 eventHandlers[key](eventData);
@@ -127,15 +130,20 @@ export class Realtime {
       }
 
       if (typeof(e.data) === 'object') {
-        if (e.data instanceof Blob) {
-          const reader = new FileReader();
-
-          reader.addEventListener('loadend', (e: ProgressEvent) => {
-            dataString = (e.target as FileReader).result;
+        try {
+          if (e.data instanceof Blob) {
+            const reader = new FileReader();
+            reader.addEventListener('loadend', (e: ProgressEvent) => {
+              dataString = (e.target as FileReader).result;
+              sendEventHandler(dataString);
+            });
+            reader.readAsText(e.data);
+          } else {
+            const buf = new Uint8Array(e.data as Buffer).buffer;
+            dataString = String.fromCharCode.apply(null, new Uint8Array(buf));
             sendEventHandler(dataString);
-          });
-          reader.readAsText(e.data);
-        } else {
+          }
+        } catch (error) {
           const buf = new Uint8Array(e.data as Buffer).buffer;
           dataString = String.fromCharCode.apply(null, new Uint8Array(buf));
           sendEventHandler(dataString);
