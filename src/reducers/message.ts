@@ -1,5 +1,5 @@
-import { IMessage, messageList2map } from '..';
-import { MessageState, SCROLL_BOTTOM_ANIMATION_DURATION } from '../stores/message';
+import { IMessage, messageList2map, UpdateRoomMessagesReason } from '..';
+import { MessageState } from '../stores/message';
 import {
   MessageActions,
   SET_IS_FIRST_FETCH, SetIsFirstFetchAction,
@@ -12,8 +12,7 @@ import {
   RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RetrieveRoomMessagesRequestFailureAction,
   PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
   BEFORE_SEND_MESSAGES_REQUEST,
-  SEND_MESSAGES_REQUEST_SUCCESS, SendMessagesRequestSuccessAction,
-  SEND_MESSAGES_REQUEST_FAILURE,
+  SEND_MESSAGES_REQUEST_SUCCESS, SEND_MESSAGES_REQUEST_FAILURE,
   DELETE_LOCAL_MESSAGES,
   UPDATE_MESSAGES, UpdateMessagesAction,
   CLEAR_MESSAGES,
@@ -28,8 +27,9 @@ import {
   ADD_INDICATORS, AddIndicatorsAction,
   REFRESH_INDICATORS,
   CLEAR_INDICATORS,
+  SET_ON_MESSAGE_RECEIVED, SetOnMessageReceivedAction,
 } from '../actions/message';
-const R = require('ramda');
+import * as R from 'ramda';
 
 const getInitialState = (): MessageState => ({
   isFirstFetch: false,
@@ -46,7 +46,9 @@ const getInitialState = (): MessageState => ({
   localMessageList: new Array<IMessage>(),
   localMessageMap: {},
   roomMessages: new Array<IMessage>(),
-  messageMap: {},
+  roomMessagesMap: {},
+  onMessageReceived: () => {},
+  updateRoomMessagesReason: UpdateRoomMessagesReason.PAGING,
 
   // text
   text: '',
@@ -68,7 +70,8 @@ const getInitialState = (): MessageState => ({
 });
 
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
-  let mergedMap: {[key: string]: IMessage};
+  let roomMessagesMap: {[key: string]: IMessage};
+  let roomMessages: Array<IMessage>;
   let mergedLocalMap: {[key: string]: IMessage};
 
   switch (action.type) {
@@ -137,10 +140,12 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           isLoadingRoomMessages: false,
+          roomMessagesMap: R.merge(messageList2map(roomMessagesResponse.messages), state.roomMessagesMap),
           roomMessages: R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages),
           roomMessagesAllCount: roomMessagesResponse.allCount,
           roomMessagesLimit: roomMessagesResponse.limit,
           roomMessagesOffset: roomMessagesResponse.offset! + roomMessagesResponse.limit!,
+          updateRoomMessagesReason: UpdateRoomMessagesReason.PAGING,
         }
       );
     case RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE:
@@ -179,34 +184,34 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case BEFORE_SEND_MESSAGES_REQUEST:
-      mergedMap = R.merge(state.messageMap, state.localMessageMap);
+      // mergedMap = R.merge(state.messageMap, state.localMessageMap);
 
-      return Object.assign(
-        {},
-        state,
-        {
-          sending: true,
-          messageMap: mergedMap,
-        }
-      );
+      // return Object.assign(
+      //   {},
+      //   state,
+      //   {
+      //     sending: true,
+      //     messageMap: mergedMap,
+      //   }
+      // );
     case SEND_MESSAGES_REQUEST_SUCCESS:
-      mergedMap = R.clone(state.messageMap);
-      const messageList = (action as SendMessagesRequestSuccessAction).messageList;
-      messageList.forEach((m: IMessage) => {
-        mergedMap[m.messageId!] = m;
-      });
+      // mergedMap = R.clone(state.messageMap);
+      // const messageList = (action as SendMessagesRequestSuccessAction).messageList;
+      // messageList.forEach((m: IMessage) => {
+      //   mergedMap[m.messageId!] = m;
+      // });
 
-      return Object.assign(
-        {},
-        state,
-        {
-          sending: false,
-          localMessageMap: {},
-          localMessageList: [],
-          messageMap: mergedMap,
-          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
-        }
-      );
+      // return Object.assign(
+      //   {},
+      //   state,
+      //   {
+      //     sending: false,
+      //     localMessageMap: {},
+      //     localMessageList: [],
+      //     messageMap: mergedMap,
+      //     scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
+      //   }
+      // );
     case SEND_MESSAGES_REQUEST_FAILURE:
       return Object.assign(
         {},
@@ -225,15 +230,30 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case UPDATE_MESSAGES:
-      const ams = (action as UpdateMessagesAction).messages;
-      mergedMap = R.merge(state.messageMap, messageList2map(ams));
+      const umAction = (action as UpdateMessagesAction);
+      roomMessagesMap = R.clone(state.roomMessagesMap);
+      roomMessages = R.clone(state.roomMessages);
+
+      umAction.messages.forEach(roomMessage => {
+        if (roomMessagesMap[roomMessage.messageId!]) {
+          delete(roomMessagesMap[roomMessage.messageId!]);
+        }
+        roomMessagesMap[roomMessage.messageId!] = roomMessage;
+
+        const deleteIndex = R.findIndex(R.propEq('messageId', roomMessage.messageId!))(roomMessages);
+        if (deleteIndex > -1) {
+          roomMessages = R.remove(deleteIndex, 1, roomMessages);
+        }
+        roomMessages = R.insert(roomMessages.length + 1, roomMessage, roomMessages);
+      });
 
       return Object.assign(
         {},
         state,
         {
-          messageMap: mergedMap,
-          scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
+          roomMessagesMap,
+          roomMessages,
+          updateRoomMessagesReason: UpdateRoomMessagesReason.RECEIVE
         }
       );
     case CLEAR_MESSAGES:
@@ -321,7 +341,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         {},
         state,
         {
-          indicators: R.assoc(aia.indicator.messageId, aia.indicator, state.indicators),
+          indicators: R.assoc(aia.indicator.messageId!, aia.indicator, state.indicators),
         }
       );
     case REFRESH_INDICATORS:
@@ -341,6 +361,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           indicators: {},
+        }
+      );
+    case SET_ON_MESSAGE_RECEIVED:
+      return Object.assign(
+        {},
+        state,
+        {
+          onMessageReceived: (action as SetOnMessageReceivedAction).onMessageReceived,
         }
       );
     default:

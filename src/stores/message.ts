@@ -1,4 +1,4 @@
-import { IMessage } from '..';
+import { IMessage, UpdateRoomMessagesReason } from '..';
 
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
@@ -17,7 +17,9 @@ export interface MessageState {
   localMessageList: IMessage[];
   localMessageMap: {[key: string]: IMessage};
   roomMessages: IMessage[];
-  messageMap: {[key: string]: IMessage};
+  roomMessagesMap: {[key: string]: IMessage};
+  onMessageReceived: (message: IMessage) => void;
+  updateRoomMessagesReason: UpdateRoomMessagesReason;
 
   // text
   text: string;

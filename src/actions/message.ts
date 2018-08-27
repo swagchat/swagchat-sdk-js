@@ -31,6 +31,7 @@ export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESS
 export const ADD_INDICATORS = 'ADD_INDICATORS';
 export const REFRESH_INDICATORS = 'REFRESH_INDICATORS';
 export const CLEAR_INDICATORS = 'CLEAR_INDICATORS';
+export const SET_ON_MESSAGE_RECEIVED = 'SET_ON_MESSAGE_RECEIVED';
 
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
@@ -61,7 +62,8 @@ export type MessageActionTypes =
   typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST |
   typeof ADD_INDICATORS |
   typeof REFRESH_INDICATORS |
-  typeof CLEAR_INDICATORS
+  typeof CLEAR_INDICATORS |
+  typeof SET_ON_MESSAGE_RECEIVED
 ;
 
 export interface MessageBaseAction extends Action {
@@ -294,6 +296,15 @@ export const clearIndicatorsActionCreator = (): ClearIndicatorsAction => ({
   type: CLEAR_INDICATORS,
 });
 
+
+export interface SetOnMessageReceivedAction extends MessageBaseAction {
+  onMessageReceived: (message: IMessage) => void;
+}
+export const setOnMessageReceivedActionCreator = (onMessageReceived: (message: IMessage) => void): SetOnMessageReceivedAction => ({
+  type: SET_ON_MESSAGE_RECEIVED,
+  onMessageReceived,
+});
+
 export type MessageActions =
   MessageBaseAction |
   SetIsFirstFetchAction |
@@ -321,5 +332,6 @@ export type MessageActions =
   UploadAssetAndSendMessageRequestAction |
   AddIndicatorsAction |
   RefreshIndicatorsAction |
-  ClearIndicatorsAction
+  ClearIndicatorsAction |
+  SetOnMessageReceivedAction
 ;

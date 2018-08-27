@@ -3,6 +3,10 @@ export { RoomType } from 'swagchat-protobuf/roomMessage_pb';
 export { EventType } from 'swagchat-protobuf/eventMessage_pb';
 export { Platform } from 'swagchat-protobuf/deviceMessage_pb';
 
+export enum UpdateRoomMessagesReason {
+  PAGING = 'paging',
+  RECEIVE = 'receive',
+}
 export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
