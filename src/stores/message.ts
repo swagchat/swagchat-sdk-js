@@ -10,11 +10,14 @@ export interface MessageState {
   modal: boolean;
 
   // message data
-  messagesAllCount: number;
-  messagesLimit: number;
-  messagesOffset: number;
+  roomMessagesRowsHeightList: Array<number>;
+  isLoadingRoomMessages: boolean;
+  roomMessagesAllCount: number;
+  roomMessagesLimit: number;
+  roomMessagesOffset: number;
   localMessageList: IMessage[];
   localMessageMap: {[key: string]: IMessage};
+  roomMessages: IMessage[];
   messageMap: {[key: string]: IMessage};
 
   // text

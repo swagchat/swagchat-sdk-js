@@ -234,6 +234,7 @@ export class User {
   public createRoom(req: I.ICreateRoomRequest): Promise<I.ICreateRoomResponse> {
     const CreateRoomRequest = require('swagchat-protobuf/roomMessage_pb').CreateRoomRequest;
     const pbReq = new CreateRoomRequest();
+    pbReq.setRoomId(req.roomId);
     pbReq.setUserId(this.userId);
     pbReq.setName(req.name);
     pbReq.setType(req.type);
@@ -341,6 +342,7 @@ export class User {
             apiEndpoint: this._apiEndpoint,
             userId: this.userId,
             room,
+            user: this
           } as IRoomParams;
           res.room = new Room(params);
           return res;

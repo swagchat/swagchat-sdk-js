@@ -7,6 +7,7 @@ import { routerSaga } from './router';
 import { userSaga } from './user';
 import { userRoomsAllSaga } from './userRoomsAll';
 import { userRoomsUnreadSaga } from './userRoomsUnread';
+import { userRoomsOnlineSaga } from './userRoomsOnline';
 
 export function* rootSaga(): IterableIterator<ForkEffect> {
   yield fork(assetSaga);
@@ -17,4 +18,5 @@ export function* rootSaga(): IterableIterator<ForkEffect> {
   yield fork(userSaga);
   yield fork(userRoomsAllSaga);
   yield fork(userRoomsUnreadSaga);
+  yield fork(userRoomsOnlineSaga);
 }

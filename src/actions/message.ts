@@ -1,14 +1,16 @@
 import { Action } from 'redux';
-import { IMessages, IMessage, IErrorResponse } from '..';
+
+import { IErrorResponse, IMessage, IRoomMessagesResponse } from '../';
 
 export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
-export const BEFORE_FETCH_MESSAGES_REQUEST = 'BEFORE_FETCH_MESSAGES_REQUEST';
+export const BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST = 'BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST';
 export const RESET_SCROLL_BOTTOM_ANIMATION_DURATION = 'RESET_SCROLL_BOTTOM_ANIMATION_DURATION';
 export const SET_DISPLAY_SCROLL_BOTTOM_BUTTON = 'SET_DISPLAY_SCROLL_BOTTOM_BUTTON';
 export const SET_MESSAGE_MODAL = 'SET_MESSAGE_MODAL';
-export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
-export const FETCH_MESSAGES_REQUEST_SUCCESS = 'FETCH_MESSAGES_REQUEST_SUCCESS';
-export const FETCH_MESSAGES_REQUEST_FAILURE = 'FETCH_MESSAGES_REQUEST_FAILURE';
+export const RETRIEVE_ROOM_MESSAGES_REQUEST = 'RETRIEVE_ROOM_MESSAGES_REQUEST';
+export const RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS = 'RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS';
+export const RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE = 'RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE';
+export const UPDATE_ROOM_MESSAGES_ROW_HEIGHT = 'UPDATE_ROOM_MESSAGES_ROW_HEIGHT';
 export const PUSH_LOCAL_MESSAGE = 'PUSH_LOCAL_MESSAGE';
 export const BEFORE_SEND_MESSAGES_REQUEST = 'BEFORE_SEND_MESSAGES_REQUEST';
 export const SEND_DIRECT_MESSAGES_REQUEST = 'SEND_DIRECT_MESSAGES_REQUEST';
@@ -33,13 +35,14 @@ export const CLEAR_INDICATORS = 'CLEAR_INDICATORS';
 
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
-  typeof BEFORE_FETCH_MESSAGES_REQUEST |
+  typeof BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST |
   typeof RESET_SCROLL_BOTTOM_ANIMATION_DURATION |
   typeof SET_DISPLAY_SCROLL_BOTTOM_BUTTON |
   typeof SET_MESSAGE_MODAL |
-  typeof FETCH_MESSAGES_REQUEST |
-  typeof FETCH_MESSAGES_REQUEST_SUCCESS |
-  typeof FETCH_MESSAGES_REQUEST_FAILURE |
+  typeof RETRIEVE_ROOM_MESSAGES_REQUEST |
+  typeof RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS |
+  typeof RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE |
+  typeof UPDATE_ROOM_MESSAGES_ROW_HEIGHT |
   typeof PUSH_LOCAL_MESSAGE |
   typeof BEFORE_SEND_MESSAGES_REQUEST |
   typeof SEND_DIRECT_MESSAGES_REQUEST |
@@ -98,38 +101,52 @@ export const setMessageModalActionCreator = (modal: boolean): SetMessageModalAct
   modal: modal,
 });
 
-export interface BeforeFetchMessagesRequestAction extends MessageBaseAction {
+export interface BeforeRetrieveRoomMessagesRequestAction extends MessageBaseAction {
   messagesAllCount: number;
   messagesLimit: number;
 }
-export const beforeFetchMessagesRequestActionCreator =
-    (messagesAllCount: number, messagesLimit: number): BeforeFetchMessagesRequestAction => ({
-  type: BEFORE_FETCH_MESSAGES_REQUEST,
+export const beforeRetrieveRoomMessagesRequestActionCreator =
+    (messagesAllCount: number, messagesLimit: number): BeforeRetrieveRoomMessagesRequestAction => ({
+  type: BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST,
   messagesAllCount: messagesAllCount,
   messagesLimit: messagesLimit,
 });
 
-export interface FetchMessagesRequestAction extends MessageBaseAction {
+export interface RetrieveRoomMessagesRequestAction extends MessageBaseAction {
+  limit?: number;
+  offset?: number;
 }
-export const fetchMessagesRequestActionCreator = (): FetchMessagesRequestAction => ({
-  type: FETCH_MESSAGES_REQUEST,
+export const retrieveRoomMessagesRequestActionCreator = (limit?: number, offset?: number): RetrieveRoomMessagesRequestAction => ({
+  type: RETRIEVE_ROOM_MESSAGES_REQUEST,
+  limit,
+  offset
 });
 
-export interface FetchMessagesRequestSuccessAction extends MessageBaseAction {
-  messages: IMessages;
+export interface RetrieveRoomMessagesRequestSuccessAction extends MessageBaseAction {
+  roomMessagesResponse: IRoomMessagesResponse;
 }
-export const fetchMessagesRequestSuccessActionCreator = (messages: IMessages): FetchMessagesRequestSuccessAction => ({
-  type: FETCH_MESSAGES_REQUEST_SUCCESS,
-  messages: messages,
+export const retrieveRoomMessagesRequestSuccessActionCreator = (roomMessagesResponse: IRoomMessagesResponse): RetrieveRoomMessagesRequestSuccessAction => ({
+  type: RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS,
+  roomMessagesResponse
 });
 
-export interface FetchMessagesRequestFailureAction extends MessageBaseAction {
+export interface RetrieveRoomMessagesRequestFailureAction extends MessageBaseAction {
   errorResponse: IErrorResponse;
 }
-export const fetchMessagesRequestFailureActionCreator =
-    (errorResponse: IErrorResponse): FetchMessagesRequestFailureAction => ({
-  type: FETCH_MESSAGES_REQUEST_FAILURE,
+export const retrieveRoomMessagesRequestFailureActionCreator =
+    (errorResponse: IErrorResponse): RetrieveRoomMessagesRequestFailureAction => ({
+  type: RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE,
   errorResponse: errorResponse,
+});
+
+export interface UpdateRoomMessagesRowHeightAction extends MessageBaseAction {
+  index: number;
+  height: number;
+}
+export const updateRoomMessagesRowHeightActionCreator = (index: number, height: number): UpdateRoomMessagesRowHeightAction => ({
+  type: UPDATE_ROOM_MESSAGES_ROW_HEIGHT,
+  index,
+  height,
 });
 
 export interface PushLocalMessageAction extends MessageBaseAction {
@@ -295,10 +312,11 @@ export type MessageActions =
   ResetScrollBottomAnimationDurationAction |
   SetDisplayScrollBottomButtonAction |
   SetMessageModalAction |
-  BeforeFetchMessagesRequestAction |
-  FetchMessagesRequestAction |
-  FetchMessagesRequestSuccessAction |
-  FetchMessagesRequestFailureAction |
+  BeforeRetrieveRoomMessagesRequestAction |
+  RetrieveRoomMessagesRequestAction |
+  RetrieveRoomMessagesRequestSuccessAction |
+  RetrieveRoomMessagesRequestFailureAction |
+  UpdateRoomMessagesRowHeightAction |
   SendDirectMessagesRequestAction |
   SendMessagesRequestAction |
   SendMessagesRequestSuccessAction |

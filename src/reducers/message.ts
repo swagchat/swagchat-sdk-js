@@ -6,9 +6,11 @@ import {
   RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
   SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
   SET_MESSAGE_MODAL, SetMessageModalAction,
-  BEFORE_FETCH_MESSAGES_REQUEST, BeforeFetchMessagesRequestAction,
-  FETCH_MESSAGES_REQUEST_SUCCESS, FetchMessagesRequestSuccessAction,
-  FETCH_MESSAGES_REQUEST_FAILURE, FetchMessagesRequestFailureAction,
+  BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST, BeforeRetrieveRoomMessagesRequestAction,
+  RETRIEVE_ROOM_MESSAGES_REQUEST,
+  RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS, RetrieveRoomMessagesRequestSuccessAction,
+  RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RetrieveRoomMessagesRequestFailureAction,
+  UPDATE_ROOM_MESSAGES_ROW_HEIGHT, UpdateRoomMessagesRowHeightAction,
   PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
   BEFORE_SEND_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST_SUCCESS, SendMessagesRequestSuccessAction,
@@ -38,11 +40,14 @@ const getInitialState = (): MessageState => ({
   modal: false,
 
   // message data
-  messagesAllCount: 0,
-  messagesLimit: 0,
-  messagesOffset: 0,
-  localMessageList: [],
+  roomMessagesRowsHeightList: new Array<number>(),
+  isLoadingRoomMessages: false,
+  roomMessagesAllCount: 0,
+  roomMessagesLimit: 0,
+  roomMessagesOffset: 0,
+  localMessageList: new Array<IMessage>(),
   localMessageMap: {},
+  roomMessages: new Array<IMessage>(),
   messageMap: {},
 
   // text
@@ -101,8 +106,8 @@ export function message(state: MessageState = getInitialState(), action: Message
           modal: (action as SetMessageModalAction).modal,
         }
       );
-    case BEFORE_FETCH_MESSAGES_REQUEST:
-      const bfmra = action as BeforeFetchMessagesRequestAction;
+    case BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST:
+      const bfmra = action as BeforeRetrieveRoomMessagesRequestAction;
       let beforeLimit = bfmra.messagesLimit;
       let beforeOffset = bfmra.messagesAllCount - bfmra.messagesLimit;
       if (beforeOffset < 0) {
@@ -118,34 +123,46 @@ export function message(state: MessageState = getInitialState(), action: Message
           messagesOffset: beforeOffset,
         }
       );
-    case FETCH_MESSAGES_REQUEST_SUCCESS:
-      if (state.messagesAllCount === 0) {
-        return state;
-      }
-      let newLimit = state.messagesLimit;
-      let newOffset = state.messagesOffset - state.messagesLimit;
-      if (newOffset < 0) {
-        newLimit = state.messagesOffset;
-        newOffset = 0;
-      }
-      const mfa = action as FetchMessagesRequestSuccessAction;
-      mergedMap = R.merge(messageList2map(mfa.messages.messages), state.messageMap);
+    case RETRIEVE_ROOM_MESSAGES_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          isLoadingRoomMessages: true
+        }
+      );
+    case RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS:
+      const roomMessagesResponse = (action as RetrieveRoomMessagesRequestSuccessAction).roomMessagesResponse;
 
       return Object.assign(
         {},
         state,
         {
-          messageMap: mergedMap,
-          messagesLimit: newLimit,
-          messagesOffset: newOffset,
+          roomMessagesRowsHeightList: new Array<number>(),
+          isLoadingRoomMessages: false,
+          roomMessages: R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages),
+          roomMessagesAllCount: roomMessagesResponse.allCount,
+          roomMessagesLimit: roomMessagesResponse.limit,
+          roomMessagesOffset: roomMessagesResponse.offset! + roomMessagesResponse.limit!,
         }
       );
-    case FETCH_MESSAGES_REQUEST_FAILURE:
+    case RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE:
       return Object.assign(
         {},
         state,
         {
-          errorResponse: (action as FetchMessagesRequestFailureAction).errorResponse,
+          errorResponse: (action as RetrieveRoomMessagesRequestFailureAction).errorResponse,
+        }
+      );
+    case UPDATE_ROOM_MESSAGES_ROW_HEIGHT:
+      const urmrhAction = action as UpdateRoomMessagesRowHeightAction;
+      const roomMessagesRowsHeightList = R.clone(state.roomMessagesRowsHeightList);
+      roomMessagesRowsHeightList[urmrhAction.index] = urmrhAction.height;
+      return Object.assign(
+        {},
+        state,
+        {
+          roomMessagesRowsHeightList
         }
       );
     case PUSH_LOCAL_MESSAGE:

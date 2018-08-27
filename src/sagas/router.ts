@@ -1,11 +1,16 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-import { call, ForkEffect, put, select, takeLatest } from 'redux-saga/effects';
+import { ForkEffect, put, select, take, takeLatest } from 'redux-saga/effects';
 
-import { IFetchUserResponse, IRetrieveUserRequest } from '..';
 import {
-    clearProfileUserActionCreator, fetchUserRequestFailureActionCreator,
-    fetchUserRequestSuccessActionCreator, setProfileUserIdActionCreator
+    clearProfileUserActionCreator, FETCH_USER_REQUEST_SUCCESS, fetchUserRequestActionCreator,
+    setProfileUserIdActionCreator
 } from '../actions/user';
+import {
+  fetchRoomRequestActionCreator, FETCH_ROOM_REQUEST_SUCCESS,
+} from '../actions/room';
+import {
+  retrieveRoomMessagesRequestActionCreator
+} from  '../actions/message';
 import { retrieveUserRoomsAllRequestActionCreator } from '../actions/userRoomsAll';
 import { State } from '../stores';
 
@@ -25,40 +30,18 @@ function* gLocationChange() {
   let guestMessagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.guestMessageListPath));
   if (guestMessagesPathRegExp !== null) {
     // guest messages page
-    // yield put(createGuestuserAndCreateRoomAndFetchMessagesRequestActionCreator());
+    // yield put(createGuestuserAndCreateRoomAndRetrieveRoomMessagesRequestActionCreator());
     return;
+  }
+
+  if (state.user.user === null) {
+    yield put(fetchUserRequestActionCreator(client.userId, false));
+    yield take(FETCH_USER_REQUEST_SUCCESS);
   }
 
   let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
   if (!roomsPathRegExp) {
     roomsPathRegExp = location.hash.match(new RegExp('^#' + client.paths.roomListPath));
-  }
-
-  if (state.user.user === null) {
-    // let userRooms: {[key: string]: IRoomForUser} = {};
-    const userRes: IFetchUserResponse = yield call(() => {
-      const req = {
-        userId: client.userId
-      } as IRetrieveUserRequest;
-      return client.retrieveUser(req);
-    });
-    if (userRes.user !== null) {
-      // if (userRes.user.rooms !== undefined && Object.keys(userRes.user.rooms).length > 0) {
-      //   userRes.user.rooms!.map((roomForUser: IRoomForUser) => {
-      //     const users = opponentUser(roomForUser.users, userRes.user!.userId);
-      //     if (users) {
-      //       roomForUser.name = roomForUser.name === '' ?
-      //         generateRoomName(roomForUser.users, userRes.user!.userId) : roomForUser.name;
-      //       roomForUser.pictureUrl = users[0].pictureUrl ? users[0].pictureUrl : '';
-      //     }
-      //     userRooms[roomForUser.roomId] = roomForUser;
-      //   });
-      // }
-      yield put(fetchUserRequestSuccessActionCreator(userRes.user));
-    } else {
-      yield put(fetchUserRequestFailureActionCreator(userRes.error!));
-      return;
-    }
   }
 
   if (roomsPathRegExp !== null) {
@@ -71,13 +54,10 @@ function* gLocationChange() {
     // messages page
     const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
-      // const currentRoomId = roomIds[1];
-      // let state: State = yield select();
-      // if (state.user.userRoomsMap![currentRoomId] !== undefined) {
-      //   yield put(setIsFirstFetchActionCreator(true));
-      //   yield put(setCurrentRoomIdActionCreator(currentRoomId));
-      //   // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
-      // }
+      const currentRoomId = roomIds[1];
+      yield put(fetchRoomRequestActionCreator(currentRoomId));
+      yield take(FETCH_ROOM_REQUEST_SUCCESS);
+      yield put(retrieveRoomMessagesRequestActionCreator());
     }
   }
 
@@ -86,12 +66,8 @@ function* gLocationChange() {
     // roomSetting page
     const roomIds = location.pathname.match(new RegExp(client.paths.roomSettingPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
-      // const currentRoomId = roomIds[1];
-      // let state: State = yield select();
-      // if (state.user.userRoomsMap![currentRoomId] !== undefined) {
-      //   yield put(setCurrentRoomIdActionCreator(currentRoomId));
-      //   // yield put(setCurrentRoomNameActionCreator(state.user.userRooms![currentRoomId].name));
-      // }
+      const currentRoomId = roomIds[1];
+      yield put(fetchRoomRequestActionCreator(currentRoomId));
     }
   }
 

@@ -1,4 +1,4 @@
-import { IMiniUser, IMessage, IMiniRoom, Room } from '..';
+import { IMiniUser, IMessage, IMiniRoom, Room, MessageType } from '..';
 // import * as I from '../interface';
 
 export function dateHumanize(ISO3339: string): string {
@@ -84,12 +84,13 @@ export function generateRoomName(users: IMiniUser[], myUserId: string): string {
   const separator = ', ';
   let roomName = '';
 
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].userId !== myUserId && users[i].ruDisplay) {
-      roomName += users[i].name;
+  users.forEach(user => {
+    if (user.userId !== myUserId && user.ruDisplay) {
+      roomName += user.name;
       roomName += separator;
     }
-  }
+  });
+
   roomName = roomName.slice(0, -1 * separator.length);
 
   return roomName;
@@ -171,25 +172,25 @@ export function createQueryParams(params: {[key: string]: string | number}) {
     .join('&');
 }
 
-// export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): I.IMessage {
-//   if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
-//     throw Error('Creating message failure. Parameter invalid.');
-//   }
-//   if (Object.keys(payload).length === 0) {
-//     throw Error('Creating message failure. Parameter invalid.');
-//   }
-//   const iso3339 = new Date().toISOString();
-//   return {
-//     messageId: messageId,
-//     roomId: roomId,
-//     userId: userId,
-//     type: type,
-//     eventName: 'message',
-//     payload: payload,
-//     created: iso3339,
-//     modified: iso3339,
-//   };
-// }
+export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): IMessage {
+  if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
+    throw Error('Creating message failure. Parameter invalid.');
+  }
+  if (Object.keys(payload).length === 0) {
+    throw Error('Creating message failure. Parameter invalid.');
+  }
+  const iso3339 = new Date().toISOString();
+  return {
+    created: iso3339,
+    messageId: messageId,
+    modified: iso3339,
+    payload: payload.toString(),
+    roomId: roomId,
+    type: type,
+    userId: userId,
+    userIdsList: new Array<string>(),
+  };
+}
 
 const apiLogColor = '#039BE5';
 const realtimeLogColor = '#304FFE';

@@ -1,33 +1,36 @@
-import { takeLatest, call, put, select, ForkEffect } from 'redux-saga/effects';
+import { call, ForkEffect, put, select, takeLatest } from 'redux-saga/effects';
+
 import {
-  IFetchMessagesResponse, ISendMessageResponse,
-} from '..';
+    IRetrieveRoomMessagesRequest, IRetrieveRoomMessagesResponse, ISendMessageResponse
+} from '../';
 import {
-  FETCH_MESSAGES_REQUEST,
-  fetchMessagesRequestSuccessActionCreator,
-  fetchMessagesRequestFailureActionCreator,
-  SEND_MESSAGES_REQUEST,
-  SEND_DIRECT_MESSAGES_REQUEST, SendDirectMessagesRequestAction,
-  sendMessagesRequestFailureActionCreator,
-  sendMessagesRequestSuccessActionCreator,
+    RETRIEVE_ROOM_MESSAGES_REQUEST, RetrieveRoomMessagesRequestAction,
+    retrieveRoomMessagesRequestFailureActionCreator, retrieveRoomMessagesRequestSuccessActionCreator,
+    SEND_DIRECT_MESSAGES_REQUEST, SEND_MESSAGES_REQUEST, SendDirectMessagesRequestAction,
+    sendMessagesRequestFailureActionCreator, sendMessagesRequestSuccessActionCreator,
 } from '../actions/message';
 import { State } from '../stores';
 
-function* gFetchMessagesRequest() {
+function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction) {
   const state: State  = yield select();
-  if (state.room.room === null) {
+  const client = state.client.client;
+  const room = state.room.room;
+  const message = state.message;
+  if (room === null || client === null) {
     return;
   }
-  const {messages, error}: IFetchMessagesResponse = yield call(() => {
-    return state.room.room!.retrieveMessages({
-      limit: state.message.messagesLimit,
-      offset: state.message.messagesOffset,
-    });
+  const { roomMessagesResponse , error}: IRetrieveRoomMessagesResponse = yield call(() => {
+    const req = {
+      limit: action.limit !== undefined ? action.limit : state.client.client!.settings.messageListPagingCount,
+      offset: action.offset !== undefined ? action.offset : message.roomMessagesOffset,
+    } as IRetrieveRoomMessagesRequest;
+    return state.room.room!.retrieveRoomMessages(req);
   });
   if (error) {
-    yield put(fetchMessagesRequestFailureActionCreator(error!));
+    yield put(retrieveRoomMessagesRequestFailureActionCreator(error!));
   } else {
-    yield put(fetchMessagesRequestSuccessActionCreator(messages!));
+    window.console.log('00000000000000000000000');
+    yield put(retrieveRoomMessagesRequestSuccessActionCreator(roomMessagesResponse!));
   }
 }
 
@@ -58,7 +61,7 @@ function* gSendDirectMessagesRequest(action: SendDirectMessagesRequestAction) {
 }
 
 export function* messageSaga(): IterableIterator<ForkEffect> {
-  yield takeLatest(FETCH_MESSAGES_REQUEST, gFetchMessagesRequest);
+  yield takeLatest(RETRIEVE_ROOM_MESSAGES_REQUEST, gRetrieveRoomMessagesRequest);
   yield takeLatest(SEND_DIRECT_MESSAGES_REQUEST, gSendDirectMessagesRequest);
   yield takeLatest(SEND_MESSAGES_REQUEST, gSendMessagesRequest);
 }

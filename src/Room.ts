@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import * as I from './interface';
 import { User } from './User';
-import { logger, createQueryParams } from './utils';
+import { logger } from './utils';
 import { SpeechMode } from './const';
 
 export interface IRoomParams {
@@ -313,37 +313,25 @@ export class Room {
     });
   }
 
-  public retrieveMessages(queryParams: {[key: string]: string | number}): Promise<I.IFetchMessagesResponse> {
+  public retrieveRoomMessages(req: I.IRetrieveRoomMessagesRequest): Promise<I.IRetrieveRoomMessagesResponse> {
     const res = {
-      messages: null,
+      roomMessagesResponse: null,
       error: null,
-    } as I.IFetchMessagesResponse;
+    } as I.IRetrieveRoomMessagesResponse;
 
-    let queryParamsString = '';
-    if (queryParams !== undefined) {
-      queryParamsString = createQueryParams(queryParams);
-    }
-    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/messages?' + queryParamsString, {
+    return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/messages' +
+     '?limit=' + req.limit + '&offset=' + req.offset, {
       method: 'GET',
       headers: this._user.client.setHeaders(this._user.userId),
     }).then((response: Response) => {
       if (response.status === 200) {
-        return response.json().then((messages) => {
-          return (
-            {
-              messages: <I.IMessages>messages,
-              error: null,
-            } as I.IFetchMessagesResponse
-          );
+        return response.json().then(res => {
+          res.roomMessagesResponse = res;
+          return res;
         });
       } else {
-        return response.json().then((json) => {
-          return (
-            {
-              messages: null,
-              error: <I.IErrorResponse>json,
-            } as I.IFetchMessagesResponse
-          );
+        return response.json().then(error => {
+          throw error;
         });
       }
     }).catch(error => {

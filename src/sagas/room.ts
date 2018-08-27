@@ -30,10 +30,14 @@ function* gFetchRoomRequest(action: FetchRoomRequestAction) {
     return user!.retrieveRoom(req);
   }, action.roomId);
   if (roomRes.room !== null) {
+    let roomName = roomRes.room.name;
+    if (roomName === undefined || roomName === '') {
+      window.console.log(roomRes.room.users!, state.user.user!.userId);
+      roomName = generateRoomName(roomRes.room.users!, state.user.user!.userId);
+    }
     yield put(fetchRoomRequestSuccessActionCreator(roomRes.room));
     yield put(setCurrentRoomIdActionCreator(roomRes.room.roomId));
-    yield put(setCurrentRoomNameActionCreator(roomRes.room.name === '' ?
-      generateRoomName(roomRes.room.users!, state.user.user!.userId) : roomRes.room.name));
+    yield put(setCurrentRoomNameActionCreator(roomName));
   } else {
     yield put(fetchRoomRequestFailureActionCreator(roomRes.error!));
     if (client!.paths !== undefined && client!.paths.roomListPath !== undefined) {

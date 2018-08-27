@@ -4,7 +4,7 @@ export interface RoomState {
   currentRoomId: string;
   currentRoomName: string;
   room: Room | null;
-  roomUsers: {[key: string]: IMiniUser} | null;
+  roomUsers: {[userId: string]: IMiniUser} | null;
   roomsAllCount: number;
   roomsLimit: number;
   roomsOffset: number;

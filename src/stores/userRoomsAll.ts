@@ -1,7 +1,7 @@
 import { IMiniRoom } from '..';
 
 export interface UserRoomsAllState {
-  userRoomsMap: {[key: string]: IMiniRoom} | null;
+  userRoomsMap: {[roomId: string]: IMiniRoom} | null;
   userRooms: IMiniRoom[];
   allCount: number;
   limit: number;

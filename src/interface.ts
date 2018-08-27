@@ -2,11 +2,14 @@ import {
     AddBlockUsersRequest, AddDeviceRequest, AddRoomUsersRequest, CreateRoomRequest,
     CreateUserRequest, DeleteBlockUsersRequest, DeleteDeviceRequest, DeleteRoomUsersRequest,
     Device as pbDevice, ErrorResponse as pbIErrorResponse, EventData as pbEventData, InvalidParam,
-    Message as pbMessage, MiniRoom as pbMiniRoom, MiniUser as pbMiniUser, RetrieveRoomRequest,
-    RetrieveUserRequest, RetrieveUserRoomsRequest, Room as pbRoom, RoomUser as pbRoomUser,
-    SendMessageRequest, UpdateRoomRequest, UpdateUserRequest, User as pbUser,
+    Message as pbMessage, MiniRoom as pbMiniRoom, MiniUser as pbMiniUser,
+    RetrieveRoomMessagesRequest as pbRetrieveRoomMessagesRequest, RetrieveRoomRequest,
+    RetrieveUserRequest, RetrieveUserRoomsRequest, Room as pbRoom,
+    RoomMessagesResponse as pbRoomMessagesResponse, RoomUser as pbRoomUser, SendMessageRequest,
+    UpdateRoomRequest, UpdateUserRequest, User as pbUser,
     UserJoinEventPayload as pbUserJoinEventPayload, UserRoomsResponse as pbUserRoomsResponse
 } from 'swagchat-protobuf';
+
 import { Room } from './Room';
 import { User } from './User';
 
@@ -16,7 +19,9 @@ export interface IErrorResponse extends pbIErrorResponse.AsObject {
 
 // user
 export interface IUser extends pbUser.AsObject {}
-export interface IMiniRoom extends pbMiniRoom.AsObject {}
+export interface IMiniRoom extends pbMiniRoom.AsObject {
+  users: IMiniUser[];
+}
 export interface ICreateUserRequest extends CreateUserRequest.AsObject {
   metaDataObj?: object;
 }
@@ -41,6 +46,11 @@ export interface ICreateRoomRequest extends CreateRoomRequest.AsObject {
 export interface IRetrieveRoomRequest extends RetrieveRoomRequest.AsObject {}
 export interface IUpdateRoomRequest extends UpdateRoomRequest.AsObject {
   metaDataObj?: object;
+}
+export interface IRetrieveRoomMessagesRequest extends pbRetrieveRoomMessagesRequest.AsObject {}
+export interface IRoomMessagesResponse extends pbRoomMessagesResponse.AsObject {
+  allCount: number;
+  messages: IMessage[];
 }
 
 // device
@@ -230,8 +240,8 @@ export interface IDeleteBlockUsersResponse {
 }
 
 // message
-export interface IFetchMessagesResponse {
-  messages: IMessages | null;
+export interface IRetrieveRoomMessagesResponse {
+  roomMessagesResponse: IRoomMessagesResponse | null;
   error: IErrorResponse | null;
 }
 
@@ -242,24 +252,25 @@ export interface IPostAssetResponse {
 }
 
 export interface IAddonMessage {
-  name: string;
+  addonName: string;
   // messageListMarginBottom: number;
-  item: React.ComponentClass<IAddonMessageItemProps> | null;
-  interaction: React.ComponentClass<IAddonMessageInteractionProps> | null;
+  item: React.ComponentType<IAddonMessageItemProps>;
+  interaction: React.ComponentType<IAddonMessageInteractionProps> | null;
   // menu: React.ComponentClass<IAddonMessageMenuProps>;
   // position: 'top' | 'bottom';
   // isAlwaysDisplay: boolean;
 }
 
 export interface IAddonMessageItemProps {
+  index: number;
   message?: IMessage;
-  user?: IMiniUser;
+  user?: IMiniUser | IUser;
   myUserId?: string;
   onRenderComplete?: () => {};
   isLast?: boolean;
   isSearchResult?: boolean;
   opponentUser?: IMiniUser;
-  calcHeight?: (height: number) => void;
+  calcHeight?: (index: number, height: number) => void;
   text?: string;
   animation?: boolean;
   onSendListener?: (message: IMessage) => void;

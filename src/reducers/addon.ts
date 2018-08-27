@@ -24,7 +24,7 @@ export function addon(state: AddonState = getInitialState(), action: AddonAction
       const msgs = (action as SetAddonMessageAction).messages;
       let messages: {[key: string]: IAddonMessage} = {};
       msgs.forEach(msg => {
-        messages[msg.name] = msg;
+        messages[msg.addonName] = msg;
       });
       return Object.assign(
         {},
