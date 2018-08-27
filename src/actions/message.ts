@@ -10,7 +10,6 @@ export const SET_MESSAGE_MODAL = 'SET_MESSAGE_MODAL';
 export const RETRIEVE_ROOM_MESSAGES_REQUEST = 'RETRIEVE_ROOM_MESSAGES_REQUEST';
 export const RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS = 'RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS';
 export const RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE = 'RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE';
-export const UPDATE_ROOM_MESSAGES_ROW_HEIGHT = 'UPDATE_ROOM_MESSAGES_ROW_HEIGHT';
 export const PUSH_LOCAL_MESSAGE = 'PUSH_LOCAL_MESSAGE';
 export const BEFORE_SEND_MESSAGES_REQUEST = 'BEFORE_SEND_MESSAGES_REQUEST';
 export const SEND_DIRECT_MESSAGES_REQUEST = 'SEND_DIRECT_MESSAGES_REQUEST';
@@ -42,7 +41,6 @@ export type MessageActionTypes =
   typeof RETRIEVE_ROOM_MESSAGES_REQUEST |
   typeof RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS |
   typeof RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE |
-  typeof UPDATE_ROOM_MESSAGES_ROW_HEIGHT |
   typeof PUSH_LOCAL_MESSAGE |
   typeof BEFORE_SEND_MESSAGES_REQUEST |
   typeof SEND_DIRECT_MESSAGES_REQUEST |
@@ -137,16 +135,6 @@ export const retrieveRoomMessagesRequestFailureActionCreator =
     (errorResponse: IErrorResponse): RetrieveRoomMessagesRequestFailureAction => ({
   type: RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE,
   errorResponse: errorResponse,
-});
-
-export interface UpdateRoomMessagesRowHeightAction extends MessageBaseAction {
-  index: number;
-  height: number;
-}
-export const updateRoomMessagesRowHeightActionCreator = (index: number, height: number): UpdateRoomMessagesRowHeightAction => ({
-  type: UPDATE_ROOM_MESSAGES_ROW_HEIGHT,
-  index,
-  height,
 });
 
 export interface PushLocalMessageAction extends MessageBaseAction {
@@ -316,7 +304,6 @@ export type MessageActions =
   RetrieveRoomMessagesRequestAction |
   RetrieveRoomMessagesRequestSuccessAction |
   RetrieveRoomMessagesRequestFailureAction |
-  UpdateRoomMessagesRowHeightAction |
   SendDirectMessagesRequestAction |
   SendMessagesRequestAction |
   SendMessagesRequestSuccessAction |

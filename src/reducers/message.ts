@@ -10,7 +10,6 @@ import {
   RETRIEVE_ROOM_MESSAGES_REQUEST,
   RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS, RetrieveRoomMessagesRequestSuccessAction,
   RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RetrieveRoomMessagesRequestFailureAction,
-  UPDATE_ROOM_MESSAGES_ROW_HEIGHT, UpdateRoomMessagesRowHeightAction,
   PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
   BEFORE_SEND_MESSAGES_REQUEST,
   SEND_MESSAGES_REQUEST_SUCCESS, SendMessagesRequestSuccessAction,
@@ -40,7 +39,6 @@ const getInitialState = (): MessageState => ({
   modal: false,
 
   // message data
-  roomMessagesRowsHeightList: new Array<number>(),
   isLoadingRoomMessages: false,
   roomMessagesAllCount: 0,
   roomMessagesLimit: 0,
@@ -138,7 +136,6 @@ export function message(state: MessageState = getInitialState(), action: Message
         {},
         state,
         {
-          roomMessagesRowsHeightList: new Array<number>(),
           isLoadingRoomMessages: false,
           roomMessages: R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages),
           roomMessagesAllCount: roomMessagesResponse.allCount,
@@ -152,17 +149,6 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           errorResponse: (action as RetrieveRoomMessagesRequestFailureAction).errorResponse,
-        }
-      );
-    case UPDATE_ROOM_MESSAGES_ROW_HEIGHT:
-      const urmrhAction = action as UpdateRoomMessagesRowHeightAction;
-      const roomMessagesRowsHeightList = R.clone(state.roomMessagesRowsHeightList);
-      roomMessagesRowsHeightList[urmrhAction.index] = urmrhAction.height;
-      return Object.assign(
-        {},
-        state,
-        {
-          roomMessagesRowsHeightList
         }
       );
     case PUSH_LOCAL_MESSAGE:
@@ -186,8 +172,7 @@ export function message(state: MessageState = getInitialState(), action: Message
       }
 
       return Object.assign(
-        {},
-        state,
+        {},        state,
         {
           localMessageMap: mergedLocalMap,
           localMessageList:  localMessageList,

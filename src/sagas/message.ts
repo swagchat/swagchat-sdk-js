@@ -29,7 +29,6 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
   if (error) {
     yield put(retrieveRoomMessagesRequestFailureActionCreator(error!));
   } else {
-    window.console.log('00000000000000000000000');
     yield put(retrieveRoomMessagesRequestSuccessActionCreator(roomMessagesResponse!));
   }
 }

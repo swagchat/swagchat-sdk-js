@@ -2,15 +2,13 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import { ForkEffect, put, select, take, takeLatest } from 'redux-saga/effects';
 
 import {
+    retrieveRoomMessagesRequestActionCreator, setIsFirstFetchActionCreator
+} from '../actions/message';
+import { FETCH_ROOM_REQUEST_SUCCESS, fetchRoomRequestActionCreator } from '../actions/room';
+import {
     clearProfileUserActionCreator, FETCH_USER_REQUEST_SUCCESS, fetchUserRequestActionCreator,
     setProfileUserIdActionCreator
 } from '../actions/user';
-import {
-  fetchRoomRequestActionCreator, FETCH_ROOM_REQUEST_SUCCESS,
-} from '../actions/room';
-import {
-  retrieveRoomMessagesRequestActionCreator
-} from  '../actions/message';
 import { retrieveUserRoomsAllRequestActionCreator } from '../actions/userRoomsAll';
 import { State } from '../stores';
 
@@ -55,6 +53,7 @@ function* gLocationChange() {
     const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
       const currentRoomId = roomIds[1];
+      yield put(setIsFirstFetchActionCreator(true));
       yield put(fetchRoomRequestActionCreator(currentRoomId));
       yield take(FETCH_ROOM_REQUEST_SUCCESS);
       yield put(retrieveRoomMessagesRequestActionCreator());

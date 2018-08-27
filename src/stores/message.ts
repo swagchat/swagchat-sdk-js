@@ -10,7 +10,6 @@ export interface MessageState {
   modal: boolean;
 
   // message data
-  roomMessagesRowsHeightList: Array<number>;
   isLoadingRoomMessages: boolean;
   roomMessagesAllCount: number;
   roomMessagesLimit: number;
