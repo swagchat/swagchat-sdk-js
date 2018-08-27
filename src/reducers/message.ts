@@ -15,7 +15,7 @@ import {
   SEND_MESSAGES_REQUEST_SUCCESS, SEND_MESSAGES_REQUEST_FAILURE,
   DELETE_LOCAL_MESSAGES,
   UPDATE_MESSAGES, UpdateMessagesAction,
-  CLEAR_MESSAGES,
+  CLEAR_ROOM_MESSAGES,
   SET_MESSAGE_TEXT, SetMessageTextAction,
   SET_DROP_IMAGE_FILE, SetDropImageFileAction,
   SET_DROP_FILE, SetDropFileAction,
@@ -256,16 +256,20 @@ export function message(state: MessageState = getInitialState(), action: Message
           updateRoomMessagesReason: UpdateRoomMessagesReason.RECEIVE
         }
       );
-    case CLEAR_MESSAGES:
+    case CLEAR_ROOM_MESSAGES:
       return Object.assign(
         {},
         state,
         {
-          messageMap: {},
-          messageList: [],
-          messagesAllCount: 0,
-          messagesLimit: 0,
-          messagesOffset: 0,
+          isLoadingRoomMessages: false,
+          roomMessagesAllCount: 0,
+          roomMessagesLimit: 0,
+          roomMessagesOffset: 0,
+          localMessageList: new Array<IMessage>(),
+          localMessageMap: {},
+          roomMessages: new Array<IMessage>(),
+          roomMessagesMap: {},
+          onMessageReceived: () => {},
         }
       );
     case SET_MESSAGE_TEXT:

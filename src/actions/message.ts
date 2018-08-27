@@ -18,7 +18,7 @@ export const SEND_MESSAGES_REQUEST_SUCCESS = 'SEND_MESSAGES_REQUEST_SUCCESS';
 export const SEND_MESSAGES_REQUEST_FAILURE = 'SEND_MESSAGES_REQUEST_FAILURE';
 export const DELETE_LOCAL_MESSAGES = 'DELETE_LOCAL_MESSAGES';
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
-export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
+export const CLEAR_ROOM_MESSAGES = 'CLEAR_ROOM_MESSAGES';
 export const SET_MESSAGE_TEXT = 'SET_MESSAGE_TEXT';
 export const SET_DROP_IMAGE_FILE = 'SET_DROP_IMAGE_FILE';
 export const SET_DROP_FILE = 'SET_DROP_FILE';
@@ -50,7 +50,7 @@ export type MessageActionTypes =
   typeof SEND_MESSAGES_REQUEST_FAILURE |
   typeof DELETE_LOCAL_MESSAGES |
   typeof UPDATE_MESSAGES |
-  typeof CLEAR_MESSAGES |
+  typeof CLEAR_ROOM_MESSAGES |
   typeof SET_MESSAGE_TEXT |
   typeof SET_DROP_IMAGE_FILE |
   typeof SET_DROP_FILE |
@@ -198,10 +198,10 @@ export const updateMessagesActionCreator = (messages: IMessage[]): UpdateMessage
   messages: messages,
 });
 
-export interface ClearMessagesAction extends MessageBaseAction {
+export interface ClearRoomMessagesAction extends MessageBaseAction {
 }
-export const clearMessagesActionCreator = (): ClearMessagesAction => ({
-  type: CLEAR_MESSAGES
+export const clearRoomMessagesActionCreator = (): ClearRoomMessagesAction => ({
+  type: CLEAR_ROOM_MESSAGES
 });
 
 
@@ -321,7 +321,7 @@ export type MessageActions =
   SendMessagesRequestFailureAction |
   DeleteLocalMessagesAction |
   PushLocalMessageAction |
-  ClearMessagesAction |
+  ClearRoomMessagesAction |
   SetDropImageFileAction |
   SetDropFileAction |
   ClearDropFileAction |
