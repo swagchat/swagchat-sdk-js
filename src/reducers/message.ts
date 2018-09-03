@@ -1,4 +1,4 @@
-import { IMessage, UpdateRoomMessagesReason } from '..';
+import { IMessage, RetrieveRoomMessagesReason } from '..';
 import { MessageState } from '../stores/message';
 import {
   MessageActions,
@@ -27,7 +27,6 @@ import {
   ADD_INDICATORS, AddIndicatorsAction,
   REFRESH_INDICATORS,
   CLEAR_INDICATORS,
-  SET_ON_MESSAGE_RECEIVED, SetOnMessageReceivedAction,
 } from '../actions/message';
 import * as R from 'ramda';
 
@@ -47,8 +46,7 @@ const getInitialState = (): MessageState => ({
   localMessageMap: {},
   roomMessages: new Array<IMessage>(),
   roomMessagesMap: {},
-  onMessageReceived: () => {},
-  updateRoomMessagesReason: UpdateRoomMessagesReason.PAGING,
+  retrieveRoomMessagesReason: RetrieveRoomMessagesReason.PAGING,
 
   // text
   text: '',
@@ -76,7 +74,6 @@ export function message(state: MessageState = getInitialState(), action: Message
   let roomMessagesMap: {[key: string]: IMessage};
   let roomMessages: Array<IMessage>;
   let mergedLocalMap: {[key: string]: IMessage};
-  let workMessageId = '';
 
   switch (action.type) {
     case SET_IS_FIRST_FETCH:
@@ -131,22 +128,46 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS:
+      const retrieveRoomMessagesReason = (action as RetrieveRoomMessagesRequestSuccessAction).retrieveRoomMessagesReason;
       const roomMessagesResponse = (action as RetrieveRoomMessagesRequestSuccessAction).roomMessagesResponse;
+      roomMessagesMap = R.clone(state.roomMessagesMap);
+      roomMessages = R.clone(state.roomMessages);
 
-      workMessageId = '';
-      roomMessages = R.reduce(
-        (acc: IMessage[], item: IMessage) => item.messageId === workMessageId ? R.reduced(acc) : acc.concat(item),
-        [],
-        R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages)
+      let addRoomMessages = new Array<IMessage>();
+      roomMessagesResponse.messages.forEach(roomMessage => {
+        if (roomMessagesMap[roomMessage.messageId!]) {
+          delete(roomMessagesMap[roomMessage.messageId!]);
+        }
+        roomMessagesMap[roomMessage.messageId!] = roomMessage;
+
+        const deleteIndex = R.findIndex(R.propEq('messageId', roomMessage.messageId!))(roomMessages);
+        if (deleteIndex > -1) {
+          roomMessages = R.remove(deleteIndex, 1, roomMessages);
+        }
+        addRoomMessages.push(roomMessage);
+      });
+
+      addRoomMessages = R.reverse(addRoomMessages);
+      if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PAGING) {
+        roomMessages = R.insertAll(0, addRoomMessages, roomMessages);
+      } else if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.RECEIVE) {
+        roomMessages = R.insertAll(roomMessages.length + 1, addRoomMessages, roomMessages);
+      }
+
+      return R.merge(
+        state,
+        {
+          isLoadingRoomMessages: false,
+          roomMessagesMap,
+          roomMessages,
+          roomMessagesAllCount: roomMessagesResponse.allCount,
+          roomMessagesLimit: roomMessagesResponse.limit!,
+          roomMessagesOffset: roomMessagesResponse.offset! + roomMessagesResponse.limit!,
+          roomMessagesLimitTimestamp: roomMessagesResponse.limitTimestamp!,
+          roomMessagesOffsetTimestamp: roomMessagesResponse.offsetTimestamp!,
+          retrieveRoomMessagesReason
+        }
       );
-
-      state.isLoadingRoomMessages = false;
-      state.roomMessages = roomMessages;
-      state.roomMessagesAllCount = roomMessagesResponse.allCount;
-      state.roomMessagesLimit = roomMessagesResponse.limit!;
-      state.roomMessagesOffset = roomMessagesResponse.offset! + roomMessagesResponse.limit!;
-      state.updateRoomMessagesReason = UpdateRoomMessagesReason.PAGING;
-      return R.clone(state);
     case RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE:
       return R.merge(
         state,
@@ -243,7 +264,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         {
           roomMessagesMap,
           roomMessages,
-          updateRoomMessagesReason: UpdateRoomMessagesReason.RECEIVE
+          updateRoomMessagesReason: RetrieveRoomMessagesReason.RECEIVE
         }
       );
     case CLEAR_ROOM_MESSAGES:
@@ -343,13 +364,6 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           indicators: {},
-        }
-      );
-    case SET_ON_MESSAGE_RECEIVED:
-      return R.merge(
-        state,
-        {
-          onMessageReceived: (action as SetOnMessageReceivedAction).onMessageReceived,
         }
       );
     default:

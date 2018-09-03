@@ -1,4 +1,4 @@
-import { User, IUser, IErrorResponse } from '..';
+import { User, IUser, IErrorResponse, IMiniRoom, IMessage } from '..';
 
 export interface UserState {
   user: User | null;
@@ -18,4 +18,8 @@ export interface UserState {
   profileUser: IUser | null;
 
   errorResponse: IErrorResponse | null;
+
+  // event listenner
+  onMessageReceived: (message: IMessage) => void;
+  onRoomReceived: (message: IMiniRoom) => void;
 }

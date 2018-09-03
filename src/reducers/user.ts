@@ -17,8 +17,11 @@ import {
   USER_BLOCK_REQUEST_FAILURE, UserBlockRequestFailureAction,
   USER_UNBLOCK_REQUEST_SUCCESS, UserUnBlockRequestSuccessAction,
   USER_UNBLOCK_REQUEST_FAILURE, UserUnBlockRequestFailureAction,
+  SET_ON_MESSAGE_RECEIVED, SetOnMessageReceivedAction,
+  SET_ON_ROOM_RECEIVED, SetOnRoomReceivedAction,
 } from '../actions/user';
 import { IUser } from '..';
+import * as R from 'ramda';
 
 const getInitialState = (): UserState => ({
   user: null,
@@ -37,14 +40,17 @@ const getInitialState = (): UserState => ({
   profileUserId: '',
   profileUser: null,
   errorResponse: null,
+
+  // event listenner
+  onMessageReceived: () => {},
+  onRoomReceived: () => {}
 });
 
 export function user(state: UserState = getInitialState(), action: UserActions): UserState {
   switch (action.type) {
     case FETCH_USER_REQUEST_SUCCESS:
       const fursAction = action as FetchUserRequestSuccessAction;
-      let resUser = Object.assign(
-        {},
+      let resUser = R.merge(
         state,
         {user: fursAction.user}
       );
@@ -53,8 +59,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
       }
       return resUser;
     case FETCH_USER_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           user: null,
@@ -62,16 +67,14 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         }
       );
     case SET_PROFILE_USER_ID:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           profileUserId: (action as SetProfileUserIdAction).profileUserId,
         }
       );
     case FETCH_PROFILE_USER_REQUEST_SUCCESS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           profileUser: (action as FetchProfileUserRequestSuccessAction).profileUser,
@@ -79,8 +82,7 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         }
       );
     case FETCH_PROFILE_USER_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           profileUser: null,
@@ -88,24 +90,21 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         }
       );
     case CLEAR_PROFILE_USER:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           profileUser: null,
         }
       );
     case FETCH_CONTACTS_REQUEST_SUCCESS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           contacts: (<FetchContactsRequestSuccessAction>action).contacts,
         }
       );
     case FETCH_CONTACTS_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           users: null,
@@ -121,16 +120,14 @@ export function user(state: UserState = getInitialState(), action: UserActions):
       } else {
         selectedContacts[contactUserId] = updateSelectContactsAction.contact;
       }
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           selectedContacts: selectedContacts,
         }
       );
     case CLEAR_SELECT_CONTACTS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           selectedContacts: {},
@@ -139,24 +136,21 @@ export function user(state: UserState = getInitialState(), action: UserActions):
     case MARK_AS_READ_REQUEST_SUCCESS:
       return state;
     case MARK_AS_READ_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           errorResponse: (action as MarkAsReadRequestFailureAction).errorResponse,
         }
       );
     case USER_BLOCK_REQUEST_SUCCESS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           blocks: (action as UserBlockRequestSuccessAction).blocks,
         }
       );
     case USER_BLOCK_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           user: null,
@@ -164,20 +158,32 @@ export function user(state: UserState = getInitialState(), action: UserActions):
         }
       );
     case USER_UNBLOCK_REQUEST_SUCCESS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           blocks: (action as UserUnBlockRequestSuccessAction).blocks,
         }
       );
     case USER_UNBLOCK_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           user: null,
           errorResponse: (action as UserUnBlockRequestFailureAction).errorResponse,
+        }
+      );
+    case SET_ON_MESSAGE_RECEIVED:
+      return R.merge(
+        state,
+        {
+          onMessageReceived: (action as SetOnMessageReceivedAction).onMessageReceived,
+        }
+      );
+    case SET_ON_ROOM_RECEIVED:
+      return R.merge(
+        state,
+        {
+          onRoomReceived: (action as SetOnRoomReceivedAction).onRoomReceived,
         }
       );
     default:

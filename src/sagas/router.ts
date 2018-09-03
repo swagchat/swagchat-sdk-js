@@ -11,6 +11,7 @@ import {
 } from '../actions/user';
 import { retrieveUserRoomsAllRequestActionCreator } from '../actions/userRoomsAll';
 import { State } from '../stores';
+import { RetrieveRoomMessagesReason } from '../';
 
 function* gLocationChange() {
   const state: State = yield select();
@@ -56,7 +57,7 @@ function* gLocationChange() {
       yield put(setIsFirstFetchActionCreator(true));
       yield put(fetchRoomRequestActionCreator(currentRoomId));
       yield take(FETCH_ROOM_REQUEST_SUCCESS);
-      yield put(retrieveRoomMessagesRequestActionCreator());
+      yield put(retrieveRoomMessagesRequestActionCreator(RetrieveRoomMessagesReason.PAGING));
     }
   }
 

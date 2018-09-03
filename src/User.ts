@@ -48,6 +48,10 @@ export class User {
     return this._client;
   }
 
+  get data(): I.IUser {
+    return  this._data;
+  }
+
   set data(user: I.IUser) {
     this._data = user;
   }
@@ -167,8 +171,8 @@ export class User {
     this._client.subscribe(EventType.MESSAGEEVENT, 'messageList', callback);
   }
 
-  public onUserJoinReceived(callback: Function) {
-    this._client.subscribe(EventType.USERJOINEVENT, 'userJoin', callback);
+  public onRoomReceived(callback: Function) {
+    this._client.subscribe(EventType.ROOMEVENT, 'roomList', callback);
   }
 
   /**
@@ -364,6 +368,9 @@ export class User {
       }
       if (error.hasOwnProperty('invalidParams')) {
         errRes.invalidParams = error.invalidParams;
+      }
+      if (error.hasOwnProperty('developerMessage')) {
+        errRes.developerMessage = error.developerMessage;
       }
       res.error = errRes;
       return res;

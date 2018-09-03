@@ -99,7 +99,7 @@ export class Realtime {
         dataList.forEach(data => {
           try {
             const eventDataObj = JSON.parse(data) as I.IEventData;
-            if (eventDataObj.type !== EventType.MESSAGEEVENT && eventDataObj.type !== EventType.USERJOINEVENT) {
+            if (eventDataObj.type !== EventType.MESSAGEEVENT && eventDataObj.type !== EventType.ROOMEVENT) {
               return;
             }
 
@@ -192,7 +192,7 @@ export class Realtime {
   }
 
   public subscribe(eventType: EventType, funcName: string, func: Function): void {
-    if (eventType !== EventType.MESSAGEEVENT && eventType !== EventType.USERJOINEVENT) {
+    if (eventType !== EventType.MESSAGEEVENT && eventType !== EventType.ROOMEVENT) {
       logger('realtime', 'error', 'Subscribe failure. eventType is not setting.');
       return;
     }

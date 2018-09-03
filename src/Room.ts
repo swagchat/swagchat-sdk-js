@@ -320,7 +320,7 @@ export class Room {
     } as I.IRetrieveRoomMessagesResponse;
 
     return fetch(this._apiEndpoint + '/rooms/' + this.roomId + '/messages' +
-     '?limit=' + req.limit + '&offset=' + req.offset, {
+     '?limit=' + req.limit + '&offset=' + req.offset + '&limitTimestamp=' + req.limitTimestamp + '&offsetTimestamp=' + req.offsetTimestamp, {
       method: 'GET',
       headers: this._user.client.setHeaders(this._user.userId),
     }).then((response: Response) => {

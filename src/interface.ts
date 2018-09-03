@@ -7,7 +7,7 @@ import {
     RetrieveUserRequest, RetrieveUserRoomsRequest, Room as pbRoom,
     RoomMessagesResponse as pbRoomMessagesResponse, RoomUser as pbRoomUser, SendMessageRequest,
     UpdateRoomRequest, UpdateUserRequest, User as pbUser,
-    UserJoinEventPayload as pbUserJoinEventPayload, UserRoomsResponse as pbUserRoomsResponse
+    RoomEventPayload as pbRoomEventPayload, UserRoomsResponse as pbUserRoomsResponse
 } from 'swagchat-protobuf';
 
 import { Room } from './Room';
@@ -120,7 +120,7 @@ export interface IAsset {
 export interface IEventData extends pbEventData.AsObject {
   user_ids: Array<string>;
 }
-export interface IUserJoinEventPayload extends pbUserJoinEventPayload.AsObject {}
+export interface IRoomEventPayload extends pbRoomEventPayload.AsObject {}
 
 export interface ICloseEvent extends Event {
   code: number;

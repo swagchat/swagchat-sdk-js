@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { IErrorResponse, IMessage, IRoomMessagesResponse } from '../';
+import { IErrorResponse, IMessage, IRoomMessagesResponse, RetrieveRoomMessagesReason } from '../';
 
 export const SET_IS_FIRST_FETCH = 'SET_IS_FIRST_FETCH';
 export const BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST = 'BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST';
@@ -31,7 +31,6 @@ export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESS
 export const ADD_INDICATORS = 'ADD_INDICATORS';
 export const REFRESH_INDICATORS = 'REFRESH_INDICATORS';
 export const CLEAR_INDICATORS = 'CLEAR_INDICATORS';
-export const SET_ON_MESSAGE_RECEIVED = 'SET_ON_MESSAGE_RECEIVED';
 
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
@@ -62,8 +61,7 @@ export type MessageActionTypes =
   typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST |
   typeof ADD_INDICATORS |
   typeof REFRESH_INDICATORS |
-  typeof CLEAR_INDICATORS |
-  typeof SET_ON_MESSAGE_RECEIVED
+  typeof CLEAR_INDICATORS
 ;
 
 export interface MessageBaseAction extends Action {
@@ -113,20 +111,20 @@ export const beforeRetrieveRoomMessagesRequestActionCreator =
 });
 
 export interface RetrieveRoomMessagesRequestAction extends MessageBaseAction {
-  limit?: number;
-  offset?: number;
+  retrieveRoomMessagesReason: RetrieveRoomMessagesReason;
 }
-export const retrieveRoomMessagesRequestActionCreator = (limit?: number, offset?: number): RetrieveRoomMessagesRequestAction => ({
+export const retrieveRoomMessagesRequestActionCreator = (retrieveRoomMessagesReason: RetrieveRoomMessagesReason): RetrieveRoomMessagesRequestAction => ({
   type: RETRIEVE_ROOM_MESSAGES_REQUEST,
-  limit,
-  offset
+  retrieveRoomMessagesReason,
 });
 
 export interface RetrieveRoomMessagesRequestSuccessAction extends MessageBaseAction {
+  retrieveRoomMessagesReason: RetrieveRoomMessagesReason;
   roomMessagesResponse: IRoomMessagesResponse;
 }
-export const retrieveRoomMessagesRequestSuccessActionCreator = (roomMessagesResponse: IRoomMessagesResponse): RetrieveRoomMessagesRequestSuccessAction => ({
+export const retrieveRoomMessagesRequestSuccessActionCreator = (retrieveRoomMessagesReason: RetrieveRoomMessagesReason, roomMessagesResponse: IRoomMessagesResponse): RetrieveRoomMessagesRequestSuccessAction => ({
   type: RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS,
+  retrieveRoomMessagesReason,
   roomMessagesResponse
 });
 
@@ -296,15 +294,6 @@ export const clearIndicatorsActionCreator = (): ClearIndicatorsAction => ({
   type: CLEAR_INDICATORS,
 });
 
-
-export interface SetOnMessageReceivedAction extends MessageBaseAction {
-  onMessageReceived: (message: IMessage) => void;
-}
-export const setOnMessageReceivedActionCreator = (onMessageReceived: (message: IMessage) => void): SetOnMessageReceivedAction => ({
-  type: SET_ON_MESSAGE_RECEIVED,
-  onMessageReceived,
-});
-
 export type MessageActions =
   MessageBaseAction |
   SetIsFirstFetchAction |
@@ -332,6 +321,5 @@ export type MessageActions =
   UploadAssetAndSendMessageRequestAction |
   AddIndicatorsAction |
   RefreshIndicatorsAction |
-  ClearIndicatorsAction |
-  SetOnMessageReceivedAction
+  ClearIndicatorsAction
 ;

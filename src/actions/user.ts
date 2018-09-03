@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { IErrorResponse, IUser, User } from '..';
+import { IErrorResponse, IUser, IMessage, IMiniRoom, User } from '..';
 
 export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
 export const FETCH_USER_REQUEST_SUCCESS = 'FETCH_USER_REQUEST_SUCCESS';
@@ -24,6 +24,8 @@ export const USER_BLOCK_REQUEST_FAILURE = 'USER_BLOCK_REQUEST_FAILURE';
 export const USER_UNBLOCK_REQUEST = 'USER_UNBLOCK_REQUEST';
 export const USER_UNBLOCK_REQUEST_SUCCESS = 'USER_UNBLOCK_REQUEST_SUCCESS';
 export const USER_UNBLOCK_REQUEST_FAILURE = 'USER_UNBLOCK_REQUEST_FAILURE';
+export const SET_ON_MESSAGE_RECEIVED = 'SET_ON_MESSAGE_RECEIVED';
+export const SET_ON_ROOM_RECEIVED = 'SET_ON_ROOM_RECEIVED';
 
 export type UserActionTypes =
   typeof FETCH_USER_REQUEST |
@@ -47,7 +49,9 @@ export type UserActionTypes =
   typeof USER_BLOCK_REQUEST_FAILURE |
   typeof USER_UNBLOCK_REQUEST |
   typeof USER_UNBLOCK_REQUEST_SUCCESS |
-  typeof USER_UNBLOCK_REQUEST_FAILURE
+  typeof USER_UNBLOCK_REQUEST_FAILURE |
+  typeof SET_ON_MESSAGE_RECEIVED |
+  typeof SET_ON_ROOM_RECEIVED
 ;
 
 export interface UserBaseAction extends Action {
@@ -226,6 +230,22 @@ export const userUnBlockRequestFailureActionCreator = (errorResponse: IErrorResp
   errorResponse: errorResponse,
 });
 
+export interface SetOnMessageReceivedAction extends UserBaseAction {
+  onMessageReceived: (message: IMessage) => void;
+}
+export const setOnMessageReceivedActionCreator = (onMessageReceived: (message: IMessage) => void): SetOnMessageReceivedAction => ({
+  type: SET_ON_MESSAGE_RECEIVED,
+  onMessageReceived,
+});
+
+export interface SetOnRoomReceivedAction extends UserBaseAction {
+  onRoomReceived: (room: IMiniRoom) => void;
+}
+export const setOnRoomReceivedActionCreator = (onRoomReceived: (room: IMiniRoom) => void): SetOnRoomReceivedAction => ({
+  type: SET_ON_ROOM_RECEIVED,
+  onRoomReceived,
+});
+
 export type UserActions =
   UserBaseAction |
   FetchUserRequestAction |
@@ -250,5 +270,7 @@ export type UserActions =
   UserBlockRequestFailureAction |
   UserUnBlockRequestAction |
   UserUnBlockRequestSuccessAction |
-  UserUnBlockRequestFailureAction
+  UserUnBlockRequestFailureAction |
+  SetOnMessageReceivedAction |
+  SetOnRoomReceivedAction
 ;
