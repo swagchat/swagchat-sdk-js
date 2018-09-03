@@ -15,6 +15,7 @@ const getInitialState = (): UserRoomsOnlineState => ({
   allCount: 0,
   limit: 0,
   offset: 0,
+  errorResponse: null
 });
 
 export function userRoomsOnline(state: UserRoomsOnlineState = getInitialState(), action: UserRoomsOnlineActions): UserRoomsOnlineState {
@@ -24,22 +25,7 @@ export function userRoomsOnline(state: UserRoomsOnlineState = getInitialState(),
   switch (action.type) {
     case RETRIEVE_USER_ROOMS_ONLINE_REQUEST_SUCCESS:
       const userRoomsResponse = (action as RetrieveUserRoomsOnlineRequestSuccessAction).userRoomsResponse;
-      // userRoomsMap = R.clone(state.userRoomsMap);
-      // let userRooms = new Array<IMiniRoom>();
-      // let j = 0;
-      // for (let i = userRoomsResponse.offset!; i < userRoomsResponse.limit!; i++) {
-      //   userRooms[i] = userRoomsResponse.rooms[j];
-      //   j++;
-      // }
-      // userRoomsResponse.rooms.forEach(room => {
-      //   userRoomsMap[room.roomId!] = room;
-      // });
-      // Object.keys(userRoomsMap).forEach((roomId: string) => {
-      //   userRooms.push(userRoomsMap[roomId]);
-      // });
-
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap: R.merge(userRoomList2map(userRoomsResponse.rooms), state.userRoomsMap),
@@ -50,27 +36,14 @@ export function userRoomsOnline(state: UserRoomsOnlineState = getInitialState(),
         }
       );
     case RETRIEVE_USER_ROOMS_ONLINE_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
-          rooms: new Array<IMiniRoom>(),
           errorResponse: (action as RetrieveUserRoomsOnlineRequestFailureAction).errorResponse,
         }
       );
-    // case UPDATE_USER_ROOMS_LOADED:
-    //   const uurlAction = (action as UpdateUserRoomsLoadedAction);
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     {
-    //       userRoomsLoadedRowCount: uurlAction.userRoomsLoadedRowCount,
-    //       userRoomsLoadedRowsMap: uurlAction.userRoomsLoadedRowsMap
-    //     }
-    //   );
     case CLEAR_USER_ROOMS_ONLINE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap: null,
@@ -98,8 +71,7 @@ export function userRoomsOnline(state: UserRoomsOnlineState = getInitialState(),
         userRooms = R.insert(0, userRoom, userRooms);
       });
 
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap,

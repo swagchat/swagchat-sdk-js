@@ -15,6 +15,7 @@ const getInitialState = (): UserRoomsAllState => ({
   allCount: 0,
   limit: 0,
   offset: 0,
+  errorResponse: null
 });
 
 export function userRoomsAll(state: UserRoomsAllState = getInitialState(), action: UserRoomsAllActions): UserRoomsAllState {
@@ -24,22 +25,7 @@ export function userRoomsAll(state: UserRoomsAllState = getInitialState(), actio
   switch (action.type) {
     case RETRIEVE_USER_ROOMS_ALL_REQUEST_SUCCESS:
       const userRoomsResponse = (action as RetrieveUserRoomsAllRequestSuccessAction).userRoomsResponse;
-      // userRoomsMap = R.clone(state.userRoomsMap);
-      // let userRooms = new Array<IMiniRoom>();
-      // let j = 0;
-      // for (let i = userRoomsResponse.offset!; i < userRoomsResponse.limit!; i++) {
-      //   userRooms[i] = userRoomsResponse.rooms[j];
-      //   j++;
-      // }
-      // userRoomsResponse.rooms.forEach(room => {
-      //   userRoomsMap[room.roomId!] = room;
-      // });
-      // Object.keys(userRoomsMap).forEach((roomId: string) => {
-      //   userRooms.push(userRoomsMap[roomId]);
-      // });
-
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap: R.merge(userRoomList2map(userRoomsResponse.rooms), state.userRoomsMap),
@@ -47,31 +33,17 @@ export function userRoomsAll(state: UserRoomsAllState = getInitialState(), actio
           allCount: userRoomsResponse.allCount,
           limit: userRoomsResponse.limit,
           offset: userRoomsResponse.offset! + userRoomsResponse.limit!,
-          filter: userRoomsResponse.filter,
         }
       );
     case RETRIEVE_USER_ROOMS_ALL_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
-          rooms: new Array<IMiniRoom>(),
           errorResponse: (action as RetrieveUserRoomsAllRequestFailureAction).errorResponse,
         }
       );
-    // case UPDATE_USER_ROOMS_LOADED:
-    //   const uurlAction = (action as UpdateUserRoomsLoadedAction);
-    //   return Object.assign(
-    //     {},
-    //     state,
-    //     {
-    //       userRoomsLoadedRowCount: uurlAction.userRoomsLoadedRowCount,
-    //       userRoomsLoadedRowsMap: uurlAction.userRoomsLoadedRowsMap
-    //     }
-    //   );
     case CLEAR_USER_ROOMS_ALL:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap: null,
@@ -99,8 +71,7 @@ export function userRoomsAll(state: UserRoomsAllState = getInitialState(), actio
         userRooms = R.insert(0, userRoom, userRooms);
       });
 
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           userRoomsMap,

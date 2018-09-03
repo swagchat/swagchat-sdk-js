@@ -1,4 +1,4 @@
-import { IMessage, messageList2map, UpdateRoomMessagesReason } from '..';
+import { IMessage, UpdateRoomMessagesReason } from '..';
 import { MessageState } from '../stores/message';
 import {
   MessageActions,
@@ -67,46 +67,46 @@ const getInitialState = (): MessageState => ({
 
   // indicator
   indicators: {},
+
+  // error
+  errorResponse: null
 });
 
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
   let roomMessagesMap: {[key: string]: IMessage};
   let roomMessages: Array<IMessage>;
   let mergedLocalMap: {[key: string]: IMessage};
+  let workMessageId = '';
 
   switch (action.type) {
     case SET_IS_FIRST_FETCH:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           isFirstFetch: (action as SetIsFirstFetchAction).isFirstFetch,
         }
       );
     case RESET_SCROLL_BOTTOM_ANIMATION_DURATION:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           scrollBottomAnimationDuration: 0,
         }
       );
     case SET_DISPLAY_SCROLL_BOTTOM_BUTTON:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           displayScrollBottomButton: (action as SetDisplayScrollBottomButtonAction).displayScrollBottomButton,
         }
       );
     case SET_MESSAGE_MODAL:
-      return Object.assign(
-        {},
-        state,
-        {
-          modal: (action as SetMessageModalAction).modal,
-        }
-      );
+    return R.merge(
+      state,
+      {
+        modal: (action as SetMessageModalAction).modal,
+      }
+    );
     case BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST:
       const bfmra = action as BeforeRetrieveRoomMessagesRequestAction;
       let beforeLimit = bfmra.messagesLimit;
@@ -115,8 +115,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         beforeLimit = bfmra.messagesAllCount;
         beforeOffset = 0;
       }
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           messagesAllCount: bfmra.messagesAllCount,
@@ -125,8 +124,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case RETRIEVE_ROOM_MESSAGES_REQUEST:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           isLoadingRoomMessages: true
@@ -135,22 +133,22 @@ export function message(state: MessageState = getInitialState(), action: Message
     case RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS:
       const roomMessagesResponse = (action as RetrieveRoomMessagesRequestSuccessAction).roomMessagesResponse;
 
-      return Object.assign(
-        {},
-        state,
-        {
-          isLoadingRoomMessages: false,
-          roomMessagesMap: R.merge(messageList2map(roomMessagesResponse.messages), state.roomMessagesMap),
-          roomMessages: R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages),
-          roomMessagesAllCount: roomMessagesResponse.allCount,
-          roomMessagesLimit: roomMessagesResponse.limit,
-          roomMessagesOffset: roomMessagesResponse.offset! + roomMessagesResponse.limit!,
-          updateRoomMessagesReason: UpdateRoomMessagesReason.PAGING,
-        }
+      workMessageId = '';
+      roomMessages = R.reduce(
+        (acc: IMessage[], item: IMessage) => item.messageId === workMessageId ? R.reduced(acc) : acc.concat(item),
+        [],
+        R.insertAll(0, R.reverse(roomMessagesResponse.messages), state.roomMessages)
       );
+
+      state.isLoadingRoomMessages = false;
+      state.roomMessages = roomMessages;
+      state.roomMessagesAllCount = roomMessagesResponse.allCount;
+      state.roomMessagesLimit = roomMessagesResponse.limit!;
+      state.roomMessagesOffset = roomMessagesResponse.offset! + roomMessagesResponse.limit!;
+      state.updateRoomMessagesReason = UpdateRoomMessagesReason.PAGING;
+      return R.clone(state);
     case RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           errorResponse: (action as RetrieveRoomMessagesRequestFailureAction).errorResponse,
@@ -176,8 +174,8 @@ export function message(state: MessageState = getInitialState(), action: Message
         });
       }
 
-      return Object.assign(
-        {},        state,
+      return R.merge(
+        state,
         {
           localMessageMap: mergedLocalMap,
           localMessageList:  localMessageList,
@@ -213,16 +211,9 @@ export function message(state: MessageState = getInitialState(), action: Message
       //   }
       // );
     case SEND_MESSAGES_REQUEST_FAILURE:
-      return Object.assign(
-        {},
-        state,
-        {
-          // TODO
-        }
-      );
+      // TODO
     case DELETE_LOCAL_MESSAGES:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           localMessageMap: {},
@@ -247,8 +238,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         roomMessages = R.insert(roomMessages.length + 1, roomMessage, roomMessages);
       });
 
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           roomMessagesMap,
@@ -257,8 +247,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case CLEAR_ROOM_MESSAGES:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           isLoadingRoomMessages: false,
@@ -273,16 +262,14 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case SET_MESSAGE_TEXT:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           text: (action as SetMessageTextAction).text,
         }
       );
     case SET_DROP_IMAGE_FILE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           dropImageFile: (action as SetDropImageFileAction).dropImageFile,
@@ -290,8 +277,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case SET_DROP_FILE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           dropImageFile: null,
@@ -299,8 +285,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case CLEAR_DROP_FILE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           dropImageFile: null,
@@ -308,32 +293,28 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case SET_SPEECH_MODE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           isSpeechMode: (action as SetSpeechModeAction).isSpeechMode,
         }
       );
     case SET_SPEECH_SYNTHESIS_UTTERANCE:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           speechSynthesisUtterance: (action as SetSpeechSynthesisUtteranceAction).speechSynthesisUtterance,
         }
       );
     case SET_SEARCH_TEXT:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           searchText: (action as SetSearchTextAction).searchText,
         }
       );
     case SET_SEARCH_RESULT_TAB_INDEX:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           searchResultTabIndex: (action as SetSearchResultTabIndexAction).searchResultTabIndex,
@@ -341,8 +322,7 @@ export function message(state: MessageState = getInitialState(), action: Message
       );
     case ADD_INDICATORS:
       const aia = action as AddIndicatorsAction;
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           indicators: R.assoc(aia.indicator.messageId!, aia.indicator, state.indicators),
@@ -352,24 +332,21 @@ export function message(state: MessageState = getInitialState(), action: Message
       const refreshIndicators = R.filter((v: IMessage) => {
         return ((new Date().getTime() - new Date(v.created as string).getTime()) / 1000 - 5 < 0);
       }, state.indicators);
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           indicators: refreshIndicators,
         }
       );
     case CLEAR_INDICATORS:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           indicators: {},
         }
       );
     case SET_ON_MESSAGE_RECEIVED:
-      return Object.assign(
-        {},
+      return R.merge(
         state,
         {
           onMessageReceived: (action as SetOnMessageReceivedAction).onMessageReceived,

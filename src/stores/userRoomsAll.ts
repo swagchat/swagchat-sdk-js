@@ -1,4 +1,4 @@
-import { IMiniRoom } from '..';
+import { IMiniRoom, IErrorResponse } from '..';
 
 export interface UserRoomsAllState {
   userRoomsMap: {[roomId: string]: IMiniRoom} | null;
@@ -6,4 +6,5 @@ export interface UserRoomsAllState {
   allCount: number;
   limit: number;
   offset: number;
+  errorResponse: IErrorResponse | null;
 }

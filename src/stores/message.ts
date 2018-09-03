@@ -1,4 +1,5 @@
 import { IMessage, UpdateRoomMessagesReason } from '..';
+import { IErrorResponse } from '../interface';
 
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
@@ -39,4 +40,6 @@ export interface MessageState {
   // indicator
   indicators: {[key: string]: IMessage};
 
+  // error
+  errorResponse: IErrorResponse | null;
 }
