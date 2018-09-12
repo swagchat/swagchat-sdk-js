@@ -1,16 +1,16 @@
 import * as R from 'ramda';
 
-import { IMessage, RetrieveRoomMessagesReason, MessageType } from '../';
+import { IMessage, MessageType, RetrieveRoomMessagesReason, indicatorRefleshTime } from '../';
 import {
-    BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST,
-    BEFORE_SEND_MESSAGES_REQUEST, BeforeRetrieveRoomMessagesRequestAction, CLEAR_DROP_FILE,
-    CLEAR_ROOM_MESSAGES, DELETE_LOCAL_MESSAGES, MessageActions,
-    PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
-    RESET_SCROLL_BOTTOM_ANIMATION_DURATION, RETRIEVE_ROOM_MESSAGES_REQUEST,
-    RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS,
-    RetrieveRoomMessagesRequestFailureAction, RetrieveRoomMessagesRequestSuccessAction,
-    SEND_MESSAGES_REQUEST_FAILURE, SEND_MESSAGES_REQUEST_SUCCESS, SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
-    SET_DROP_FILE, SET_DROP_IMAGE_FILE, SET_IS_FIRST_FETCH, SET_MESSAGE_MODAL, SET_MESSAGE_TEXT,
+    BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST, BEFORE_SEND_MESSAGES_REQUEST,
+    BeforeRetrieveRoomMessagesRequestAction, CLEAR_DROP_FILE, CLEAR_ROOM_MESSAGES,
+    DELETE_LOCAL_MESSAGES, MessageActions, PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
+    REFRESH_INDICATOR, RefreshIndicatorAction, RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
+    RETRIEVE_ROOM_MESSAGES_REQUEST, RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE,
+    RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS, RetrieveRoomMessagesRequestFailureAction,
+    RetrieveRoomMessagesRequestSuccessAction, SEND_MESSAGES_REQUEST_FAILURE,
+    SEND_MESSAGES_REQUEST_SUCCESS, SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SET_DROP_FILE,
+    SET_DROP_IMAGE_FILE, SET_IS_FIRST_FETCH, SET_MESSAGE_MODAL, SET_MESSAGE_TEXT,
     SET_SEARCH_RESULT_TAB_INDEX, SET_SEARCH_TEXT, SET_SPEECH_MODE, SET_SPEECH_SYNTHESIS_UTTERANCE,
     SetDisplayScrollBottomButtonAction, SetDropFileAction, SetDropImageFileAction,
     SetIsFirstFetchAction, SetMessageModalAction, SetMessageTextAction,
@@ -338,6 +338,35 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           searchResultTabIndex: (action as SetSearchResultTabIndexAction).searchResultTabIndex,
+        }
+      );
+    case REFRESH_INDICATOR:
+      const lastItem = state.roomMessages[state.roomMessages.length - 1];
+
+      if (!lastItem.messageId!.startsWith(MessageType.INDICATOR_START)) {
+        return state;
+      }
+
+      const previousText = (action as RefreshIndicatorAction).previousText;
+      if (previousText !== state.text) {
+        return state;
+      }
+
+      roomMessagesMap = R.clone(state.roomMessagesMap);
+      roomMessages = R.clone(state.roomMessages);
+
+      const currentTime = new Date().getTime();
+      const lastItemTime = new Date(lastItem.created as string).getTime();
+      if (currentTime - lastItemTime - indicatorRefleshTime > 0) {
+        delete(roomMessagesMap[lastItem.messageId!]);
+        roomMessages = R.remove(state.roomMessages.length - 1, 1, roomMessages);
+      }
+
+      return R.merge(
+        state,
+        {
+          roomMessagesMap,
+          roomMessages
         }
       );
     default:

@@ -47,3 +47,4 @@ export enum Speech2Text {
 
 export const cookieUserIdKey = 'sc_user_id';
 export const cookieRoomIdKey = 'sc_room_id';
+export const indicatorRefleshTime = 3000; // milliseconds

@@ -28,6 +28,7 @@ export const SET_SPEECH_SYNTHESIS_UTTERANCE = 'SET_SPEECH_SYNTHESIS_UTTERANCE';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
 export const SET_SEARCH_RESULT_TAB_INDEX = 'SET_SEARCH_RESULT_TAB_INDEX';
 export const UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST = 'UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST';
+export const REFRESH_INDICATOR = 'REFRESH_INDICATOR';
 
 export type MessageActionTypes =
   typeof SET_IS_FIRST_FETCH |
@@ -55,7 +56,8 @@ export type MessageActionTypes =
   typeof SET_SPEECH_SYNTHESIS_UTTERANCE |
   typeof SET_SEARCH_TEXT |
   typeof SET_SEARCH_RESULT_TAB_INDEX |
-  typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST
+  typeof UPLOAD_ASSET_AND_SEND_MESSAGE_REQUEST |
+  typeof REFRESH_INDICATOR
 ;
 
 export interface MessageBaseAction extends Action {
@@ -268,6 +270,14 @@ export const uploadAssetAndSendMessageRequestActionCreator = (file: File): Uploa
   file: file,
 });
 
+export interface RefreshIndicatorAction extends MessageBaseAction {
+  previousText: string;
+}
+export const refreshIndicatorActionCreator = (previousText: string): RefreshIndicatorAction => ({
+  type: REFRESH_INDICATOR,
+  previousText
+});
+
 export type MessageActions =
   MessageBaseAction |
   SetIsFirstFetchAction |
@@ -292,5 +302,6 @@ export type MessageActions =
   SetSpeechSynthesisUtteranceAction |
   SetSearchTextAction |
   SetSearchResultTabIndexAction |
-  UploadAssetAndSendMessageRequestAction
+  UploadAssetAndSendMessageRequestAction |
+  RefreshIndicatorAction
 ;
