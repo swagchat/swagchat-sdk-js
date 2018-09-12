@@ -11,7 +11,7 @@ export const RETRIEVE_ROOM_MESSAGES_REQUEST = 'RETRIEVE_ROOM_MESSAGES_REQUEST';
 export const RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS = 'RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS';
 export const RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE = 'RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE';
 export const PUSH_LOCAL_MESSAGE = 'PUSH_LOCAL_MESSAGE';
-export const BEFORE_SEND_MESSAGES_REQUEST = 'BEFORE_SEND_MESSAGES_REQUEST';
+export const SYNC_LOCAL_MESSAGES = 'SYNC_LOCAL_MESSAGES';
 export const SEND_DIRECT_MESSAGES_REQUEST = 'SEND_DIRECT_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST = 'SEND_MESSAGES_REQUEST';
 export const SEND_MESSAGES_REQUEST_SUCCESS = 'SEND_MESSAGES_REQUEST_SUCCESS';
@@ -40,7 +40,7 @@ export type MessageActionTypes =
   typeof RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS |
   typeof RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE |
   typeof PUSH_LOCAL_MESSAGE |
-  typeof BEFORE_SEND_MESSAGES_REQUEST |
+  typeof SYNC_LOCAL_MESSAGES |
   typeof SEND_DIRECT_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST |
   typeof SEND_MESSAGES_REQUEST_SUCCESS |
@@ -141,10 +141,10 @@ export const pushLocalMessageActionCreator = (message: IMessage): PushLocalMessa
   message: message,
 });
 
-export interface BeforeSendMessagesRequestAction extends MessageBaseAction {
+export interface SyncLocalMessagesAction extends MessageBaseAction {
 }
-export const beforeSendMessagesRequestActionCreator = (): BeforeSendMessagesRequestAction => ({
-  type: BEFORE_SEND_MESSAGES_REQUEST,
+export const syncLocalMessagesActionCreator = (): SyncLocalMessagesAction => ({
+  type: SYNC_LOCAL_MESSAGES,
 });
 
 export interface SendDirectMessagesRequestAction extends MessageBaseAction {
@@ -294,6 +294,7 @@ export type MessageActions =
   SendMessagesRequestFailureAction |
   DeleteLocalMessagesAction |
   PushLocalMessageAction |
+  SyncLocalMessagesAction |
   ClearRoomMessagesAction |
   SetDropImageFileAction |
   SetDropFileAction |

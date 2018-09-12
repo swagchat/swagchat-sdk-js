@@ -2,7 +2,7 @@ import * as R from 'ramda';
 
 import { IMessage, MessageType, RetrieveRoomMessagesReason, indicatorRefleshTime } from '../';
 import {
-    BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST, BEFORE_SEND_MESSAGES_REQUEST,
+    BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST, SYNC_LOCAL_MESSAGES,
     BeforeRetrieveRoomMessagesRequestAction, CLEAR_DROP_FILE, CLEAR_ROOM_MESSAGES,
     DELETE_LOCAL_MESSAGES, MessageActions, PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
     REFRESH_INDICATOR, RefreshIndicatorAction, RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
@@ -181,11 +181,11 @@ export function message(state: MessageState = getInitialState(), action: Message
           localRoomMessages,
         }
       );
-    case BEFORE_SEND_MESSAGES_REQUEST:
+    case SYNC_LOCAL_MESSAGES:
       roomMessagesMap = R.clone(state.roomMessagesMap);
       roomMessages = R.clone(state.roomMessages);
 
-      addRoomMessages = new Array<IMessage>();
+      let addCount = 0;
       state.localRoomMessages.forEach(roomMessage => {
         const messageId = roomMessage.messageId!;
 
@@ -199,18 +199,16 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
 
         roomMessagesMap[messageId] = roomMessage;
-        addRoomMessages.push(roomMessage);
+        roomMessages.push(roomMessage);
+        addCount++;
       });
-
-      addRoomMessages = R.reverse(addRoomMessages);
-      roomMessages = R.insertAll(0, addRoomMessages, roomMessages);
 
       return R.merge(
         state,
         {
           roomMessagesMap,
           roomMessages,
-          roomMessagesAllCount: state.roomMessagesAllCount++,
+          roomMessagesAllCount: state.roomMessagesAllCount + addCount,
         }
       );
     case SEND_MESSAGES_REQUEST_SUCCESS:
