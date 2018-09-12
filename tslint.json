@@ -7,7 +7,7 @@
       ],
       "indent": [
         true,
-        "tab"
+        "spaces"
       ],
       "no-duplicate-variable": true,
       "no-eval": true,
@@ -51,7 +51,7 @@
       ],
       "indent": [
         true,
-        "tab"
+        "spaces"
       ],
       "no-eval": true,
       "no-internal-module": true,

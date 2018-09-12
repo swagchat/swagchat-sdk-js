@@ -173,7 +173,7 @@ export function createQueryParams(params: {[key: string]: string | number}) {
 }
 
 export function createMessage(messageId: string, roomId: string, userId: string, type: MessageType, payload: Object): IMessage {
-  if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object) || !(payload instanceof Object)) {
+  if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object)) {
     throw Error('Creating message failure. Parameter invalid.');
   }
   if (Object.keys(payload).length === 0) {
@@ -184,7 +184,8 @@ export function createMessage(messageId: string, roomId: string, userId: string,
     created: iso3339,
     messageId: messageId,
     modified: iso3339,
-    payload: payload.toString(),
+    payload: '',
+    payloadObj: payload,
     roomId: roomId,
     type: type,
     userId: userId,

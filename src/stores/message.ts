@@ -4,22 +4,22 @@ import { IErrorResponse } from '../interface';
 export const SCROLL_BOTTOM_ANIMATION_DURATION = 1000;
 
 export interface MessageState {
-  isFirstFetch: boolean;
-  sending: boolean;
   scrollBottomAnimationDuration: number;
   displayScrollBottomButton: boolean;
   modal: boolean;
 
-  // message data
+  // retrieving message
+  isFirstFetch: boolean;
   isLoadingRoomMessages: boolean;
   roomMessagesAllCount: number;
   roomMessagesLimit: number;
   roomMessagesOffset: number;
-  localMessageList: IMessage[];
-  localMessageMap: {[key: string]: IMessage};
   roomMessages: IMessage[];
-  roomMessagesMap: {[key: string]: IMessage};
+  roomMessagesMap: {[messageId: string]: IMessage};
   retrieveRoomMessagesReason: RetrieveRoomMessagesReason;
+
+  // sending message
+  localRoomMessages: IMessage[];
 
   // text
   text: string;
@@ -35,9 +35,6 @@ export interface MessageState {
   // search
   searchText: string;
   searchResultTabIndex: number;
-
-  // indicator
-  indicators: {[key: string]: IMessage};
 
   // error
   errorResponse: IErrorResponse | null;

@@ -355,7 +355,9 @@ export class Room {
   public sendMessage(req: I.ISendMessageRequest): Promise<I.ISendMessageResponse> {
     const SendMessageRequest = require('swagchat-protobuf/messageMessage_pb').SendMessageRequest;
     const pbReq = new SendMessageRequest();
-    pbReq.setMessageId(req.messageId);
+    if (req.messageId) {
+      pbReq.setMessageId(req.messageId);
+    }
     pbReq.setRoomId(this.roomId);
     pbReq.setUserId(this._user.userId);
     pbReq.setType(req.type);

@@ -1,52 +1,41 @@
-import { IMessage, RetrieveRoomMessagesReason } from '..';
-import { MessageState } from '../stores/message';
-import {
-  MessageActions,
-  SET_IS_FIRST_FETCH, SetIsFirstFetchAction,
-  RESET_SCROLL_BOTTOM_ANIMATION_DURATION,
-  SET_DISPLAY_SCROLL_BOTTOM_BUTTON, SetDisplayScrollBottomButtonAction,
-  SET_MESSAGE_MODAL, SetMessageModalAction,
-  BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST, BeforeRetrieveRoomMessagesRequestAction,
-  RETRIEVE_ROOM_MESSAGES_REQUEST,
-  RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS, RetrieveRoomMessagesRequestSuccessAction,
-  RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RetrieveRoomMessagesRequestFailureAction,
-  PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
-  BEFORE_SEND_MESSAGES_REQUEST,
-  SEND_MESSAGES_REQUEST_SUCCESS, SEND_MESSAGES_REQUEST_FAILURE,
-  DELETE_LOCAL_MESSAGES,
-  UPDATE_MESSAGES, UpdateMessagesAction,
-  CLEAR_ROOM_MESSAGES,
-  SET_MESSAGE_TEXT, SetMessageTextAction,
-  SET_DROP_IMAGE_FILE, SetDropImageFileAction,
-  SET_DROP_FILE, SetDropFileAction,
-  CLEAR_DROP_FILE,
-  SET_SPEECH_MODE, SetSpeechModeAction,
-  SET_SPEECH_SYNTHESIS_UTTERANCE, SetSpeechSynthesisUtteranceAction,
-  SET_SEARCH_TEXT, SetSearchTextAction,
-  SET_SEARCH_RESULT_TAB_INDEX, SetSearchResultTabIndexAction,
-  ADD_INDICATORS, AddIndicatorsAction,
-  REFRESH_INDICATORS,
-  CLEAR_INDICATORS,
-} from '../actions/message';
 import * as R from 'ramda';
 
+import { IMessage, RetrieveRoomMessagesReason, MessageType } from '../';
+import {
+    BEFORE_RETRIEVE_ROOM_MESSAGES_REQUEST,
+    BEFORE_SEND_MESSAGES_REQUEST, BeforeRetrieveRoomMessagesRequestAction, CLEAR_DROP_FILE,
+    CLEAR_ROOM_MESSAGES, DELETE_LOCAL_MESSAGES, MessageActions,
+    PUSH_LOCAL_MESSAGE, PushLocalMessageAction,
+    RESET_SCROLL_BOTTOM_ANIMATION_DURATION, RETRIEVE_ROOM_MESSAGES_REQUEST,
+    RETRIEVE_ROOM_MESSAGES_REQUEST_FAILURE, RETRIEVE_ROOM_MESSAGES_REQUEST_SUCCESS,
+    RetrieveRoomMessagesRequestFailureAction, RetrieveRoomMessagesRequestSuccessAction,
+    SEND_MESSAGES_REQUEST_FAILURE, SEND_MESSAGES_REQUEST_SUCCESS, SET_DISPLAY_SCROLL_BOTTOM_BUTTON,
+    SET_DROP_FILE, SET_DROP_IMAGE_FILE, SET_IS_FIRST_FETCH, SET_MESSAGE_MODAL, SET_MESSAGE_TEXT,
+    SET_SEARCH_RESULT_TAB_INDEX, SET_SEARCH_TEXT, SET_SPEECH_MODE, SET_SPEECH_SYNTHESIS_UTTERANCE,
+    SetDisplayScrollBottomButtonAction, SetDropFileAction, SetDropImageFileAction,
+    SetIsFirstFetchAction, SetMessageModalAction, SetMessageTextAction,
+    SetSearchResultTabIndexAction, SetSearchTextAction, SetSpeechModeAction,
+    SetSpeechSynthesisUtteranceAction, UPDATE_MESSAGES, UpdateMessagesAction
+} from '../actions/message';
+import { MessageState } from '../stores/message';
+
 const getInitialState = (): MessageState => ({
-  isFirstFetch: false,
-  sending: false,
   scrollBottomAnimationDuration: 0,
   displayScrollBottomButton: false,
   modal: false,
 
-  // message data
+  // retrieving message
+  isFirstFetch: false,
   isLoadingRoomMessages: false,
   roomMessagesAllCount: 0,
   roomMessagesLimit: 0,
   roomMessagesOffset: 0,
-  localMessageList: new Array<IMessage>(),
-  localMessageMap: {},
   roomMessages: new Array<IMessage>(),
   roomMessagesMap: {},
   retrieveRoomMessagesReason: RetrieveRoomMessagesReason.PAGING,
+
+  // sending message
+  localRoomMessages: new Array<IMessage>(),
 
   // text
   text: '',
@@ -63,9 +52,6 @@ const getInitialState = (): MessageState => ({
   searchText: '',
   searchResultTabIndex: 0,
 
-  // indicator
-  indicators: {},
-
   // error
   errorResponse: null
 });
@@ -73,7 +59,9 @@ const getInitialState = (): MessageState => ({
 export function message(state: MessageState = getInitialState(), action: MessageActions): MessageState {
   let roomMessagesMap: {[key: string]: IMessage};
   let roomMessages: Array<IMessage>;
-  let mergedLocalMap: {[key: string]: IMessage};
+  let addRoomMessages: Array<IMessage>;
+  let localRoomMessages: Array<IMessage>;
+  let message: IMessage;
 
   switch (action.type) {
     case SET_IS_FIRST_FETCH:
@@ -133,17 +121,20 @@ export function message(state: MessageState = getInitialState(), action: Message
       roomMessagesMap = R.clone(state.roomMessagesMap);
       roomMessages = R.clone(state.roomMessages);
 
-      let addRoomMessages = new Array<IMessage>();
+      addRoomMessages = new Array<IMessage>();
       roomMessagesResponse.messages.forEach(roomMessage => {
-        if (roomMessagesMap[roomMessage.messageId!]) {
-          delete(roomMessagesMap[roomMessage.messageId!]);
-        }
-        roomMessagesMap[roomMessage.messageId!] = roomMessage;
+        const messageId = roomMessage.messageId!;
 
-        const deleteIndex = R.findIndex(R.propEq('messageId', roomMessage.messageId!))(roomMessages);
-        if (deleteIndex > -1) {
-          roomMessages = R.remove(deleteIndex, 1, roomMessages);
+        // If the same messageId already exists in the map, delete it from both the map and the list
+        if (roomMessagesMap[messageId]) {
+          delete(roomMessagesMap[messageId]);
+          const deleteIndex = R.findIndex(R.propEq('messageId', messageId))(roomMessages);
+          if (deleteIndex > -1) {
+            roomMessages = R.remove(deleteIndex, 1, roomMessages);
+          }
         }
+
+        roomMessagesMap[messageId] = roomMessage;
         addRoomMessages.push(roomMessage);
       });
 
@@ -151,7 +142,11 @@ export function message(state: MessageState = getInitialState(), action: Message
       if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PAGING) {
         roomMessages = R.insertAll(0, addRoomMessages, roomMessages);
       } else if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.RECEIVE) {
-        roomMessages = R.insertAll(roomMessages.length + 1, addRoomMessages, roomMessages);
+        if (roomMessages[roomMessages.length - 1].messageId!.startsWith(MessageType.INDICATOR_START)) {
+          roomMessages = R.insertAll(roomMessages.length - 1, addRoomMessages, roomMessages);
+        } else {
+          roomMessages = R.insertAll(roomMessages.length, addRoomMessages, roomMessages);
+        }
       }
 
       return R.merge(
@@ -176,69 +171,63 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case PUSH_LOCAL_MESSAGE:
-      // map
-      const am = (action as PushLocalMessageAction).message;
-      mergedLocalMap = R.clone(state.localMessageMap);
-      mergedLocalMap[am.messageId!] = am;
-
-      // list
-      let localMessageList: IMessage[] = [];
-      if (state.localMessageList.length === 0) {
-        localMessageList = [am];
-      } else {
-        state.localMessageList.forEach((sm: IMessage) => {
-          if (sm.messageId === am.messageId) {
-            localMessageList = R.concat(localMessageList, [am]);
-          } else {
-            localMessageList = R.concat(localMessageList, [sm]);
-          }
-        });
-      }
+      message = (action as PushLocalMessageAction).message;
+      localRoomMessages = R.clone(state.localRoomMessages);
+      localRoomMessages.push(message);
 
       return R.merge(
         state,
         {
-          localMessageMap: mergedLocalMap,
-          localMessageList:  localMessageList,
+          localRoomMessages,
         }
       );
     case BEFORE_SEND_MESSAGES_REQUEST:
-      // mergedMap = R.merge(state.messageMap, state.localMessageMap);
+      roomMessagesMap = R.clone(state.roomMessagesMap);
+      roomMessages = R.clone(state.roomMessages);
 
-      // return Object.assign(
-      //   {},
-      //   state,
-      //   {
-      //     sending: true,
-      //     messageMap: mergedMap,
-      //   }
-      // );
+      addRoomMessages = new Array<IMessage>();
+      state.localRoomMessages.forEach(roomMessage => {
+        const messageId = roomMessage.messageId!;
+
+        // If the same messageId already exists in the map, delete it from both the map and the list
+        if (roomMessagesMap[messageId]) {
+          delete(roomMessagesMap[messageId]);
+          const deleteIndex = R.findIndex(R.propEq('messageId', messageId))(roomMessages);
+          if (deleteIndex > -1) {
+            roomMessages = R.remove(deleteIndex, 1, roomMessages);
+          }
+        }
+
+        roomMessagesMap[messageId] = roomMessage;
+        addRoomMessages.push(roomMessage);
+      });
+
+      addRoomMessages = R.reverse(addRoomMessages);
+      roomMessages = R.insertAll(0, addRoomMessages, roomMessages);
+
+      return R.merge(
+        state,
+        {
+          roomMessagesMap,
+          roomMessages,
+          roomMessagesAllCount: state.roomMessagesAllCount++,
+        }
+      );
     case SEND_MESSAGES_REQUEST_SUCCESS:
-      // mergedMap = R.clone(state.messageMap);
-      // const messageList = (action as SendMessagesRequestSuccessAction).messageList;
-      // messageList.forEach((m: IMessage) => {
-      //   mergedMap[m.messageId!] = m;
-      // });
-
-      // return Object.assign(
-      //   {},
-      //   state,
-      //   {
-      //     sending: false,
-      //     localMessageMap: {},
-      //     localMessageList: [],
-      //     messageMap: mergedMap,
-      //     scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
-      //   }
-      // );
+      return R.merge(
+        state,
+        {
+          localRoomMessages: [],
+          // scrollBottomAnimationDuration: SCROLL_BOTTOM_ANIMATION_DURATION,
+        }
+      );
     case SEND_MESSAGES_REQUEST_FAILURE:
       // TODO
     case DELETE_LOCAL_MESSAGES:
       return R.merge(
         state,
         {
-          localMessageMap: {},
-          localMessageList: [],
+          localRoomMessages: [],
         }
       );
     case UPDATE_MESSAGES:
@@ -247,16 +236,27 @@ export function message(state: MessageState = getInitialState(), action: Message
       roomMessages = R.clone(state.roomMessages);
 
       umAction.messages.forEach(roomMessage => {
-        if (roomMessagesMap[roomMessage.messageId!]) {
-          delete(roomMessagesMap[roomMessage.messageId!]);
+        let messageId = roomMessage.messageId!;
+        if (roomMessage.type === MessageType.INDICATOR_END) {
+          // When the indicator is displayed, convert the message id to delete it
+          // [indicator-end-USER_ID] -> [indicator-start-USER_ID]
+          messageId = messageId.replace(/end/i, 'start');
         }
-        roomMessagesMap[roomMessage.messageId!] = roomMessage;
 
-        const deleteIndex = R.findIndex(R.propEq('messageId', roomMessage.messageId!))(roomMessages);
-        if (deleteIndex > -1) {
-          roomMessages = R.remove(deleteIndex, 1, roomMessages);
+        // If the same messageId already exists in the map, delete it from both the map and the list
+        if (roomMessagesMap[messageId]) {
+          delete(roomMessagesMap[messageId]);
+          const deleteIndex = R.findIndex(R.propEq('messageId', messageId))(roomMessages);
+          if (deleteIndex > -1) {
+            roomMessages = R.remove(deleteIndex, 1, roomMessages);
+          }
         }
-        roomMessages = R.insert(roomMessages.length + 1, roomMessage, roomMessages);
+
+        // If it is not an end message of the indicator, it is added to the map and the list
+        if (roomMessage.type !== MessageType.INDICATOR_END) {
+          roomMessagesMap[messageId] = roomMessage;
+          roomMessages = R.insert(roomMessages.length + 1, roomMessage, roomMessages);
+        }
       });
 
       return R.merge(
@@ -264,7 +264,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         {
           roomMessagesMap,
           roomMessages,
-          updateRoomMessagesReason: RetrieveRoomMessagesReason.RECEIVE
+          retrieveRoomMessagesReason: RetrieveRoomMessagesReason.RECEIVE,
         }
       );
     case CLEAR_ROOM_MESSAGES:
@@ -275,8 +275,7 @@ export function message(state: MessageState = getInitialState(), action: Message
           roomMessagesAllCount: 0,
           roomMessagesLimit: 0,
           roomMessagesOffset: 0,
-          localMessageList: new Array<IMessage>(),
-          localMessageMap: {},
+          localRoomMessages: new Array<IMessage>(),
           roomMessages: new Array<IMessage>(),
           roomMessagesMap: {},
           onMessageReceived: () => {},
@@ -339,31 +338,6 @@ export function message(state: MessageState = getInitialState(), action: Message
         state,
         {
           searchResultTabIndex: (action as SetSearchResultTabIndexAction).searchResultTabIndex,
-        }
-      );
-    case ADD_INDICATORS:
-      const aia = action as AddIndicatorsAction;
-      return R.merge(
-        state,
-        {
-          indicators: R.assoc(aia.indicator.messageId!, aia.indicator, state.indicators),
-        }
-      );
-    case REFRESH_INDICATORS:
-      const refreshIndicators = R.filter((v: IMessage) => {
-        return ((new Date().getTime() - new Date(v.created as string).getTime()) / 1000 - 5 < 0);
-      }, state.indicators);
-      return R.merge(
-        state,
-        {
-          indicators: refreshIndicators,
-        }
-      );
-    case CLEAR_INDICATORS:
-      return R.merge(
-        state,
-        {
-          indicators: {},
         }
       );
     default:

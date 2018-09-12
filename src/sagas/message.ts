@@ -65,12 +65,12 @@ function* gSendMessagesRequest() {
   let state: State = yield select();
   const room = state.room.room!;
   const { error }: ISendMessageResponse = yield call(() => {
-    return room.sendMessage(state.message.localMessageList[0]);
+    return room.sendMessage(state.message.localRoomMessages[0]);
   });
   if (error) {
     yield put(sendMessagesRequestFailureActionCreator(error!));
   } else {
-    yield put(sendMessagesRequestSuccessActionCreator([]));
+    yield put(sendMessagesRequestSuccessActionCreator(state.message.localRoomMessages));
   }
 }
 

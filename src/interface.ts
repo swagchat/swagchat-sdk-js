@@ -68,7 +68,9 @@ export interface IAddRoomUsersRequest extends AddRoomUsersRequest.AsObject {}
 export interface IDeleteRoomUsersRequest extends DeleteRoomUsersRequest.AsObject {}
 
 // message
-export interface IMessage extends pbMessage.AsObject {}
+export interface IMessage extends pbMessage.AsObject {
+  payloadObj?: object;
+}
 export interface ISendMessageRequest extends SendMessageRequest.AsObject {
   payloadObj?: object;
 }
