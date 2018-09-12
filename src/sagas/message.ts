@@ -26,8 +26,8 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
   if (action.retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PAGING) {
     const headRoomMessage = R.head(roomMessages);
     let offsetTimestamp = 0;
-    if (headRoomMessage) {
-      offsetTimestamp = headRoomMessage.createdTimestamp!;
+    if (headRoomMessage && headRoomMessage.createdTimestamp) {
+      offsetTimestamp = headRoomMessage.createdTimestamp;
     }
     res = yield call(() => {
       const req = {

@@ -176,9 +176,7 @@ export function createMessage(messageId: string, roomId: string, userId: string,
   if (!roomId || !userId || !payload || typeof(roomId) !== 'string' || !(payload instanceof Object)) {
     throw Error('Creating message failure. Parameter invalid.');
   }
-  if (Object.keys(payload).length === 0) {
-    throw Error('Creating message failure. Parameter invalid.');
-  }
+
   const iso3339 = new Date().toISOString();
   return {
     created: iso3339,

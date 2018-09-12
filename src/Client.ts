@@ -24,6 +24,7 @@ export interface IClientParams {
 export interface ISettings {
   roomListPagingCount?: number;
   messageListPagingCount?: number;
+  messageListPlaceholderCount?: number;
 }
 
 export interface IPaths {
@@ -208,11 +209,14 @@ export class Client {
   }
 
   private defaultSettings() {
-    if (!this._settings.roomListPagingCount) {
+    if (this._settings.roomListPagingCount === undefined) {
       this._settings.roomListPagingCount = 20;
     }
-    if (!this._settings.messageListPagingCount) {
+    if (this._settings.messageListPagingCount === undefined) {
       this._settings.messageListPagingCount = 20;
+    }
+    if (this._settings.messageListPlaceholderCount === undefined) {
+      this._settings.messageListPlaceholderCount = 10;
     }
   }
 

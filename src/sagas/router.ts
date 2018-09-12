@@ -1,8 +1,9 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { ForkEffect, put, select, take, takeLatest } from 'redux-saga/effects';
 
+import { createMessage, IMessage, MessageType } from '../';
 import {
-    retrieveRoomMessagesRequestActionCreator, setIsFirstFetchActionCreator
+    setIsFirstFetchActionCreator, updateMessagesActionCreator, retrieveRoomMessagesRequestActionCreator
 } from '../actions/message';
 import { FETCH_ROOM_REQUEST_SUCCESS, fetchRoomRequestActionCreator } from '../actions/room';
 import {
@@ -11,7 +12,7 @@ import {
 } from '../actions/user';
 import { retrieveUserRoomsAllRequestActionCreator } from '../actions/userRoomsAll';
 import { State } from '../stores';
-import { RetrieveRoomMessagesReason } from '../';
+import { RetrieveRoomMessagesReason } from '../const';
 
 function* gLocationChange() {
   const state: State = yield select();
@@ -54,9 +55,25 @@ function* gLocationChange() {
     const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
       const currentRoomId = roomIds[1];
+
       yield put(setIsFirstFetchActionCreator(true));
       yield put(fetchRoomRequestActionCreator(currentRoomId));
       yield take(FETCH_ROOM_REQUEST_SUCCESS);
+
+      if (client.settings.messageListPlaceholderCount! > 0) {
+        const placeholderMessags = new Array<IMessage>();
+        for (let i = 1; i <= client.settings.messageListPlaceholderCount!; i++) {
+          const placeholderMessage = createMessage(
+            MessageType.PLACEHOLDER + '-' + i,
+            currentRoomId,
+            client.userId,
+            MessageType.PLACEHOLDER,
+            {}
+          );
+          placeholderMessags.push(placeholderMessage);
+        }
+        yield put(updateMessagesActionCreator(placeholderMessags, RetrieveRoomMessagesReason.PLACEHOLDER));
+      }
       yield put(retrieveRoomMessagesRequestActionCreator(RetrieveRoomMessagesReason.PAGING));
     }
   }

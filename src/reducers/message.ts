@@ -61,7 +61,7 @@ export function message(state: MessageState = getInitialState(), action: Message
   let roomMessages: Array<IMessage>;
   let addRoomMessages: Array<IMessage>;
   let localRoomMessages: Array<IMessage>;
-  let message: IMessage;
+  let messages: IMessage[];
 
   switch (action.type) {
     case SET_IS_FIRST_FETCH:
@@ -121,6 +121,11 @@ export function message(state: MessageState = getInitialState(), action: Message
       roomMessagesMap = R.clone(state.roomMessagesMap);
       roomMessages = R.clone(state.roomMessages);
 
+      if (state.retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PLACEHOLDER) {
+        roomMessagesMap = {};
+        roomMessages = new Array<IMessage>();
+      }
+
       addRoomMessages = new Array<IMessage>();
       roomMessagesResponse.messages.forEach(roomMessage => {
         const messageId = roomMessage.messageId!;
@@ -171,9 +176,9 @@ export function message(state: MessageState = getInitialState(), action: Message
         }
       );
     case PUSH_LOCAL_MESSAGE:
-      message = (action as PushLocalMessageAction).message;
+      messages = (action as PushLocalMessageAction).messages;
       localRoomMessages = R.clone(state.localRoomMessages);
-      localRoomMessages.push(message);
+      localRoomMessages = R.insertAll(localRoomMessages.length, messages, localRoomMessages);
 
       return R.merge(
         state,
@@ -262,7 +267,7 @@ export function message(state: MessageState = getInitialState(), action: Message
         {
           roomMessagesMap,
           roomMessages,
-          retrieveRoomMessagesReason: RetrieveRoomMessagesReason.RECEIVE,
+          retrieveRoomMessagesReason: umAction.reason,
         }
       );
     case CLEAR_ROOM_MESSAGES:

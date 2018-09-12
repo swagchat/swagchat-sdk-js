@@ -4,8 +4,10 @@ export { EventType } from 'swagchat-protobuf/eventMessage_pb';
 export { Platform } from 'swagchat-protobuf/deviceMessage_pb';
 
 export enum RetrieveRoomMessagesReason {
+  PLACEHOLDER = 'placeholder',
   PAGING = 'paging',
   RECEIVE = 'receive',
+  SEND = 'send',
 }
 export enum MessageType {
   TEXT = 'text',
@@ -14,6 +16,7 @@ export enum MessageType {
   INDICATOR_START = 'indicator-start',
   INDICATOR_END = 'indicator-end',
   UPDATE_ROOM_USER = 'updateRoomUser',
+  PLACEHOLDER = 'placeholder',
 }
 
 export enum MessageActionType {
@@ -24,9 +27,9 @@ export enum MessageActionType {
 }
 
 export enum RoleType {
-	General = 1,
-	Guest = 2,
-	Operator = 3,
+  General = 1,
+  Guest = 2,
+  Operator = 3,
   External = 4,
   Bot = 5,
 }

@@ -134,11 +134,11 @@ export const retrieveRoomMessagesRequestFailureActionCreator =
 });
 
 export interface PushLocalMessageAction extends MessageBaseAction {
-  message: IMessage;
+  messages: IMessage[];
 }
-export const pushLocalMessageActionCreator = (message: IMessage): PushLocalMessageAction => ({
+export const pushLocalMessageActionCreator = (messages: IMessage[]): PushLocalMessageAction => ({
   type: PUSH_LOCAL_MESSAGE,
-  message: message,
+  messages: messages,
 });
 
 export interface SyncLocalMessagesAction extends MessageBaseAction {
@@ -186,10 +186,12 @@ export const deleteLocalMessagesActionCreator = (): DeleteLocalMessagesAction =>
 
 export interface UpdateMessagesAction extends MessageBaseAction {
   messages: IMessage[];
+  reason: RetrieveRoomMessagesReason;
 }
-export const updateMessagesActionCreator = (messages: IMessage[]): UpdateMessagesAction => ({
+export const updateMessagesActionCreator = (messages: IMessage[], reason: RetrieveRoomMessagesReason): UpdateMessagesAction => ({
   type: UPDATE_MESSAGES,
-  messages: messages,
+  messages,
+  reason,
 });
 
 export interface ClearRoomMessagesAction extends MessageBaseAction {
