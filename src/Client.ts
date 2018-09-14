@@ -16,9 +16,16 @@ export interface IClientParams {
   history?: History;
   isGuest?: boolean;
   realm?: string;
+  renderDomId?: string;
+  renderDomSize?: IRenderDomSize;
   updateLastAccessRoomId?: boolean;
   singlePaneView?: boolean;
   settings?: ISettings;
+}
+
+export interface IRenderDomSize {
+  width: string;
+  height: string;
 }
 
 export interface ISettings {
@@ -48,6 +55,7 @@ export class Client {
   private _history: History;
   // private _realm: string;
   private _settings: ISettings;
+  private _renderDomSize: IRenderDomSize;
 
 
   public updateLastAccessRoomId: boolean;
@@ -90,6 +98,10 @@ export class Client {
 
   get settings(): ISettings {
     return this._settings;
+  }
+
+  get renderDomSize(): IRenderDomSize {
+    return this._renderDomSize;
   }
 
   public setHeaders(userId?: string): { [key: string]: string } {
@@ -201,6 +213,12 @@ export class Client {
       this._settings = params.settings;
     } else {
       this._settings = {} as ISettings;
+    }
+
+    if (params.renderDomSize !== undefined) {
+      this._renderDomSize = params.renderDomSize;
+    } else {
+      this._renderDomSize = {} as IRenderDomSize;
     }
 
     this.defaultSettings();

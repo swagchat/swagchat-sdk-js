@@ -14,6 +14,8 @@ export interface MessageState {
   roomMessagesAllCount: number;
   roomMessagesLimit: number;
   roomMessagesOffset: number;
+  roomMessagesLimitTimestamp: number;
+  roomMessagesOffsetTimestamp: number;
   roomMessages: IMessage[];
   roomMessagesMap: {[messageId: string]: IMessage};
   retrieveRoomMessagesReason: RetrieveRoomMessagesReason;

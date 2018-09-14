@@ -26,8 +26,13 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
   if (action.retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PAGING) {
     const headRoomMessage = R.head(roomMessages);
     let offsetTimestamp = 0;
-    if (headRoomMessage && headRoomMessage.createdTimestamp) {
-      offsetTimestamp = headRoomMessage.createdTimestamp;
+    if (headRoomMessage !== undefined) {
+      if (headRoomMessage.createdTimestamp) {
+        offsetTimestamp = headRoomMessage.createdTimestamp;
+      }
+      if (headRoomMessage.createdTimestamp === state.message.roomMessagesOffsetTimestamp) {
+        offsetTimestamp--;
+      }
     }
     res = yield call(() => {
       const req = {
@@ -41,8 +46,13 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
   } else if (action.retrieveRoomMessagesReason === RetrieveRoomMessagesReason.RECEIVE) {
     const lastRoomMessage = R.last(roomMessages);
     let limitTimestamp = 0;
-    if (lastRoomMessage) {
-      limitTimestamp = lastRoomMessage.createdTimestamp!;
+    if (lastRoomMessage !== undefined) {
+      if (lastRoomMessage.createdTimestamp) {
+        limitTimestamp = lastRoomMessage.createdTimestamp;
+      }
+      if (lastRoomMessage.createdTimestamp === state.message.roomMessagesLimitTimestamp) {
+        limitTimestamp++;
+      }
     }
     res = yield call(() => {
       const req = {

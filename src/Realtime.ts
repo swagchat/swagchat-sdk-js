@@ -152,6 +152,10 @@ export class Realtime {
     });
 
     for (let eventType = 0; eventType < this.onEventHandlers.length; eventType++) {
+      if (!this.onEventHandlers[eventType]) {
+        continue;
+      }
+
       Object.keys(this.onEventHandlers[eventType]).forEach((funcName) => {
         setTimeout(() => {
           this.sendEvent(eventType, funcName, 'subscribe');

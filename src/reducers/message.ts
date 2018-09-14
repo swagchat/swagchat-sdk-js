@@ -30,6 +30,8 @@ const getInitialState = (): MessageState => ({
   roomMessagesAllCount: 0,
   roomMessagesLimit: 0,
   roomMessagesOffset: 0,
+  roomMessagesLimitTimestamp: 0,
+  roomMessagesOffsetTimestamp: 0,
   roomMessages: new Array<IMessage>(),
   roomMessagesMap: {},
   retrieveRoomMessagesReason: RetrieveRoomMessagesReason.PAGING,
@@ -147,7 +149,7 @@ export function message(state: MessageState = getInitialState(), action: Message
       if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.PAGING) {
         roomMessages = R.insertAll(0, addRoomMessages, roomMessages);
       } else if (retrieveRoomMessagesReason === RetrieveRoomMessagesReason.RECEIVE) {
-        if (roomMessages[roomMessages.length - 1].messageId!.startsWith(MessageType.INDICATOR_START)) {
+        if (roomMessages[roomMessages.length - 1].messageId!.indexOf(MessageType.INDICATOR_START) >= 0) {
           roomMessages = R.insertAll(roomMessages.length - 1, addRoomMessages, roomMessages);
         } else {
           roomMessages = R.insertAll(roomMessages.length, addRoomMessages, roomMessages);
@@ -346,7 +348,7 @@ export function message(state: MessageState = getInitialState(), action: Message
     case REFRESH_INDICATOR:
       const lastItem = state.roomMessages[state.roomMessages.length - 1];
 
-      if (!lastItem.messageId!.startsWith(MessageType.INDICATOR_START)) {
+      if (lastItem.messageId!.indexOf(MessageType.INDICATOR_START) < 0) {
         return state;
       }
 
