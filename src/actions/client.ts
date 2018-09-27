@@ -1,10 +1,12 @@
 import { Action } from 'redux';
-import { Client } from '..';
+import { Client, ISettings } from '..';
 
 export const SET_CLIENT = 'SET_CLIENT';
+export const SET_SETTINGS = 'SET_SETTINGS';
 
 export type ClientActionTypes =
-  typeof SET_CLIENT
+  typeof SET_CLIENT |
+  typeof SET_SETTINGS
 ;
 
 export interface ClientBaseAction extends Action {
@@ -16,10 +18,20 @@ export interface SetClientAction extends ClientBaseAction {
 }
 export const setClientActionCreator = (client: Client): SetClientAction => ({
   type: SET_CLIENT,
-  client: client,
+  client
 });
+
+export interface SetSettingsAction extends ClientBaseAction {
+  settings: ISettings;
+}
+export const setSettingsActionCreator = (settings: ISettings): SetSettingsAction => ({
+  type: SET_SETTINGS,
+  settings
+});
+
 
 export type ClientActions =
   ClientBaseAction |
-  SetClientAction
+  SetClientAction |
+  SetSettingsAction
 ;

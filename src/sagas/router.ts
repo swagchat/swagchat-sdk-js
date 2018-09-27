@@ -21,11 +21,12 @@ function* gLocationChange() {
     return;
   }
 
-  if (state.client.client === null) {
+  if (state.client.client === null || state.client.settings === null) {
     return;
   }
 
   const client = state.client.client;
+  const settings = state.client.settings;
 
   let guestMessagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.guestMessageListPath));
   if (guestMessagesPathRegExp !== null) {
@@ -60,9 +61,9 @@ function* gLocationChange() {
       yield put(fetchRoomRequestActionCreator(currentRoomId));
       yield take(FETCH_ROOM_REQUEST_SUCCESS);
 
-      if (client.settings.messageListPlaceholderCount! > 0) {
+      if (settings.messageListPlaceholderCount! > 0) {
         const placeholderMessags = new Array<IMessage>();
-        for (let i = 1; i <= client.settings.messageListPlaceholderCount!; i++) {
+        for (let i = 1; i <= settings.messageListPlaceholderCount!; i++) {
           const placeholderMessage = createMessage(
             MessageType.PLACEHOLDER + '-' + i,
             currentRoomId,

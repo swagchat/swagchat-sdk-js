@@ -18,7 +18,6 @@ export interface IClientParams {
   isGuest?: boolean;
   realm?: string;
   renderDomId?: string;
-  renderDomSize?: IRenderDomSize;
   updateLastAccessRoomId?: boolean;
   singlePaneView?: boolean;
   settings?: ISettings;
@@ -32,6 +31,7 @@ export interface IRenderDomSize {
 export interface ISettings {
   theme?: Theme;
   renderSize?: RenderSize;
+  renderDomSize?: IRenderDomSize;
   roomListPagingCount?: number;
   messageListPagingCount?: number;
   messageListPlaceholderCount?: number;
@@ -57,8 +57,6 @@ export class Client {
   private _paths: IPaths;
   private _history: History;
   // private _realm: string;
-  private _settings: ISettings;
-  private _renderDomSize: IRenderDomSize;
   private _theme: object;
 
   public updateLastAccessRoomId: boolean;
@@ -97,18 +95,6 @@ export class Client {
 
   get history(): History {
     return this._history;
-  }
-
-  get settings(): ISettings {
-    return this._settings;
-  }
-
-  get renderDomSize(): IRenderDomSize {
-    return this._renderDomSize;
-  }
-
-  set renderDomSize(renderDomSize: IRenderDomSize) {
-    this._renderDomSize = renderDomSize;
   }
 
   set theme(theme: object) {
@@ -224,41 +210,7 @@ export class Client {
       this.singlePaneView = params.singlePaneView;
     }
 
-    if (params.settings !== undefined) {
-      this._settings = params.settings;
-    } else {
-      this._settings = {} as ISettings;
-    }
-
-    if (!this._settings.theme) {
-      this._settings.theme = Theme.THEME_DEFAULT;
-    }
-
-    if (!this._settings.renderSize) {
-      this._settings.renderSize = RenderSize.RENDER_RELATIVE;
-    }
-
-    if (params.renderDomSize !== undefined) {
-      this._renderDomSize = params.renderDomSize;
-    } else {
-      this._renderDomSize = {} as IRenderDomSize;
-    }
-
-    this.defaultSettings();
-
     logger('api', 'info', 'Initialized API Client OK');
-  }
-
-  private defaultSettings() {
-    if (this._settings.roomListPagingCount === undefined) {
-      this._settings.roomListPagingCount = 20;
-    }
-    if (this._settings.messageListPagingCount === undefined) {
-      this._settings.messageListPagingCount = 20;
-    }
-    if (this._settings.messageListPlaceholderCount === undefined) {
-      this._settings.messageListPlaceholderCount = 10;
-    }
   }
 
   public socketOpen(userId: string) {

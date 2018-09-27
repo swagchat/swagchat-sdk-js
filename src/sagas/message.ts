@@ -36,7 +36,7 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
     }
     res = yield call(() => {
       const req = {
-        limit: state.client.client!.settings.messageListPagingCount,
+        limit: state.client.settings!.messageListPagingCount,
         offset: 0,
         limitTimestamp: 0,
         offsetTimestamp
@@ -56,7 +56,7 @@ function* gRetrieveRoomMessagesRequest(action: RetrieveRoomMessagesRequestAction
     }
     res = yield call(() => {
       const req = {
-        limit: state.client.client!.settings.messageListPagingCount,
+        limit: state.client.settings!.messageListPagingCount,
         offset: 0,
         limitTimestamp,
         offsetTimestamp: 0

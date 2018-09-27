@@ -16,7 +16,7 @@ function* gRetrieveUserRoomsAllRequest(action: RetrieveUserRoomsAllRequestAction
   const res: IRetrieveUserRoomsResponse = yield call(() => {
     const req = {
       userId: user.user!.userId,
-      limit: action.limit !== undefined ? action.limit : state.client.client!.settings.roomListPagingCount,
+      limit: action.limit !== undefined ? action.limit : state.client.settings!.roomListPagingCount,
       offset: action.offset !== undefined ? action.offset : userRoomsAll.offset,
       filter: UserRoomsFilter.NONE
     } as IRetrieveUserRoomsRequest;
