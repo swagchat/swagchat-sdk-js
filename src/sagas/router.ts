@@ -39,18 +39,18 @@ function* gLocationChange() {
     yield take(FETCH_USER_REQUEST_SUCCESS);
   }
 
-  let roomsPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomListPath));
+  let roomsPathRegExp = location.pathname === client.paths.roomListPath ? true : false;
   if (!roomsPathRegExp) {
-    roomsPathRegExp = location.hash.match(new RegExp('^#' + client.paths.roomListPath));
+    roomsPathRegExp = location.hash === '#' + client.paths.roomListPath ? true : false;
   }
 
-  if (roomsPathRegExp !== null) {
+  if (roomsPathRegExp) {
     // rooms page
     yield put(retrieveUserRoomsAllRequestActionCreator());
   }
 
-  let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath));
-  if (messagesPathRegExp !== null) {
+  let messagesPathRegExp = location.pathname.match(new RegExp('^' + client.paths.messageListPath)) ? true : false;
+  if (messagesPathRegExp) {
     // messages page
     const roomIds = location.pathname.match(new RegExp(client.paths.messageListPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
@@ -78,8 +78,8 @@ function* gLocationChange() {
     }
   }
 
-  let roomSettingPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomSettingPath));
-  if (roomSettingPathRegExp !== null) {
+  let roomSettingPathRegExp = location.pathname.match(new RegExp('^' + client.paths.roomSettingPath)) ? true : false;
+  if (roomSettingPathRegExp) {
     // roomSetting page
     const roomIds = location.pathname.match(new RegExp(client.paths.roomSettingPath + '/([a-zA-z0-9-]+)'));
     if (roomIds !== null) {
@@ -88,8 +88,8 @@ function* gLocationChange() {
     }
   }
 
-  let profilePathRegExp = location.pathname.match(new RegExp('^' + client.paths.profilePath));
-  if (profilePathRegExp !== null) {
+  let profilePathRegExp = location.pathname.match(new RegExp('^' + client.paths.profilePath)) ? true : false;
+  if (profilePathRegExp) {
     // profile page
     yield put(clearProfileUserActionCreator());
     const userIds = location.pathname.match(new RegExp(client.paths.profilePath + '/([a-zA-z0-9-]+)'));
@@ -99,8 +99,8 @@ function* gLocationChange() {
     }
   }
 
-  let accountPathRegExp = location.pathname.match(new RegExp('^' + client.paths.accountPath));
-  if (accountPathRegExp !== null) {
+  let accountPathRegExp = location.pathname === client.paths.accountPath ? true : false;
+  if (accountPathRegExp) {
     // accout page
   }
 

@@ -48,6 +48,16 @@ export enum Speech2Text {
   GOOGLE = 3,
 }
 
+export enum Theme {
+  THEME_DEFAULT = 'default',
+}
+
+export enum RenderSize {
+  RENDER_RELATIVE = 'relative',
+  RENDER_FULLSCREEN = 'fullscreen',
+}
+
 export const cookieUserIdKey = 'sc_user_id';
 export const cookieRoomIdKey = 'sc_room_id';
 export const indicatorRefleshTime = 3000; // milliseconds
+export const defaultRenderDomId = 'swagchat';

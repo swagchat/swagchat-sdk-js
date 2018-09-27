@@ -148,9 +148,23 @@ export function getAuthInfoFromStorage(): IAuthInfo {
   return scObj;
 }
 
+export const isAndroid = (): Boolean => {
+  const ua = 'Android';
+  return window.navigator.userAgent.indexOf(ua) > 0;
+};
+
 export const isIphone = (): Boolean => {
   const ua = 'iPhone';
   return window.navigator.userAgent.indexOf(ua) > 0;
+};
+
+export const isIpad = (): Boolean => {
+  const ua = 'iPad';
+  return window.navigator.userAgent.indexOf(ua) > 0;
+};
+
+export const isIOS = (): Boolean => {
+  return /iP(hone|(o|a)d)/.test(window.navigator.userAgent);
 };
 
 export const countString = (str: string): number => {

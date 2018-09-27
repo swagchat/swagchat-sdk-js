@@ -1,7 +1,8 @@
+import * as R from 'ramda';
 import 'isomorphic-fetch';
 import { History, createHashHistory } from 'history';
 import { Realtime } from './Realtime';
-import { EventType } from './const';
+import { EventType, RenderSize, Theme } from './const';
 import { logger } from './utils';
 import * as I from './interface';
 import { User, IUserParams } from './User';
@@ -29,6 +30,8 @@ export interface IRenderDomSize {
 }
 
 export interface ISettings {
+  theme?: Theme;
+  renderSize?: RenderSize;
   roomListPagingCount?: number;
   messageListPagingCount?: number;
   messageListPlaceholderCount?: number;
@@ -56,7 +59,7 @@ export class Client {
   // private _realm: string;
   private _settings: ISettings;
   private _renderDomSize: IRenderDomSize;
-
+  private _theme: object;
 
   public updateLastAccessRoomId: boolean;
   public singlePaneView: boolean;
@@ -102,6 +105,18 @@ export class Client {
 
   get renderDomSize(): IRenderDomSize {
     return this._renderDomSize;
+  }
+
+  set renderDomSize(renderDomSize: IRenderDomSize) {
+    this._renderDomSize = renderDomSize;
+  }
+
+  set theme(theme: object) {
+    this._theme = theme;
+  }
+
+  get theme(): object {
+    return this._theme;
   }
 
   public setHeaders(userId?: string): { [key: string]: string } {
@@ -175,16 +190,16 @@ export class Client {
       this._wsEndpoint = params.wsEndpoint!;
     }
 
+    this._paths = {
+      accountPath: '/account',
+      messageListPath: '/messages',
+      profilePath: '/profile',
+      roomListPath: '/rooms',
+      roomSettingPath: '/roomSetting'
+    } as IPaths;
+
     if (params.paths !== undefined) {
-      this._paths = params.paths;
-    } else {
-      this._paths = {
-        accountPath: '/account',
-        messageListPath: '/messages',
-        profilePath: '/profile',
-        roomListPath: '/rooms',
-        roomSettingPath: '/roomSetting'
-      } as IPaths;
+      this._paths = R.merge(this._paths, params.paths);
     }
 
     if (params.history !== undefined) {
@@ -213,6 +228,14 @@ export class Client {
       this._settings = params.settings;
     } else {
       this._settings = {} as ISettings;
+    }
+
+    if (!this._settings.theme) {
+      this._settings.theme = Theme.THEME_DEFAULT;
+    }
+
+    if (!this._settings.renderSize) {
+      this._settings.renderSize = RenderSize.RENDER_RELATIVE;
     }
 
     if (params.renderDomSize !== undefined) {
