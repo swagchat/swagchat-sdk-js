@@ -149,22 +149,49 @@ export function getAuthInfoFromStorage(): IAuthInfo {
 }
 
 export const isAndroid = (): Boolean => {
-  const ua = 'Android';
-  return window.navigator.userAgent.indexOf(ua) > 0;
+  return window.navigator.userAgent.indexOf('Android') > 0;
+};
+
+export const isAndroidMobile = (): Boolean => {
+  if (window.navigator.userAgent.indexOf('Android') > 0) {
+    return window.navigator.userAgent.indexOf('Mobile') > 0;
+  }
+  return false;
+};
+
+export const isAndroidTablet = (): Boolean => {
+  if (window.navigator.userAgent.indexOf('Android') > 0) {
+    return window.navigator.userAgent.indexOf('Mobile') <= 0;
+  }
+  return false;
 };
 
 export const isIphone = (): Boolean => {
-  const ua = 'iPhone';
-  return window.navigator.userAgent.indexOf(ua) > 0;
+  return window.navigator.userAgent.indexOf('iPhone') > 0;
 };
 
 export const isIpad = (): Boolean => {
-  const ua = 'iPad';
-  return window.navigator.userAgent.indexOf(ua) > 0;
+  return window.navigator.userAgent.indexOf('iPad') > 0;
 };
 
 export const isIOS = (): Boolean => {
   return /iP(hone|(o|a)d)/.test(window.navigator.userAgent);
+};
+
+export const calcStringLength = (str: string): number => {
+  let length = 0;
+  for (let i = 0; i < str.length; i++) {
+    let chr = str.charCodeAt(i);
+    if ((chr >= 0x00 && chr < 0x81) ||
+       (chr === 0xf8f0) ||
+       (chr >= 0xff61 && chr < 0xffa0) ||
+       (chr >= 0xf8f1 && chr < 0xf8f4)) {
+        length += 1;
+    } else {
+      length += 2;
+    }
+  }
+  return length;
 };
 
 export const countString = (str: string): number => {
