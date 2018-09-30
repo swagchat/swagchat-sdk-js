@@ -7,6 +7,7 @@ swagchat is an open source chat components for your webapps.
 
 This is SDK for [Chat API](http://github.com/swagchat/chat-api)
 
+**Currently developing for version 1**
 
 ## Architecture
 
