@@ -3,3 +3,4 @@ libs
 dist
 yarn-error.log
 coverage
+.vscode
