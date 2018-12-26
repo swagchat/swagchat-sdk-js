@@ -12,6 +12,7 @@ This is SDK for [Chat API](http://github.com/swagchat/chat-api)
 ## Architecture
 
 ![Architecture](https://client.fairway.ne.jp/swagchat/img/swagchat-start-guide-20170920.png "Architecture")
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fswagchat%2Fswagchat-sdk-js.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fswagchat%2Fswagchat-sdk-js?ref=badge_shield)
 
 ##### Related repositories
 
@@ -106,3 +107,6 @@ Open `doc/index.html` in browser.
 ## License
 
 MIT License.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fswagchat%2Fswagchat-sdk-js.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fswagchat%2Fswagchat-sdk-js?ref=badge_large)
